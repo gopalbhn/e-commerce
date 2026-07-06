@@ -17,6 +17,7 @@ const ProductDetail = () => {
   return (
     <div className='h-full w-full '>
 
+      <h1 className='text-primary text-md px-14 font-semibold '>Home / Electornics / HeadPhone</h1>
       <section className='w-full h-full rounded-lg flex items-center justify-center gap-1 px-10'>
         <div className='w-1/2 h-full p-4 group'>
           <div className='relative h-screen w-full flex justify-center items-center overflow-hidden '>

@@ -1,4 +1,5 @@
-import { BiDevices, BiHome, BiFace, BiDumbbell, BiCheckCircle } from "react-icons/bi";
+import { BiDevices, BiHome, BiFace, BiDumbbell, BiCheckCircle, BiSolidTShirt } from "react-icons/bi";
+import { TbShirt } from "react-icons/tb";
 
 
 export interface CartItem {
@@ -14,15 +15,19 @@ export interface ProductCartType {
     name: string,
     price: string,
     old: string,
-    discount: string
+    discount?: string
+    wishList?: Boolean
+    isDiscounted: Boolean
     onclick?: () => void
 }
 export const products = [
     {
         name: "Aura Studio Headphones",
         price: "$199",
-        old: "$285",
-        discount: "30%",
+        old: "$199",
+        discount: "",
+        wishList: false,
+        isDiscounted: false,
         img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
     },
     {
@@ -30,6 +35,8 @@ export const products = [
         price: "$450",
         old: "$530",
         discount: "15%",
+        wishList: true,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30"
     },
     {
@@ -37,13 +44,17 @@ export const products = [
         price: "$125",
         old: "$210",
         discount: "40%",
+        wishList: false,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=80"
     },
     {
         name: "Smart LED Desk Lamp",
         price: "$45",
-        old: "$70",
-        discount: "36%",
+        old: "$45",
+        discount: "",
+        wishList: false,
+        isDiscounted: false,
         img: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4"
     },
     {
@@ -51,13 +62,17 @@ export const products = [
         price: "$59",
         old: "$99",
         discount: "40%",
+        wishList: true,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b"
     },
     {
         name: "Wireless Gaming Mouse",
         price: "$75",
-        old: "$110",
-        discount: "32%",
+        old: "$75",
+        discount: "",
+        wishList: false,
+        isDiscounted: false,
         img: "https://images.unsplash.com/photo-1527814050087-3793815479db"
     },
     {
@@ -65,6 +80,8 @@ export const products = [
         price: "$129",
         old: "$180",
         discount: "28%",
+        wishList: true,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8"
     },
     {
@@ -72,13 +89,17 @@ export const products = [
         price: "$220",
         old: "$300",
         discount: "27%",
+        wishList: false,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd"
     },
     {
         name: "Bluetooth Speaker Mini",
         price: "$39",
-        old: "$60",
-        discount: "35%",
+        old: "$39",
+        discount: "",
+        wishList: false,
+        isDiscounted: false,
         img: "https://images.unsplash.com/photo-1585386959984-a41552231693"
     },
     {
@@ -86,6 +107,8 @@ export const products = [
         price: "$35",
         old: "$55",
         discount: "36%",
+        wishList: true,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633"
     },
     {
@@ -93,13 +116,17 @@ export const products = [
         price: "$110",
         old: "$150",
         discount: "27%",
+        wishList: false,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
     },
     {
         name: "Compact Espresso Pro",
         price: "$89",
-        old: "$120",
-        discount: "26%",
+        old: "$89",
+        discount: "",
+        wishList: true,
+        isDiscounted: false,
         img: "https://images.unsplash.com/photo-1517701550925-2f9c3e2f6c7d"
     },
     {
@@ -107,6 +134,8 @@ export const products = [
         price: "$99",
         old: "$140",
         discount: "29%",
+        wishList: false,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1587829741301-dc798b83add3"
     },
     {
@@ -114,13 +143,17 @@ export const products = [
         price: "$139",
         old: "$200",
         discount: "31%",
+        wishList: true,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1593642634367-d91a135587b5"
     },
     {
         name: "Smart Watch Series X",
         price: "$299",
-        old: "$399",
-        discount: "25%",
+        old: "$299",
+        discount: "",
+        wishList: false,
+        isDiscounted: false,
         img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30"
     },
     {
@@ -128,13 +161,17 @@ export const products = [
         price: "$89",
         old: "$130",
         discount: "32%",
+        wishList: true,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1585386959984-a41552231693"
     },
     {
         name: "Professional Tripod Stand",
         price: "$65",
-        old: "$95",
-        discount: "32%",
+        old: "$65",
+        discount: "",
+        wishList: false,
+        isDiscounted: false,
         img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32"
     },
     {
@@ -142,6 +179,8 @@ export const products = [
         price: "$199",
         old: "$280",
         discount: "29%",
+        wishList: true,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1598550476439-6847785fcea6"
     },
     {
@@ -149,13 +188,17 @@ export const products = [
         price: "$120",
         old: "$170",
         discount: "29%",
+        wishList: false,
+        isDiscounted: true,
         img: "https://images.unsplash.com/photo-1543512214-318c7553f230"
     },
     {
         name: "Travel Duffel Bag",
         price: "$80",
-        old: "$120",
-        discount: "33%",
+        old: "$80",
+        discount: "",
+        wishList: true,
+        isDiscounted: false,
         img: "https://images.unsplash.com/photo-1526481280695-3c687fd5432c"
     }
 ];
@@ -164,8 +207,8 @@ export const products = [
 
 export const category = [
     { title: "Electronics", icon: BiDevices },
-    { title: "Fashion", icon: BiCheckCircle },
-    { title: "Home", icon: BiHome },
+    { title: "Fashion", icon: TbShirt },
+    { title: "Home Appliance", icon: BiHome },
     { title: "Beauty", icon: BiFace },
     { title: "Sports", icon: BiDumbbell }
 ];

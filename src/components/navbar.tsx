@@ -2,10 +2,11 @@ import { useEffect, useState } from "react"
 import { CiHeart } from "react-icons/ci"
 import { FaRegUserCircle } from "react-icons/fa"
 import { IoCartOutline, IoSearchOutline } from "react-icons/io5"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const NavBar = () => {
     const [color, setColor] = useState<string>("")
+    const navigate = useNavigate();
     useEffect(() => {
         function handleScroll() {
             if (window.scrollY > 15) {
@@ -40,7 +41,7 @@ const NavBar = () => {
                 />
             </div>
             <div className="flex items-center gap-4 ">
-                <button className="p-2 rounded-full transition hover:bg-gray-100 group ">
+                <button className="p-2 rounded-full transition hover:bg-gray-100 group " onClick={() => navigate("/wishlist")}>
                     <CiHeart className="text-2xl" />
                 </button>
                 <button className="p-2 rounded-full transition hover:bg-gray-100 ">

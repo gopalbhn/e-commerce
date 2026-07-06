@@ -26,7 +26,7 @@ const Dashboard = () => {
                     <h2 className="text-5xl font-bold">
                         Elevate Your Lifestyle with <span className="text-primary">Aura</span>
                     </h2>
-                    <p className="mt-4 text-gray-600">
+                    <p className="mt-4 text-black">
                         Discover the Spring 2024 collection. Minimalist aesthetics <br></br> meet unparalleled quality in our curated essentials.
                     </p>
                     <button className="mt-6 px-6 py-3 bg-primary-light text-white rounded-lg">
@@ -64,7 +64,9 @@ const Dashboard = () => {
                             old={product.old}
                             key={index}
                             discount={product.discount}
-                            onclick={() => navigate(`/product`)}
+                            isDiscounted={product.isDiscounted}
+                            wishList={product.wishList}
+                            onclick={() => navigate(`/product-detail`)}
                         />
                     ))}
                 </div>
@@ -97,7 +99,9 @@ const Dashboard = () => {
                             old={product.old}
                             discount={product.discount}
                             key={index}
-                            onclick={() => navigate(`/product`)}
+                            isDiscounted={product.isDiscounted}
+                            wishList={product.wishList}
+                            onclick={() => navigate(`/product-detail`)}
                         />
                     ))}
                 </div>
