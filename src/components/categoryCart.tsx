@@ -7,8 +7,8 @@ const CategoryCart = ({ icon, title }: {
 }) => {
     const Icon = icon
     return (
-        <div className="h-30 w-40 shadow-xl rounded-xl flex flex-col items-center justify-center p-4 ">
-            <div className="bg-primary-light/80 rounded-full p-2"> <Icon size={30} color="var(--color-primary)" /></div>
+        <div className="h-40 w-50 shadow-sm rounded-xl flex flex-col items-center justify-center p-4 group hover:shadow-md  transition-all duration-200">
+            <div className="bg-primary-light/80 rounded-full mb-4 flex h-16 w-16 items-center justify-center  group-hover:text-primary transition-all duration-200"> <Icon size={24} className="text-primary" /></div>
             <h1>{title}</h1>
         </div>
     )

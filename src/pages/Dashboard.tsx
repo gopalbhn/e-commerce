@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import CategoryCart from "../components/categoryCart"
 import Footer from "../components/Footer"
 import ProductCart from "../components/productCart"
@@ -7,7 +8,7 @@ const Dashboard = () => {
     const hours = new Date().getHours()
     const minutes = new Date().getMinutes()
     const seconds = new Date().getSeconds()
-
+    const navigate = useNavigate();
     const time = [hours, minutes, seconds]
     return (
         <div className="h-full w-full space-y-10">
@@ -62,13 +63,15 @@ const Dashboard = () => {
                             price={product.price}
                             old={product.old}
                             key={index}
+                            discount={product.discount}
+                            onclick={() => navigate(`/product`)}
                         />
                     ))}
                 </div>
             </section>
             <section className="h-full w-full px-10">
                 <h1 className="text-title text-center font-semibold line-height-[40px]">Shop by Category</h1>
-                <div className="w-full grid grid-cols-5 gap-4 items-center mb-10">
+                <div className="w-full grid grid-cols-5 gap-4 items-center mb-10 mt-5">
                     {category.map((item, index) => (
                         <CategoryCart
                             icon={item.icon}
@@ -92,7 +95,9 @@ const Dashboard = () => {
                             name={product.name}
                             price={product.price}
                             old={product.old}
+                            discount={product.discount}
                             key={index}
+                            onclick={() => navigate(`/product`)}
                         />
                     ))}
                 </div>

@@ -20,13 +20,14 @@
 
     --color-background: "#ffff"
 
-        --font-sans: "Inter", sans-serif;
 
-    --text-hero: 48px;
+        --text-hero: 48px;
     --text-header: 32px;
     --text-title: 22px;
     --text-body: 16px;
     --text-small: 14px;
+
+    --font-sans: "Inter", sans-serif;
 
 
 }
