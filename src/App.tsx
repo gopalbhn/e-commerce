@@ -7,6 +7,8 @@ import ProductDetail from './pages/ProductDetail'
 import ShopingCart from './pages/ShopingCart'
 import ProductListing from './pages/ProductListing'
 import WishList from './pages/WishList'
+import MyOrders from './pages/MyOrders'
+import Checkout from './pages/Checkout'
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path='/shoping-cart' element={<ShopingCart />} />
         <Route path='/products' element={<ProductListing />} />
         <Route path='/wishlist' element={<WishList />} />
+        <Route path='/myorders' element={<MyOrders />} />
+        <Route path='/checkout' element={<Checkout />} />
       </Routes>
     </div>
   )

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { BiCart, BiCheckCircle } from 'react-icons/bi'
 import { FiStar } from 'react-icons/fi'
 import { HiMiniMagnifyingGlassPlus } from 'react-icons/hi2'
@@ -63,9 +63,9 @@ const ProductDetail = () => {
           <div className=' mb-6 px-3 py-1.5 rounded-xl border border-gray-300 bg-[#f1edec]'>
             <p className='flex items-center gap-4 mb-1'>
               <BiCheckCircle className='text-2xl text-accent-light' />
-              <span className='text-[14px] font-semibold'>In Stock - 5 Left</span>
+              <span className='text-small font-semibold'>In Stock - 5 Left</span>
             </p>
-            <p className='text-[14px] font-semibold text-gray-500'>Order within 2h 15m for Same-Day Shipping.</p>
+            <p className='text-small font-semibold text-gray-500'>Order within 2h 15m for Same-Day Shipping.</p>
           </div>
           <div className='flex flex-col gap-4 mb-6'>
             <p>
@@ -214,25 +214,25 @@ const ProductDetail = () => {
 
                 <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
                   <img
-                    className="w-24 h-24 rounded-lg object-cover flex-shrink-0 border border-outline-variant"
+                    className="w-24 h-24 rounded-lg object-cover shrink-0 border border-outline-variant"
                     src="/assets/review1.jpg"
                     alt="Customer wearing the wireless headphones while working at a desk."
                   />
 
                   <img
-                    className="w-24 h-24 rounded-lg object-cover flex-shrink-0 border border-outline-variant"
+                    className="w-24 h-24 rounded-lg object-cover shrink-0 border border-outline-variant"
                     src="/assets/review2.jpg"
                     alt="Close-up of the premium ear cushions and headband."
                   />
 
                   <img
-                    className="w-24 h-24 rounded-lg object-cover flex-shrink-0 border border-outline-variant"
+                    className="w-24 h-24 rounded-lg object-cover shrink-0 border border-outline-variant"
                     src="/assets/review3.jpg"
                     alt="Customer using the headphones during a workout."
                   />
 
                   <img
-                    className="w-24 h-24 rounded-lg object-cover flex-shrink-0 border border-outline-variant"
+                    className="w-24 h-24 rounded-lg object-cover shrink-0 border border-outline-variant"
                     src="/assets/review4.jpg"
                     alt="Headphones packed inside the premium carrying case."
                   />
@@ -250,7 +250,7 @@ const ProductDetail = () => {
                         {[...Array(5)].map((_, i) => (
                           <span
                             key={i}
-                            className="material-symbols-outlined text-[16px]"
+                            className="material-symbols-outlined text-body"
                             style={{ fontVariationSettings: "'FILL' 1" }}
                           >
                             star
@@ -276,7 +276,7 @@ const ProductDetail = () => {
                         {[...Array(5)].map((_, i) => (
                           <span
                             key={i}
-                            className="material-symbols-outlined text-[16px]"
+                            className="material-symbols-outlined text-body"
                             style={{ fontVariationSettings: "'FILL' 1" }}
                           >
                             star
@@ -302,14 +302,14 @@ const ProductDetail = () => {
                         {[...Array(4)].map((_, i) => (
                           <span
                             key={i}
-                            className="material-symbols-outlined text-[16px]"
+                            className="material-symbols-outlined text-body"
                             style={{ fontVariationSettings: "'FILL' 1" }}
                           >
                             star
                           </span>
                         ))}
                         <span
-                          className="material-symbols-outlined text-[16px]"
+                          className="material-symbols-outlined text-body"
                           style={{ fontVariationSettings: "'FILL' 0" }}
                         >
                           star

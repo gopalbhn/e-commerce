@@ -23,7 +23,7 @@ const NavBar = () => {
     }, [])
 
     return (
-        <div className={`h-15 w-full flex items-center gap-8 px-10 inset-0 sticky ${color} top-0 left-0 z-10`}>
+        <div className={`h-15 w-full flex items-center gap-8 px-10 inset-0 sticky ${color} top-0 left-0 z-100`}>
             <div className="text-2xl font-bold text-primary">
                 Logo
             </div>
