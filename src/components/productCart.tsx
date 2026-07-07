@@ -1,7 +1,7 @@
 
-import { FaHeart, FaShoppingCart } from 'react-icons/fa'
+import { FaShoppingCart } from 'react-icons/fa'
 import type { ProductCartType } from '../types/types'
-import { BiCross } from 'react-icons/bi'
+
 import { RxCross1 } from 'react-icons/rx'
 
 const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isDiscounted }: ProductCartType) => {

@@ -27,7 +27,7 @@ const ProductDetail = () => {
             </button>
           </div>
           <div className="w-full h-30 grid grid-cols-5 gap-2 mt-6">
-            {productImages.map((img, i) => (
+            {productImages.map((img) => (
               <div className="h-25 w-25 overflow-hidden rounded-lg group-hover:border border-primary ">
                 <img
                   src={img}

@@ -1,4 +1,4 @@
-import { BiDevices, BiHome, BiFace, BiDumbbell, BiCheckCircle, BiSolidTShirt } from "react-icons/bi";
+import { BiDevices, BiHome, BiFace, BiDumbbell } from "react-icons/bi";
 import { TbShirt } from "react-icons/tb";
 
 
