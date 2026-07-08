@@ -142,7 +142,7 @@ const StatsCard = ({
     subtitle,
     growth,
     chartData,
-}) => {
+}: { title: string, value: string, subtitle: string, growth: string, chartData: number[] }) => {
     const data = {
         labels: ["Jan", "Feb", "Mar", "Apr", "May"],
         datasets: [

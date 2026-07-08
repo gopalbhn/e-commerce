@@ -213,7 +213,7 @@ const Dashboard = () => {
         }, 1000)
         return () => clearInterval(id)
     }, [])
-    const values = [time?.[0], time?.[1], time?.[2]];
+
     return (
         <div className="h-full w-full space-y-10">
             <HeroCarousel />
