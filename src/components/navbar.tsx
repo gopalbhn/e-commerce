@@ -44,10 +44,10 @@ const NavBar = () => {
                 <button className="p-2 rounded-full transition hover:bg-gray-100 group " onClick={() => navigate("/wishlist")}>
                     <CiHeart className="text-2xl" />
                 </button>
-                <button className="p-2 rounded-full transition hover:bg-gray-100 ">
+                <button className="p-2 rounded-full transition hover:bg-gray-100 " onClick={() => navigate('/shoping-cart')}>
                     <IoCartOutline className="text-2xl" />
                 </button>
-                <button className="p-2 rounded-full transition hover:bg-gray-100 ">
+                <button className="p-2 rounded-full transition hover:bg-gray-100 " onClick={() => navigate('/login')}>
                     <FaRegUserCircle className="text-2xl" />
                 </button>
             </div>

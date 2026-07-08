@@ -81,7 +81,7 @@ const ShopingCart = () => {
                             ))}
                     </div>
                     <div className="w-1/3  p-6 rounded-xl shadow-md">
-                        <h1 className="text-body font-[600] mb-8 mt-2">Order Summary</h1>
+                        <h1 className="text-body font-semibold mb-8 mt-2">Order Summary</h1>
                         <div className="flex flex-col gap-y-3 py-3 border-b border-gray-400">
 
                             <div className="flex items-center justify-between">

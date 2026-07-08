@@ -86,7 +86,7 @@ const HeroCarousel = () => {
     const next = useCallback(() => goTo(current + 1), [current, goTo])
     const prev = useCallback(() => goTo(current - 1), [current, goTo])
 
-    // auto-play
+
     useEffect(() => {
         timerRef.current = setTimeout(next, AUTOPLAY_INTERVAL)
         return () => {
@@ -98,13 +98,12 @@ const HeroCarousel = () => {
 
     return (
         <section className="relative w-full h-[580px] overflow-hidden rounded-xl shadow-md select-none">
-           
+
             {heroSlides.map((s, i) => (
                 <div
                     key={i}
-                    className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                        i === current ? "opacity-100 z-10" : "opacity-0 z-0"
-                    }`}
+                    className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"
+                        }`}
                 >
                     <div
                         className="absolute inset-0 bg-cover bg-center"
@@ -149,7 +148,7 @@ const HeroCarousel = () => {
                 </button>
             </div>
 
-            {/* Prev / Next arrows */}
+
             <button
                 onClick={prev}
                 aria-label="Previous slide"
@@ -177,11 +176,10 @@ const HeroCarousel = () => {
                         key={i}
                         onClick={() => goTo(i)}
                         aria-label={`Go to slide ${i + 1}`}
-                        className={`rounded-full transition-all duration-300 ${
-                            i === current
-                                ? "w-7 h-2.5 bg-primary"
-                                : "w-2.5 h-2.5 bg-white/60 hover:bg-white"
-                        }`}
+                        className={`rounded-full transition-all duration-300 ${i === current
+                            ? "w-7 h-2.5 bg-primary"
+                            : "w-2.5 h-2.5 bg-white/60 hover:bg-white"
+                            }`}
                     />
                 ))}
             </div>
@@ -191,11 +189,31 @@ const HeroCarousel = () => {
 }
 
 const Dashboard = () => {
-    const hours = new Date().getHours()
-    const minutes = new Date().getMinutes()
-    const seconds = new Date().getSeconds()
     const navigate = useNavigate();
-    const time = [hours, minutes, seconds]
+
+    const endTime = useRef(Date.now() + 5 * 60 * 60 * 1000);
+    function FlashShaleCountDown() {
+        const difference = endTime.current - new Date().getTime()
+        const hours = Math.floor(difference / (1000 * 60 * 60));
+        const minutes = Math.floor((difference / (1000 * 60)) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
+
+        return [
+            String(hours).padStart(2, "0"),
+            String(minutes).padStart(2, "0"),
+            String(seconds).padStart(2, "0"),
+        ];
+
+    }
+
+    const [time, setTime] = useState(FlashShaleCountDown());
+    useEffect(() => {
+        const id = setInterval(() => {
+            setTime(FlashShaleCountDown())
+        }, 1000)
+        return () => clearInterval(id)
+    }, [])
+    const values = [time?.[0], time?.[1], time?.[2]];
     return (
         <div className="h-full w-full space-y-10">
             <HeroCarousel />

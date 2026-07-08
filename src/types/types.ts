@@ -28,6 +28,7 @@ export const products = [
         discount: "",
         wishList: false,
         isDiscounted: false,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
     },
     {
@@ -37,6 +38,7 @@ export const products = [
         discount: "15%",
         wishList: true,
         isDiscounted: true,
+        quantity: 4,
         img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30"
     },
     {
@@ -46,6 +48,7 @@ export const products = [
         discount: "40%",
         wishList: false,
         isDiscounted: true,
+        quantity: 6,
         img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=80"
     },
     {
@@ -55,6 +58,7 @@ export const products = [
         discount: "",
         wishList: false,
         isDiscounted: false,
+        quantity: 2,
         img: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4"
     },
     {
@@ -64,6 +68,7 @@ export const products = [
         discount: "40%",
         wishList: true,
         isDiscounted: true,
+        quantity: 7,
         img: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b"
     },
     {
@@ -73,6 +78,7 @@ export const products = [
         discount: "",
         wishList: false,
         isDiscounted: false,
+        quantity: 3,
         img: "https://images.unsplash.com/photo-1527814050087-3793815479db"
     },
     {
@@ -82,6 +88,7 @@ export const products = [
         discount: "28%",
         wishList: true,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8"
     },
     {
@@ -91,6 +98,7 @@ export const products = [
         discount: "27%",
         wishList: false,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd"
     },
     {
@@ -100,6 +108,7 @@ export const products = [
         discount: "",
         wishList: false,
         isDiscounted: false,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1585386959984-a41552231693"
     },
     {
@@ -109,6 +118,7 @@ export const products = [
         discount: "36%",
         wishList: true,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633"
     },
     {
@@ -118,6 +128,7 @@ export const products = [
         discount: "27%",
         wishList: false,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
     },
     {
@@ -127,6 +138,7 @@ export const products = [
         discount: "",
         wishList: true,
         isDiscounted: false,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1517701550925-2f9c3e2f6c7d"
     },
     {
@@ -136,6 +148,7 @@ export const products = [
         discount: "29%",
         wishList: false,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1587829741301-dc798b83add3"
     },
     {
@@ -145,6 +158,7 @@ export const products = [
         discount: "31%",
         wishList: true,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1593642634367-d91a135587b5"
     },
     {
@@ -154,6 +168,7 @@ export const products = [
         discount: "",
         wishList: false,
         isDiscounted: false,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30"
     },
     {
@@ -163,6 +178,7 @@ export const products = [
         discount: "32%",
         wishList: true,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1585386959984-a41552231693"
     },
     {
@@ -172,6 +188,7 @@ export const products = [
         discount: "",
         wishList: false,
         isDiscounted: false,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32"
     },
     {
@@ -181,6 +198,7 @@ export const products = [
         discount: "29%",
         wishList: true,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1598550476439-6847785fcea6"
     },
     {
@@ -190,6 +208,7 @@ export const products = [
         discount: "29%",
         wishList: false,
         isDiscounted: true,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1543512214-318c7553f230"
     },
     {
@@ -199,6 +218,7 @@ export const products = [
         discount: "",
         wishList: true,
         isDiscounted: false,
+        quantity: 1,
         img: "https://images.unsplash.com/photo-1526481280695-3c687fd5432c"
     }
 ];

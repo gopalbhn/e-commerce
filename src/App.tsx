@@ -11,10 +11,15 @@ import MyOrders from './pages/MyOrders'
 import Checkout from './pages/Checkout'
 import PurchaseHistory from './pages/PurchaseHistory'
 import Login from './pages/Login'
+import SellerDashboard from './pages/seller/SellerDashboard'
+import MyProducts from './pages/seller/MyProducts'
+import AllOrders from './pages/seller/AllOrders'
+import AddProduct from './pages/seller/AddProduct'
+import EditProduct from './pages/seller/EditProduct'
 
 function App() {
   const location = useLocation();
-  const hideNav = location.pathname === '/login';
+  const hideNav = location.pathname === '/login' || location.pathname.startsWith('/seller');
 
   return (
     <div className="App">
@@ -29,6 +34,12 @@ function App() {
         <Route path='/myorders' element={<MyOrders />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/history' element={<PurchaseHistory />} />
+        <Route path='/seller' element={<SellerDashboard />} />
+        <Route path='/seller/product' element={<MyProducts />} />
+        <Route path='/seller/orders' element={<AllOrders />} />
+        <Route path='/seller/add-product' element={<AddProduct />} />
+        <Route path='/seller/edit-product' element={<EditProduct />} />
+
       </Routes>
     </div>
   )
