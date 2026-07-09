@@ -1,33 +1,45 @@
 
-import  { useState } from 'react'
+import { useState } from 'react'
 import { BiCart, BiCheckCircle } from 'react-icons/bi'
 import { FiStar } from 'react-icons/fi'
 import { HiMiniMagnifyingGlassPlus } from 'react-icons/hi2'
-import front from "../assets/front.png";
-import sideLeft from "../assets/side-left.png";
-import side from "../assets/side.png";
+
 import Footer from '../components/Footer';
+import { useParams } from 'react-router-dom';
+import { products } from '@/types/types';
+
+import useCartStore from '@/store/cartStore';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
   const buttonList = ["Product Specs", "Description", "Reviews"];
-  const productImages = [
-    front, sideLeft, side
-  ];
+
+  const [totalCartItem, setTotalCartItem] = useState<number>(1)
+  const { id } = useParams();
+
+  const product = products.find(product => product.id === id);
+  console.log(product)
+
+
+  const addToCart = useCartStore(state => state?.addToCart)
+  const handleAddToCart = () => {
+    addToCart(product?.id, totalCartItem)
+  }
+
   return (
     <div className='h-full w-full '>
 
       <h1 className='text-primary text-md px-14 font-semibold '>Home / Electornics / HeadPhone</h1>
-      <section className='w-full h-full rounded-lg flex items-center justify-center gap-1 px-10'>
+      <section className='w-full h-[90vh] rounded-lg flex items-center justify-center gap-1 px-10'>
         <div className='w-1/2 h-full p-4 group'>
-          <div className='relative h-screen w-full flex justify-center items-center overflow-hidden '>
-            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e" alt="Product Image" className='w-full h-full object-cover rounded-lg transition-soft duration-300 group-hover:scale-110' />
+          <div className='relative h-[60vh] w-full flex justify-center items-center overflow-hidden '>
+            <img src={product.img} alt="Product Image" className='w-full h-full object-cover rounded-lg transition-soft duration-300 group-hover:scale-110' />
             <button className='absolute top-4 right-4 text-primary bg-white/50 text-2xl p-2 rounded-full hover:scale-110 transition-soft duration-300 backdrop-blur-sm'>
               <HiMiniMagnifyingGlassPlus />
             </button>
           </div>
           <div className="w-full h-30 grid grid-cols-5 gap-2 mt-6">
-            {productImages.map((img) => (
+            {product.relatedImages.map((img) => (
               <div className="h-25 w-25 overflow-hidden rounded-lg group-hover:border border-primary ">
                 <img
                   src={img}
@@ -38,36 +50,34 @@ const ProductDetail = () => {
             ))}
           </div>
         </div>
-        <div className='w-1/2 h-full p-4 flex flex-col justify-center gap-4'>
-          <div className='mb-4 space-y-2'>
-            <span className='bg-accent-light px-3 py-1 rounded-full text-sm'>Best Seller</span>
-          </div>
-          <h1 className='text-header font-bold'>Aura Studio Headphones</h1>
+        <div className='w-1/2 h-full p-4 flex flex-col justify-center gap-y-4'>
 
-          <div className='flex items-center gap-4 mb-6'>
+          <h1 className='text-title font-bold'>{product.name}</h1>
+
+          <div className='flex items-center gap-4 '>
             <div className='flex items-center gap-2'>
-              <FiStar className='text-yellow-500 text-2xl' fill='currentColor' />
-              <FiStar className='text-yellow-500 text-2xl' fill='currentColor' />
-              <FiStar className='text-yellow-500 text-2xl' fill='currentColor' />
-              <FiStar className='text-yellow-500 text-2xl' fill='currentColor' />
-              <FiStar className='text-yellow-500 text-2xl' />
+              <FiStar className='text-yellow-500 text-xl' fill='currentColor' />
+              <FiStar className='text-yellow-500 text-xl' fill='currentColor' />
+              <FiStar className='text-yellow-500 text-xl' fill='currentColor' />
+              <FiStar className='text-yellow-500 text-xl' fill='currentColor' />
+              <FiStar className='text-yellow-500 text-xl' />
               <span className="ml-2 text-sm text-gray-500">4.8/5 (248 Reviews)</span>
             </div>
           </div>
-          <div className='flex items-center gap-4 mb-6'>
+          <div className='flex items-center gap-4 '>
 
-            <h2 className='text-header font-bold text-primary'>$199</h2>
-            <h2 className='text-title text-gray-500 line-through'>$249</h2>
-            <h2 className='text-[24px] font-bold text-primary-light'>Save 20%</h2>
+            <h2 className='text-title font-bold text-primary'>{product.price}</h2>
+            <h2 className='text-body text-gray-500 line-through'>{product.old}</h2>
+            <h2 className='text-title font-bold text-primary-light'>{product.discount}</h2>
           </div>
-          <div className=' mb-6 px-3 py-1.5 rounded-xl border border-gray-300 bg-[#f1edec]'>
+          <div className='  px-3 py-1.5 rounded-xl border border-gray-300 bg-[#f1edec]'>
             <p className='flex items-center gap-4 mb-1'>
               <BiCheckCircle className='text-2xl text-accent-light' />
-              <span className='text-small font-semibold'>In Stock - 5 Left</span>
+              <span className='text-small font-semibold'>In Stock - {product.quantity} Left</span>
             </p>
             <p className='text-small font-semibold text-gray-500'>Order within 2h 15m for Same-Day Shipping.</p>
           </div>
-          <div className='flex flex-col gap-4 mb-6'>
+          <div className='flex flex-col gap-4 '>
             <p>
               <span className='font-bold text-sm mr-2'>Color:</span>
               Dark Walnut
@@ -83,12 +93,26 @@ const ProductDetail = () => {
             <p>Quantity</p>
             <div className='flex items-center gap-4 rounded-xl '>
               <div className='rounded-xl border border-gray-300 bg-white flex items-center gap-4'>
-                <button className='px-4 py-2.5 hover:bg-gray-200'>-</button>
-                <span className='text-sm font-semibold'>1</span>
-                <button className='px-4 py-2.5 hover:bg-gray-200'>+</button>
+                <button className='px-4 py-2.5 hover:bg-gray-200' onClick={() => setTotalCartItem(prev => {
+                  if (prev == 1) {
+                    return 1
+                  } else {
+                    prev--;
+                    return prev;
+                  }
+                })}>-</button>
+                <span className='text-sm font-semibold'>{totalCartItem}</span>
+                <button className='px-4 py-2.5 hover:bg-gray-200' onClick={() => setTotalCartItem(prev => {
+                  if (prev >= product.quantity) {
+                    return product.quantity;
+                  } else {
+                    prev++;
+                    return prev;
+                  }
+                })}>+</button>
 
               </div>
-              <button className='w-full max-w-xl px-10 py-4 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300'>
+              <button className='w-full max-w-xl px-10 py-4 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300' onClick={handleAddToCart}>
                 <BiCart className='text-xl' /> Add To cart
               </button>
 

@@ -96,7 +96,7 @@ const SellerDashboard = () => {
 
                 {/* Cards */}
                 <div className="p-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-6">
                         {cards.map((card, index) => (
                             <StatsCard
                                 key={index}

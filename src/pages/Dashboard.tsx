@@ -6,6 +6,7 @@ import Footer from "../components/Footer"
 import ProductCart from "../components/productCart"
 import { category, products } from "../types/types"
 
+
 const heroSlides = [
     {
         image:
@@ -86,7 +87,7 @@ const HeroCarousel = () => {
     const next = useCallback(() => goTo(current + 1), [current, goTo])
     const prev = useCallback(() => goTo(current - 1), [current, goTo])
 
-
+    // auto-play
     useEffect(() => {
         timerRef.current = setTimeout(next, AUTOPLAY_INTERVAL)
         return () => {
@@ -97,7 +98,7 @@ const HeroCarousel = () => {
     const slide = heroSlides[current]
 
     return (
-        <section className="relative w-full h-[580px] overflow-hidden rounded-xl shadow-md select-none">
+        <section className="relative w-full h-145 overflow-hidden rounded-xl shadow-md select-none">
 
             {heroSlides.map((s, i) => (
                 <div
@@ -110,7 +111,7 @@ const HeroCarousel = () => {
                         style={{ backgroundImage: `url('${s.image}')` }}
                     />
                     <div
-                        className={`absolute inset-0 bg-gradient-to-r ${s.overlay}`}
+                        className={`absolute inset-0 bg-linear-to-r ${s.overlay}`}
                     />
                 </div>
             ))}
@@ -141,14 +142,16 @@ const HeroCarousel = () => {
                 <button
                     key={`btn-${current}`}
                     className="mt-7 self-start px-7 py-3 bg-primary text-white rounded-lg
+                            
                                font-medium hover:bg-primary-hover transition-colors duration-200
                                animate-[fadeSlideUp_0.5s_0.3s_ease_both]"
                 >
                     {slide.cta}
                 </button>
+
             </div>
 
-
+            {/* Prev / Next arrows */}
             <button
                 onClick={prev}
                 aria-label="Previous slide"
@@ -203,7 +206,6 @@ const Dashboard = () => {
             String(minutes).padStart(2, "0"),
             String(seconds).padStart(2, "0"),
         ];
-
     }
 
     const [time, setTime] = useState(FlashShaleCountDown());
@@ -249,7 +251,7 @@ const Dashboard = () => {
                             discount={product.discount}
                             isDiscounted={product.isDiscounted}
                             wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail`)}
+                            onclick={() => navigate(`/product-detail/${product.id}`)}
                         />
                     ))}
                 </div>

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import Footer from "../components/Footer"
 import ProductCart from "../components/productCart"
 import { products } from "../types/types"
@@ -13,8 +14,8 @@ const WishList = () => {
                         <p>5 Items Saved In Your Wishlist</p>
                     </div>
                     <div className="flex gap-x-2">
-                        <button className="rounded-xl w-40 h-12 bg-primary text-white text-sm">Add All to Cart</button>
-                        <button className="rounded-xl w-40 h-12 bg-primary text-white text-sm">Clear All</button>
+                        <Button variant = "default">Add All to Cart</Button> 
+                        <Button variant="default" >Clear All</Button>
                     </div>
                 </div>
                 <div className="h-full grid grid-cols-4 items-center gap-5 mt-5">

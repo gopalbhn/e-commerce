@@ -1,9 +1,9 @@
 
 import { GoPackage } from "react-icons/go"
-
 import { IoBagOutline } from "react-icons/io5"
 import { LuLogOut } from "react-icons/lu"
 import { MdOutlineDashboard } from "react-icons/md"
+import { RiCoupon3Line } from "react-icons/ri"
 import { Link, useLocation } from "react-router-dom"
 
 
@@ -13,6 +13,7 @@ const SellerSideBar = ({ open }: { open: boolean }) => {
         { id: 1, title: "Dashboard", link: '/seller', icon: MdOutlineDashboard },
         { id: 2, title: "Products", link: '/seller/product', icon: GoPackage },
         { id: 3, title: "Orders", link: "/seller/orders", icon: IoBagOutline },
+        { id: 4, title: "Coupons", link: "/seller/coupons", icon: RiCoupon3Line },
     ]
     return (
         <div className={`h-screen w-1/4 flex flex-col fixed top-0 left-0 z-20 bg-white shadow-sm border-r border-gray-400 p-4 transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}>
