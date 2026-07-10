@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import CategoryCart from "../components/categoryCart"
 import Footer from "../components/Footer"
 import ProductCart from "../components/productCart"
-import { category, products } from "../types/types"
+import { category, products } from "@/lib/data.js"
 
 
 const heroSlides = [

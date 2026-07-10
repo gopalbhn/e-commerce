@@ -1,8 +1,9 @@
 import { FaRegStar, FaStar } from "react-icons/fa"
-import { products } from "../types/types"
+
 import ProductCart from "../components/productCart"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { products } from "@/lib/data"
 
 
 const ProductListing = () => {

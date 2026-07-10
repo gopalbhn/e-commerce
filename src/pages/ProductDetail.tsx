@@ -6,9 +6,10 @@ import { HiMiniMagnifyingGlassPlus } from 'react-icons/hi2'
 
 import Footer from '../components/Footer';
 import { useParams } from 'react-router-dom';
-import { products } from '@/types/types';
+
 
 import useCartStore from '@/store/cartStore';
+import { products } from '@/lib/data';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")

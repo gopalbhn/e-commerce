@@ -10,8 +10,9 @@ import {
     Tooltip,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { products } from "../../types/types";
+
 import { FiEdit } from "react-icons/fi";
+import { products } from "@/lib/data";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 

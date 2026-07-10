@@ -18,10 +18,14 @@ import AddProduct from './pages/seller/AddProduct'
 import EditProduct from './pages/seller/EditProduct'
 import SellerRegistration from './pages/seller/SellerRegistration'
 import CouponManagement from './pages/seller/CouponManagement'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminProduct from './pages/admin/AdminProduct'
+import AllAdminOrders from './pages/admin/AllAdminOrders'
+import AllUsers from './pages/admin/AllUser'
 
 function App() {
   const location = useLocation();
-  const hideNav = location.pathname === '/login' || location.pathname.startsWith('/seller');
+  const hideNav = location.pathname === '/login' || location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin');
 
   return (
     <div className="App">
@@ -44,6 +48,11 @@ function App() {
         <Route path="/seller/registration" element={<SellerRegistration />} />
         <Route path="/seller/coupons" element={<CouponManagement />} />
 
+
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path='admin/product' element={<AdminProduct />} />
+        <Route path="/admin/orders" element={<AllAdminOrders />} />
+        <Route path='admin/users' element={<AllUsers />} />
       </Routes>
     </div>
   )

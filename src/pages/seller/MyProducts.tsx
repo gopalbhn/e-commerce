@@ -3,9 +3,10 @@ import SellerSideBar from "../../components/Sellers/SellerSideBar";
 import { MdMenu } from "react-icons/md";
 import { BiPlus, BiSearch } from "react-icons/bi";
 
-import { products } from "../../types/types";
+
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { products } from "@/lib/data";
 
 const MyProducts = () => {
   const [open, setOpen] = useState<boolean>(true);

@@ -1,9 +1,10 @@
 import { BiHeart, BiTrash } from "react-icons/bi";
 import Footer from "../components/Footer";
 import useCartStore from "@/store/cartStore";
-import { products } from "@/types/types";
+
 
 import { Button } from "@/components/ui/button";
+import { products } from "@/lib/data";
 const ShopingCart = () => {
 
 

@@ -2,8 +2,9 @@ import { FaVanShuttle } from "react-icons/fa6";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { TiTick } from "react-icons/ti";
 import { VscLocation } from "react-icons/vsc";
-import { products } from "../types/types";
+
 import Footer from "../components/Footer";
+import { products } from "@/lib/data";
 
 const MyOrders = () => {
   return (
@@ -72,10 +73,10 @@ const MyOrders = () => {
         </div> */}
         <div className="w-full border border-gray-300 rounded-md p-6">
           <div className="relative flex items-start justify-between">
-       
+
             <div className="absolute top-7 left-[8%] right-[8%] h-1 bg-gray-300"></div>
 
-      
+
             <div className="absolute top-7 left-[8%] w-[62%] h-1 bg-primary"></div>
 
             <div className="relative z-10 flex-1 flex flex-col items-center">
@@ -89,7 +90,7 @@ const MyOrders = () => {
               </p>
             </div>
 
-   
+
             <div className="relative z-10 flex-1 flex flex-col items-center">
               <div className="h-14 w-14 rounded-full bg-primary flex items-center justify-center">
                 <TiTick className="text-white" size={24} />
@@ -99,7 +100,7 @@ const MyOrders = () => {
               <p className="text-gray-500 text-sm">Completed: 2023-10-20</p>
             </div>
 
-         
+
             <div className="relative z-10 flex-1 flex flex-col items-center">
               <div className="h-14 w-14 rounded-full bg-primary flex items-center justify-center">
                 <FaVanShuttle className="text-white" size={24} />
@@ -109,7 +110,7 @@ const MyOrders = () => {
               <p className="text-gray-500 text-sm">Completed: 2023-10-20</p>
             </div>
 
-      
+
             <div className="relative z-10 flex-1 flex flex-col items-center">
               <div className="h-14 w-14 rounded-full border-2 border-primary bg-white flex items-center justify-center">
                 <VscLocation className="text-primary" size={24} />
@@ -119,7 +120,7 @@ const MyOrders = () => {
               <p className="text-gray-500 text-sm">Today</p>
             </div>
 
-     
+
             <div className="relative z-10 flex-1 flex flex-col items-center">
               <div className="h-14 w-14 rounded-full bg-gray-200 border-2 border-primary flex items-center justify-center">
                 <IoMdCheckmarkCircleOutline
@@ -140,24 +141,24 @@ const MyOrders = () => {
               {products.slice(0, 3).map((item) => (
 
                 <div className="p-3 w-full flex gap-2">
-                <div className=" h-25 w-25 rounded-xl flex items-center justify-between overflow-hidden">
-                  <img src={item.img} className="h-full w-full object-cover" />
-                  
-                </div>
-                <div className=" w-full flex justify-between items-center ">
-                  <div className="flex flex-col">
-                    <h1 className="text-body font-semibold">{item.name}</h1>
-                    <p className="text-sm text-primary">Color:black | Qty:1</p>
-                    <p className="text-title font-semibold text-primary">Price: {item.price}</p>
+                  <div className=" h-25 w-25 rounded-xl flex items-center justify-between overflow-hidden">
+                    <img src={item.img} className="h-full w-full object-cover" />
+
+                  </div>
+                  <div className=" w-full flex justify-between items-center ">
+                    <div className="flex flex-col">
+                      <h1 className="text-body font-semibold">{item.name}</h1>
+                      <p className="text-sm text-primary">Color:black | Qty:1</p>
+                      <p className="text-title font-semibold text-primary">Price: {item.price}</p>
 
                     </div>
                     <button className="bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-hover">
                       Track Item
                     </button>
+                  </div>
                 </div>
-              </div>
-              
-            ))}
+
+              ))}
             </div>
           </div>
           <div className="h-full w-1/3 shadow-sm rounded-xl mt-5 p-4">
@@ -166,11 +167,11 @@ const MyOrders = () => {
               <p className="text-body ">Subtotal</p>
               <p className="text-body  text-primary">$ 1000</p>
             </div>
-                 <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center">
               <p className="text-body ">Shipping</p>
               <p className="text-body  text-primary">$ 10</p>
             </div>
-                 <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center">
               <p className="text-body ">Tax</p>
               <p className="text-body  text-primary">$ 12</p>
             </div>
