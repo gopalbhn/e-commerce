@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import CategoryCart from "../components/categoryCart"
 import Footer from "../components/Footer"
 import ProductCart from "../components/productCart"
 import { category, products } from "@/lib/data.js"
+import { toast } from "sonner"
 
 
 const heroSlides = [
@@ -190,10 +191,9 @@ const HeroCarousel = () => {
         </section>
     )
 }
-
 const Dashboard = () => {
     const navigate = useNavigate();
-
+    const [searchParams] = useSearchParams();
     const endTime = useRef(Date.now() + 5 * 60 * 60 * 1000);
     function FlashShaleCountDown() {
         const difference = endTime.current - new Date().getTime()
@@ -214,7 +214,13 @@ const Dashboard = () => {
             setTime(FlashShaleCountDown())
         }, 1000)
         return () => clearInterval(id)
+
     }, [])
+    useEffect(() => {
+        if (searchParams.get('login') == "success") {
+            toast.success("Login Success")
+        }
+    }, [searchParams])
 
     return (
         <div className="h-full w-full space-y-10">

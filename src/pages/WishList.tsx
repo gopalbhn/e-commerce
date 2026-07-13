@@ -1,11 +1,41 @@
 import { Button } from "@/components/ui/button"
 import Footer from "../components/Footer"
 import ProductCart from "../components/productCart"
-import { products } from "@/lib/data"
+
+import { useEffect, useState } from "react"
 
 
 
 const WishList = () => {
+    const [products, setProducts] = useState([])
+    useEffect(() => {
+        async function fetchAllItem() {
+            const res = await fetch("http://localhost:3000/api/user/wishlist", {
+                credentials: "include"
+            })
+            const data = await res.json()
+            if (data.success) {
+                setProducts(data.data)
+            }
+            console.log(products);
+        }
+        fetchAllItem();
+    }, [])
+
+    if (products.length == 0) {
+        return (
+            <div className="h-full w-full flex flex-col">
+                <section className='h-full w-full px-10 mt-5 mb-10'>
+                    <h1 className="text-title font-bold mb-8 mt-2">Your WishList</h1>
+                    <div className="flex  justify-center gap-10">
+                        <div className="w-2/3  rounded-xl">
+                            <p>Your WishList is empty</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        )
+    }
     return (
         <div className="h-full w-full mb-10">
             <section className="h-full w-full px-10 mb-10 ">

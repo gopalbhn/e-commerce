@@ -9,5 +9,6 @@ export interface IProduct {
     thumbnails: string,
     images: string[],
     category: string,
+    isDeleted: boolean,
     seller: object
 }

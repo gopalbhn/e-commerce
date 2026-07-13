@@ -25,3 +25,11 @@ export interface AdminTopBarProps {
     onclick?: () => void
 }
 
+export interface User {
+    role: String,
+    id: string
+}
+export interface UserState {
+    user: User | null;
+    setUser: (user: User) => void
+}

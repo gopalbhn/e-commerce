@@ -5,20 +5,22 @@ import useCartStore from "@/store/cartStore";
 
 import { Button } from "@/components/ui/button";
 import { products } from "@/lib/data";
+import productCart from "@/components/productCart";
 const ShopingCart = () => {
 
 
     const product = useCartStore(state => state?.products)
-    console.log(product)
+    const increaseQuantity = useCartStore(state => state?.increaseQuantity)
+    const decreaseQuantity = useCartStore(state => state?.decreaseQuantity)
+    console.log("Product", product)
     const removeItem = useCartStore(state => state?.removeFromCart)
     console.log("Product", product)
 
-    const productCart = products.filter(item => product.some(prod => prod.productId == item.id)).map(item => {
-        return {
-            ...item,
-            totalQuantity: product.find((item) => item.quantity)?.quantity
-        }
-    })
+    const productCart = products.filter(item => product.some(prod => prod.productId == item.id)).map(item => ({
+
+        ...item,
+        totalQuantity: product.find((prod) => prod.productId === item.id)?.quantity ?? 0
+    }))
 
     console.log(productCart)
 
@@ -67,6 +69,7 @@ const ShopingCart = () => {
                                         <div className="w-full flex justify-between">
                                             <div className="w-full ">
                                                 <p>{item.name}</p>
+                                                <p>Total quantity {item.totalQuantity}</p>
                                                 {/* <p>Size: {item.variants.size} | Color: {item.variants.color}</p> */}
                                             </div>
                                             <div className='flex justify-end'>
@@ -75,9 +78,9 @@ const ShopingCart = () => {
                                         </div>
                                         <div className="w-full flex justify-between">
                                             <div className='rounded-xl border border-gray-300 bg-white flex items-center gap-4'>
-                                                <button className='px-3 py-1.5 hover:bg-gray-200'>-</button>
-                                                <span className='text-sm font-semibold'>{product[0].quantity}</span>
-                                                <button className='px-3 py-1.5 hover:bg-gray-200' >+</button>
+                                                <button className='px-3 py-1.5 hover:bg-gray-200' onClick={() => decreaseQuantity(item.id)} >-</button>
+                                                <span className='text-sm font-semibold'>{item.totalQuantity}</span>
+                                                <button className='px-3 py-1.5 hover:bg-gray-200' onClick={() => increaseQuantity(item.id)} >+</button>
 
                                             </div>
                                             <div className='flex justify-end items-center gap-x-3'>

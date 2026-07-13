@@ -6,7 +6,7 @@ import { AdminSideProducts, AprovalRequestData, mostSellingData } from "../../li
 import { useState } from 'react'
 import UserPieChart from '@/components/admin/UserPieChart.js'
 import Table from '@/components/admin/table.js'
-import DeleteModal from '@/components/admin/Delete.js'
+
 
 
 

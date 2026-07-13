@@ -1,24 +1,42 @@
 import { Request, Response } from "express";
 import { LoginSchema, RegisterSchema } from "../schemas/userSchema.js";
 import User from "../models/userModel.js";
-import { success } from "zod";
+
 import sendMail from "../utils/nodemailer.js";
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import { generateAccessToken, generateRefreshToken } from "../middlewares/auth.js";
 import RefreshToken from "../models/RefreshTokenModel.js";
 import { google } from 'googleapis'
+import { TokenPayload } from "../types/userType.js";
+
+
 
 const registerUser = async (req: Request, res: Response) => {
+    console.log("data is here ", req.body)
     const data = RegisterSchema.safeParse(req.body);
     if (!data.success) {
         return res.status(400).json({ message: data.error.issues[0].message });
     }
 
-    const { name, email, password, phoneNumber } = data.data;
-
-    const ExistingUser = await User.findOne({ email, isDeleted: false })
+    const { name, email, password, confirmPassword, phoneNumber } = data.data;
+    console.log(
+        name,
+        email,
+        password,
+        confirmPassword,
+        phoneNumber
+    )
+    const ExistingUser = await User.findOne({ email })
     if (ExistingUser) {
         return res.status(400).json({ message: "User already exists" });
+    }
+
+    const passwordMatch = password === confirmPassword
+    if (!passwordMatch) {
+        return res.status(400).json({
+            success: false,
+            message: "Password does not match",
+        });
     }
 
     const newUser = new User({
@@ -84,44 +102,43 @@ const loginUser = async (req: Request, res: Response) => {
 
     const accessToken = generateAccessToken({ email, role: user.role, id: user._id.toString() })
     const refreshToken = generateRefreshToken({ email, role: user.role, id: user._id.toString() })
-
+    console.log("Access Token", accessToken)
+    console.log("Refresh Token", refreshToken)
     const refreshtoken = new RefreshToken({
         token: refreshToken,
         user: user._id
     })
     await refreshtoken.save()
-
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
         maxAge: 15 * 60 * 1000
-    })
+    });
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000
-    })
+    });
 
 
 
 
-    return res.status(200).json({
+    res.status(200).json({
         success: true,
         message: "User logged in successfully",
     });
 }
 
 const logOutUser = async (req: Request, res: Response) => {
+    console.log("from logout route")
     const userId = req.user.id;
     const token = req.cookies.refreshToken
 
     const deleteRefreshToken = await RefreshToken.findOneAndDelete({
-        user: userId,
+
         token
     })
-
+    console.log("deleted token", deleteRefreshToken)
     if (!deleteRefreshToken) {
         return res.status(400).json({
             success: false,
@@ -136,6 +153,35 @@ const logOutUser = async (req: Request, res: Response) => {
         success: true,
         message: "User logged out successfully",
     });
+}
+
+const verifyMagicLink = async (req: Request, res: Response) => {
+    try {
+        console.log("Control here")
+        const tokenParam = req.params.token;
+        const token = typeof tokenParam === 'string' ? tokenParam : tokenParam[0];
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+        console.log(decodedToken);
+        const user = await User.findOne({ email: decodedToken.email });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        user.isVerified = true;
+        await user.save();
+        res.status(200).json({
+            success: true,
+            message: "User verified successfully",
+        });
+    } catch (err: any) {
+        return res.status(500).json({
+            success: false,
+
+            message: err.message
+        })
+    }
 }
 
 const loginWithGoogle = async (req: Request, res: Response) => {
@@ -242,4 +288,86 @@ const googleCallback = async (req: Request, res: Response) => {
     res.redirect(process.env.FRONTEND_URI!)
 }
 
-export { registerUser, loginUser, logOutUser, loginWithGoogle, googleCallback };
+const getInfo = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findOne({ email: req.user.email }).select("-isDeleted -password -refreshToken -createdAt -updatedAt -__v");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: user
+        })
+    } catch (err: any) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+const refreshToken = async (req: Request, res: Response) => {
+    try {
+        const token = req.cookies?.refreshToken;
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                message: "Refresh token not found"
+            })
+        }
+        const tokenObject = await RefreshToken.findOne({ token })
+        if (!tokenObject) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid token"
+            })
+        }
+        console.log(tokenObject)
+        const tokenObj = await tokenObject.populate("user")
+        if (!tokenObj) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        const user = tokenObj.user as unknown as TokenPayload;
+        const userObj = {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+        }
+        const accessToken = generateAccessToken(userObj)
+        const refreshToken = generateRefreshToken(userObj)
+
+        tokenObj.token = refreshToken;
+        await tokenObj.save();
+
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 15 * 60 * 1000
+        });
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Refresh token rotated successfully"
+        });
+    } catch (err: any) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+export { registerUser, loginUser, logOutUser, loginWithGoogle, googleCallback, verifyMagicLink, getInfo, refreshToken };

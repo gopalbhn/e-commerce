@@ -12,8 +12,12 @@ const addProduct = async (req: Request, res: Response) => {
             })
         }
         const { name, description, price, stock, thumbnails, images, category, seller } = data.data
-        const thumbnailFile = req.files?.thumbnail
-        const imagesFiles = req.files?.images
+
+        const files = req.files as { thumbnails?: Express.Multer.File, images?: Express.Multer.File[] }
+        const thumbnailFile = files?.thumbnails
+
+        const imagesFiles = files.images as Express.Multer.File[]
+
 
 
         const product = new Product({
@@ -26,16 +30,18 @@ const addProduct = async (req: Request, res: Response) => {
             category,
             seller: req.user.id
         })
+
+
         await product.save()
         return res.status(201).json({
             success: true,
             message: "Product created successfully",
             data: product
         })
-    } catch (error) {
+    } catch (error: any) {
         return res.status(500).json({
             success: false,
-            message: error?.message
+            message: error.message
         })
     }
 }
@@ -65,34 +71,97 @@ const updateProduct = async (req: Request, res: Response) => {
             message: "Product updated successfully",
             data: product
         })
-    } catch (error) {
+    } catch (error: any) {
         return res.status(500).json({
             success: false,
-            message: error?.message
+            message: error.message
         })
     }
 }
 
-const deleteProduct = (req: Request, res: Response) => {
+const deleteProduct = async (req: Request, res: Response) => {
     try {
+        const productId = req.params.id;
+        const userid = req.user.id;
+        if (!productId) {
+            return res.status(400).json({
+                success: false,
+                message: "Product ID is required"
+            })
+        }
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            })
+        }
 
-    } catch (error) {
+        if (product.seller.toString() !== userid) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized to delete this product"
+            })
+        }
 
+        product.isDeleted = true;
+        await product.save();
+        return res.status(200).json({
+            success: true,
+            message: "Product deleted successfully",
+            data: product
+        })
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
 }
 
-const getAllProducts = (req: Request, res: Response) => {
+const getAllProducts = async (req: Request, res: Response) => {
     try {
-
-    } catch (error) {
-
+        const product = await Product.find({ isDeleted: false })
+        return res.status(200).json({
+            success: true,
+            message: "Products fetched successfully",
+            data: product
+        })
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
 }
 
-const getProductById = (req: Request, res: Response) => {
+const getProductById = async (req: Request, res: Response) => {
     try {
 
-    } catch (error) {
+        const productId = req.params.id;
+        if (!productId) {
+            return res.status(400).json({
+                success: false,
+                message: "Product ID is required"
+            })
+        }
+        const product = await Product.findById(productId)
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            })
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Product fetched successfully",
+            data: product
+        })
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
 
     }
 }

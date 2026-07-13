@@ -33,6 +33,10 @@ const productSchema = new Schema<IProduct>({
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

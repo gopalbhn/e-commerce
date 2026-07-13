@@ -35,7 +35,13 @@
 
 }
 
-
+.cn-toast {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+    border-radius: 12px;
+    padding: 1rem;
+}
 
 @keyframes fadeSlideUp {
     from {

@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 
 import useCartStore from '@/store/cartStore';
 import { products } from '@/lib/data';
+import { toast } from 'sonner';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
@@ -19,12 +20,16 @@ const ProductDetail = () => {
   const { id } = useParams();
 
   const product = products.find(product => product.id === id);
+  const [previewimage, setPreviewimage] = useState<string>(product?.img)
   console.log(product)
 
 
   const addToCart = useCartStore(state => state?.addToCart)
   const handleAddToCart = () => {
     addToCart(product?.id, totalCartItem)
+    setTimeout(() => {
+      toast.success("Product added to cart")
+    }, 1000)
   }
 
   return (
@@ -34,14 +39,14 @@ const ProductDetail = () => {
       <section className='w-full h-[90vh] rounded-lg flex items-center justify-center gap-1 px-10'>
         <div className='w-1/2 h-full p-4 group'>
           <div className='relative h-[60vh] w-full flex justify-center items-center overflow-hidden '>
-            <img src={product.img} alt="Product Image" className='w-full h-full object-cover rounded-lg transition-soft duration-300 group-hover:scale-110' />
+            <img src={previewimage} alt="Product Image" className='w-full h-full object-cover rounded-lg transition-soft duration-300 hover:scale-110' />
             <button className='absolute top-4 right-4 text-primary bg-white/50 text-2xl p-2 rounded-full hover:scale-110 transition-soft duration-300 backdrop-blur-sm'>
               <HiMiniMagnifyingGlassPlus />
             </button>
           </div>
           <div className="w-full h-30 grid grid-cols-5 gap-2 mt-6">
             {product.relatedImages.map((img) => (
-              <div className="h-25 w-25 overflow-hidden rounded-lg group-hover:border border-primary ">
+              <div className="h-25 w-25 overflow-hidden rounded-lg hover:border border-primary " onClick={() => setPreviewimage(img)}>
                 <img
                   src={img}
                   alt="Headphone 1"
@@ -67,8 +72,8 @@ const ProductDetail = () => {
           </div>
           <div className='flex items-center gap-4 '>
 
-            <h2 className='text-title font-bold text-primary'>{product.price}</h2>
-            <h2 className='text-body text-gray-500 line-through'>{product.old}</h2>
+            <h2 className='text-title font-bold text-primary'>${product.price}</h2>
+            <h2 className='text-body text-gray-500 line-through'>${product.old}</h2>
             <h2 className='text-title font-bold text-primary-light'>{product.discount}</h2>
           </div>
           <div className='  px-3 py-1.5 rounded-xl border border-gray-300 bg-[#f1edec]'>

@@ -2,10 +2,12 @@ import { useState, useMemo } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import heroImage from "../assets/hero.png";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 
 interface StrengthResult {
-  score: number; 
+  score: number;
   label: string;
   color: string;
 }
@@ -61,11 +63,49 @@ function Field({ label, type = "text", value, placeholder, onChange, rightSlot }
 
 
 function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showPw, setShowPw] = useState<boolean>(false);
 
   const canSubmit = email.trim() !== "" && password.trim() !== "";
+
+  function handleLoginWithGoogle() {
+    window.location.href = "http://localhost:3000/api/user/google-login";
+  }
+
+  async function handleLogin() {
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters long", {
+        duration: 1000
+      })
+      return
+    }
+
+    const res = await fetch("http://localhost:3000/api/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        email,
+        password
+      })
+    })
+
+    const data = await res.json()
+
+    if (data.success) {
+      toast.success("Login Successful")
+      setTimeout(() => {
+        window.location.href = "/"
+      }, 2000)
+    } else {
+      toast.error(data.message)
+    }
+  }
+
+
 
   return (
     <div className="flex flex-col gap-6 overflow-hidden">
@@ -97,6 +137,7 @@ function LoginForm() {
 
       <button
         disabled={!canSubmit}
+        onClick={handleLogin}
         className={`w-full rounded-lg py-2.5 text-sm font-semibold text-white transition-colors
           ${canSubmit ? "bg-primary hover:bg-primary-hover cursor-pointer" : "bg-secondary-light text-secondary cursor-not-allowed"}`}
       >
@@ -111,6 +152,7 @@ function LoginForm() {
 
       <button
         className="w-full flex items-center justify-center gap-2 rounded-lg border border-secondary-light py-2.5 text-sm font-medium hover:bg-secondary-light transition-colors cursor-pointer"
+        onClick={handleLoginWithGoogle}
       >
         <FcGoogle size={18} />
         Login with Google
@@ -144,6 +186,50 @@ function RegisterForm() {
     password === confirmPassword;
 
   const passwordsMatch = confirmPassword === "" || password === confirmPassword;
+
+  async function handleRegister() {
+
+    if (phone.length !== 10) {
+      toast.error("Phone number must be 10 digits", {
+        duration: 1000
+      })
+      return
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match", {
+        duration: 1000
+      })
+      return
+    }
+    const name = `${firstName} ${lastName}`;
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        confirmPassword,
+        phoneNumber: phone
+      })
+    })
+    const data = await res.json()
+    if (data.success) {
+      toast.success("Check Your Email for verificcation Email", {
+        duration: 5000
+      })
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
+    } else {
+      toast.error(data.message)
+    }
+  }
+
+
 
   return (
     <div className="flex flex-col gap-4">
@@ -198,18 +284,16 @@ function RegisterForm() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className={`h-1.5 flex-1 rounded-full transition-colors ${
-                    i <= strength.score ? strength.color : "bg-secondary-light"
-                  }`}
+                  className={`h-1.5 flex-1 rounded-full transition-colors ${i <= strength.score ? strength.color : "bg-secondary-light"
+                    }`}
                 />
               ))}
             </div>
-            <span className={`text-xs font-medium ${
-              strength.score <= 1 ? "text-red-500"
+            <span className={`text-xs font-medium ${strength.score <= 1 ? "text-red-500"
               : strength.score === 2 ? "text-yellow-500"
-              : strength.score === 3 ? "text-blue-500"
-              : "text-green-500"
-            }`}>
+                : strength.score === 3 ? "text-blue-500"
+                  : "text-green-500"
+              }`}>
               {strength.label}
             </span>
           </div>
@@ -237,6 +321,7 @@ function RegisterForm() {
 
       <button
         disabled={!canSubmit}
+        onClick={handleRegister}
         className={`w-full rounded-lg py-2.5 text-sm font-semibold text-white transition-colors mt-1
           ${canSubmit ? "bg-primary hover:bg-primary-hover cursor-pointer" : "bg-secondary-light text-secondary cursor-not-allowed"}`}
       >
@@ -250,6 +335,8 @@ type Tab = "login" | "register";
 
 const Login = () => {
   const [tab, setTab] = useState<Tab>("login");
+
+
 
   return (
     <div className="h-screen flex bg-secondary-light/30">
@@ -286,7 +373,7 @@ const Login = () => {
               </button>
             </div>
 
-       
+
             {tab === "login" ? <LoginForm /> : <RegisterForm />}
           </div>
         </div>

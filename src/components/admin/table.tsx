@@ -150,6 +150,10 @@ export default function Table({ varaint, data }: TableProps) {
         case "user":
             return (
                 <table className="w-full">
+                    {showDeleteConfirm && <DeleteModal onCancel={() => {
+                        setPopup(false)
+                        setShowDeleteConfirm(false)
+                    }} />}
                     <thead>
                         <tr>
                             {UserColumn.map((column, index) => (
