@@ -10,19 +10,33 @@ const WishList = () => {
     const [products, setProducts] = useState([])
     useEffect(() => {
         async function fetchAllItem() {
-            const res = await fetch("http://localhost:3000/api/user/wishlist", {
+            const res = await fetch("http://localhost:3000/api/wishlist/get", {
                 credentials: "include"
             })
             const data = await res.json()
             if (data.success) {
-                setProducts(data.data)
+                const allProducts = data.wishlist.flatMap(
+                    (wishlist: any) => wishlist.products
+                );
+                setProducts(allProducts)
+                console.log(allProducts)
             }
             console.log(products);
         }
         fetchAllItem();
     }, [])
-
-    if (products.length == 0) {
+    async function clearAll() {
+        const res = await fetch("http://localhost:3000/api/wishlist/clear", {
+            method: "DELETE",
+            credentials: "include"
+        })
+        const data = await res.json()
+        if (data.success) {
+            setProducts([])
+            window.location.reload();
+        }
+    }
+    if (products?.length == 0) {
         return (
             <div className="h-full w-full flex flex-col">
                 <section className='h-full w-full px-10 mt-5 mb-10'>
@@ -42,17 +56,17 @@ const WishList = () => {
                 <div className="w-full flex items-center justify-between mt-5">
                     <div >
                         <h1 className="text-header font-semibold text-primary">My WishList</h1>
-                        <p>5 Items Saved In Your Wishlist</p>
+                        <p> Items Saved In Your Wishlist</p>
                     </div>
                     <div className="flex gap-x-2">
-                        <Button variant="default">Add All to Cart</Button>
-                        <Button variant="default" >Clear All</Button>
+                        <Button variant="default" >Add All to Cart</Button>
+                        <Button variant="default" onClick={clearAll}>Clear All</Button>
                     </div>
                 </div>
                 <div className="h-full grid grid-cols-4 items-center gap-5 mt-5">
                     {
-                        products.filter(item => item.wishList === true).slice(0, 7).map((product, index) => {
-                            return <ProductCart key={index} image={product.img} name={product.name} price={product.price} old={product.old} discount={product.discount} wishList={product.wishList} isDiscounted={product.isDiscounted} />
+                        products.map((product, index) => {
+                            return <ProductCart key={index} id={product._id} image={product.thumbnails} name={product.name} price={product.price} old={product.oldPrice} discount={product.discount} isDiscounted={product.isDiscounted} wishList={true} />
                         })
                     }
                 </div>

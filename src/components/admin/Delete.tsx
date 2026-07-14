@@ -13,6 +13,7 @@ const DeleteModal = ({ onCancel }: DeleteModalProps) => {
                 <h1 className="text-title font-semibold">Are You Sure?</h1>
                 <div className="flex gap-x-5 justify-end">
                     <Button variant={"outline"} onClick={onCancel}>Cancel</Button>
+
                     <Button>Delete</Button>
                 </div>
             </div>

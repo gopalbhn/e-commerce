@@ -5,9 +5,11 @@ import Product from "../models/productModel.js";
 const getAllCartItem = async (req: Request, res: Response) => {
     try {
         const userId = req.user.id;
-        const cart = await Cart.find({ userId })
+        const cart = await Cart.findOne({ userId }).populate({
+            path: "products.productId"
+        });
 
-        if (cart.length == 0) {
+        if (cart?.products?.length == 0) {
             return res.status(400).json({
                 success: true,
                 message: "Cart is empty",

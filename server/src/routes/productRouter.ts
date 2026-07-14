@@ -4,10 +4,10 @@ import { authenticateUser, requireRole } from '../middlewares/auth.js';
 import upload from '../middlewares/multerConfig.js';
 const router = Router();
 
-router.get('/products', getAllProducts);
-router.get('/products/:id', getProductById);
-router.post('/products', authenticateUser, requireRole("Seller"), upload.fields([{ name: "thumbnail", maxCount: 1 }, { name: "images", maxCount: 3 }]), addProduct);
-router.put('/products/:id', authenticateUser, requireRole("Seller"), updateProduct);
-router.delete('/products/:id', authenticateUser, requireRole("Seller"), deleteProduct);
+router.get('/', getAllProducts);
+router.get('/:id', getProductById);
+router.post('/', authenticateUser, requireRole("Seller"), upload.fields([{ name: "thumbnail", maxCount: 1 }, { name: "images", maxCount: 3 }]), addProduct);
+router.put('/:id', authenticateUser, requireRole("Seller"), updateProduct);
+router.delete('/:id', authenticateUser, requireRole("Seller"), deleteProduct);
 
 export default router;

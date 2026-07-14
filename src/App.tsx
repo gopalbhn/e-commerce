@@ -1,5 +1,5 @@
 
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import './App.css'
 import NavBar from './components/navbar'
 import Dashboard from './pages/Dashboard'
@@ -33,7 +33,7 @@ function App() {
 
   return (
     <div className="App">
-      <Toaster position='top-right' toastOptions={{
+      <Toaster position='bottom-right' toastOptions={{
         style: {
           background: "#fff",
           color: "#8F4B3D",
@@ -52,6 +52,7 @@ function Init() {
   const location = useLocation();
   const setUser = UserStore((state: any) => state.setUser);
   const user = UserStore((state: any) => state.user);
+  const email = user?.id
   const role = user?.role;
   async function fetchMyInfo() {
     let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/me`, {
@@ -90,8 +91,10 @@ function Init() {
   }
 
 
+
   useEffect(() => {
     fetchMyInfo();
+
   }, []);
 
   return (
@@ -105,8 +108,16 @@ function Init() {
         <Route path='/login' element={<Login />} />
         <Route path='/product-detail/:id' element={<ProductDetail />} />
         <Route path="/verify/:token" element={<VerifyEmail />} />
-        <Route path='/shoping-cart' element={<ShopingCart />} />
+        <Route path='/shoping-cart' element={
+          email ? <ShopingCart /> : <Navigate to="/login" />
+
+
+        } />
         <Route path='/wishlist' element={<WishList />} />
+        <Route path='/category' element={<ProductListing />} />
+        <Route path='/myorder' element={<MyOrders />} />
+        <Route path='/checkout' element={<Checkout />} />
+        <Route path='/purchase-history' element={<PurchaseHistory />} />
 
         {
           role === "Seller" && (

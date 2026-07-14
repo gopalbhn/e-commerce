@@ -34,6 +34,14 @@ const productSchema = new Schema<IProduct>({
         ref: "User",
         required: true
     },
+    oldPrice: {
+        type: Number,
+        default: 0
+    },
+    discount: {
+        type: Number,
+        default: 0
+    },
     isDeleted: {
         type: Boolean,
         default: false

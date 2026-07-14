@@ -4,7 +4,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import CategoryCart from "../components/categoryCart"
 import Footer from "../components/Footer"
 import ProductCart from "../components/productCart"
-import { category, products } from "@/lib/data.js"
+import { category } from "@/lib/data.js"
 import { toast } from "sonner"
 
 
@@ -195,6 +195,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const endTime = useRef(Date.now() + 5 * 60 * 60 * 1000);
+    const [products, setProducts] = useState([])
     function FlashShaleCountDown() {
         const difference = endTime.current - new Date().getTime()
         const hours = Math.floor(difference / (1000 * 60 * 60));
@@ -220,7 +221,22 @@ const Dashboard = () => {
         if (searchParams.get('login') == "success") {
             toast.success("Login Success")
         }
+        fetchAllProduct();
     }, [searchParams])
+
+    const fetchAllProduct = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product`)
+            const data = await response.json();
+            console.log(data)
+            if (data.success) {
+                setProducts(data.data)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <div className="h-full w-full space-y-10">
@@ -249,15 +265,16 @@ const Dashboard = () => {
                 <div className="h-full w-full grid grid-cols-4 items-center gap-4 mt-5">
                     {products.slice(0, 4).map((product, index) => (
                         <ProductCart
-                            image={product.img}
+                            id={product._id}
+                            image={product.thumbnails}
                             name={product.name}
                             price={product.price}
-                            old={product.old}
+                            old={product.oldPrice}
                             key={index}
                             discount={product.discount}
                             isDiscounted={product.isDiscounted}
                             wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail/${product.id}`)}
+                            onclick={() => navigate(`/product-detail/${product._id}`)}
                         />
                     ))}
                 </div>
@@ -284,15 +301,16 @@ const Dashboard = () => {
                 <div className="grid grid-cols-4 gap-4">
                     {products.slice(0, 8).map((product, index) => (
                         <ProductCart
-                            image={product.img}
+                            id={product._id}
+                            image={product.thumbnails}
                             name={product.name}
                             price={product.price}
-                            old={product.old}
+                            old={product.oldPrice}
                             discount={product.discount}
                             key={index}
                             isDiscounted={product.isDiscounted}
                             wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail`)}
+                            onclick={() => navigate(`/product-detail/${product._id}`)}
                         />
                     ))}
                 </div>

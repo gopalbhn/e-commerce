@@ -6,10 +6,40 @@ import useCartStore from "@/store/cartStore";
 import { Button } from "@/components/ui/button";
 import { products } from "@/lib/data";
 import productCart from "@/components/productCart";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { FiHeart } from "react-icons/fi";
 const ShopingCart = () => {
 
+    const [quantity, setQuantity] = useState<number>(0);
+    const [products, setProducts] = useState<any[]>([]);
+    const [isWishListed, setIsWishlisted] = useState(false)
+    useEffect(() => {
+        fetchCartItems();
+    }, []);
 
+    async function fetchCartItems() {
+        const res = await fetch("http://localhost:3000/api/cart/cart", {
+            credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+
+            const allProducts = data.data.flatMap((cart: any) =>
+                cart.products.map((item: any) => ({
+                    ...item.productId,
+                    quantity: item.quantity,
+                }))
+            );
+            console.log("all products", allProducts)
+            setProducts(allProducts);
+
+        }
+    }
     const product = useCartStore(state => state?.products)
+
     const increaseQuantity = useCartStore(state => state?.increaseQuantity)
     const decreaseQuantity = useCartStore(state => state?.decreaseQuantity)
     console.log("Product", product)
@@ -38,7 +68,34 @@ const ShopingCart = () => {
         return { total, tax, shipping, subTotal }
     }
     const { total, tax, shipping, subTotal } = calculateTotal()
-    if (productCart.length == 0) {
+
+    async function addToWishList(id: string) {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/add/${id}`, {
+            method: "POST",
+            credentials: "include"
+        })
+        if (res.ok) {
+            setIsWishlisted(true)
+            setTimeout(() => {
+                toast.success("Added Successfully")
+            }, 500)
+        }
+    }
+
+    async function removeFromWishList(id: string) {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/remove/${id}`, {
+            method: "DELETE",
+            credentials: "include"
+        })
+        if (res.ok) {
+            setIsWishlisted(false)
+            setTimeout(() => {
+                toast.success("Removed Successfully")
+            }, 500)
+        }
+    }
+
+    if (products.length == 0) {
         return (
             <div className="h-full w-full flex flex-col">
                 <section className='h-full w-full px-10 mt-5 mb-10'>
@@ -52,6 +109,7 @@ const ShopingCart = () => {
             </div>
         )
     }
+
     return (
         <div className="h-full w-full flex flex-col">
             <section className='h-full w-full px-10 mt-5 mb-10'>
@@ -60,41 +118,49 @@ const ShopingCart = () => {
 
                     <div className="w-2/3  rounded-xl">
                         {
-                            productCart?.map((item) => (
-                                <div className="w-full  flex gap-2 shadow-md p-3 font-medium text-sm" key={item.id}>
-                                    <div className="h-30 w-30 overflow-hidden rounded-xl">
-                                        <img src={item.img} alt="Product Image" className="w-full h-full object-cover" />
-                                    </div>
-                                    <div className='h-full w-full flex flex-col gap-y-10 '>
-                                        <div className="w-full flex justify-between">
-                                            <div className="w-full ">
-                                                <p>{item.name}</p>
-                                                <p>Total quantity {item.totalQuantity}</p>
-                                                {/* <p>Size: {item.variants.size} | Color: {item.variants.color}</p> */}
-                                            </div>
-                                            <div className='flex justify-end'>
-                                                {item.price}
-                                            </div>
+                            products?.map((item) => {
+                                return (
+                                    <div className="w-full  flex gap-2 shadow-md p-3 font-medium text-sm" key={item.id}>
+                                        <div className="h-30 w-30 overflow-hidden rounded-xl">
+                                            <img src={item?.thumbnails} alt="Product Image" className="w-full h-full object-cover" />
                                         </div>
-                                        <div className="w-full flex justify-between">
-                                            <div className='rounded-xl border border-gray-300 bg-white flex items-center gap-4'>
-                                                <button className='px-3 py-1.5 hover:bg-gray-200' onClick={() => decreaseQuantity(item.id)} >-</button>
-                                                <span className='text-sm font-semibold'>{item.totalQuantity}</span>
-                                                <button className='px-3 py-1.5 hover:bg-gray-200' onClick={() => increaseQuantity(item.id)} >+</button>
+                                        <div className='h-full w-full flex flex-col gap-y-10 '>
+                                            <div className="w-full flex justify-between">
+                                                <div className="w-full ">
+                                                    <p>{item.name}</p>
+                                                    <p>Total quantity {item.quantity}</p>
+                                                    {/* <p>Size: {item.variants.size} | Color: {item.variants.color}</p> */}
+                                                </div>
+                                                <div className='flex justify-end'>
+                                                    {item.price}
+                                                </div>
+                                            </div>
+                                            <div className="w-full flex justify-between">
+                                                <div className='rounded-xl border border-gray-300 bg-white flex items-center gap-4'>
+                                                    <button className='px-3 py-1.5 hover:bg-gray-200' onClick={() => setQuantity(quantity - 1)} >-</button>
+                                                    <span className='text-sm font-semibold'>{quantity}</span>
+                                                    <button className='px-3 py-1.5 hover:bg-gray-200' onClick={() => setQuantity(quantity + 1)} >+</button>
 
-                                            </div>
-                                            <div className='flex justify-end items-center gap-x-3'>
-                                                <button className='hover:text-primary flex items-center gap-x-2'>
-                                                    <BiHeart /> Save for Later
-                                                </button>
-                                                <button className='hover:text-primary flex items-center gap-x-2' onClick={() => handleRevoeItem(item.id)}>
-                                                    <BiTrash /> Remove
-                                                </button>
+                                                </div>
+                                                <div className='flex justify-end items-center gap-x-3'>
+                                                    {isWishListed ? (
+                                                        <button className='w-5 h-5' onClick={() => removeFromWishList(item.id)}>
+                                                            <FiHeart fill='red' className='w-full h-full text-red-500' />
+                                                        </button>
+                                                    ) : (
+                                                        <button className='w-5 h-5' onClick={() => addToWishList(item.id)}>
+                                                            <FiHeart className='h-full w-full' />
+                                                        </button>
+                                                    )}
+                                                    <button className='hover:text-primary flex items-center gap-x-2' onClick={() => handleRevoeItem(item.id)}>
+                                                        <BiTrash /> Remove
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                     </div>
                     <div className="w-1/3  p-6 rounded-xl shadow-md">
 

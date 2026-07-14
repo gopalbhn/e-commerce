@@ -4,7 +4,7 @@ import type { ProductCartType } from '../types/types'
 
 import { RxCross1 } from 'react-icons/rx'
 
-const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isDiscounted }: ProductCartType) => {
+const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isDiscounted, id }: ProductCartType) => {
   console.log(wishList)
   return (
     <div className="group relative bg-white hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300" onClick={onclick}>

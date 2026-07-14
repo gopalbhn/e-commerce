@@ -1,26 +1,29 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BiCart, BiCheckCircle } from 'react-icons/bi'
-import { FiStar } from 'react-icons/fi'
+import { FiHeart, FiStar } from 'react-icons/fi'
 import { HiMiniMagnifyingGlassPlus } from 'react-icons/hi2'
 
 import Footer from '../components/Footer';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 
 import useCartStore from '@/store/cartStore';
 import { products } from '@/lib/data';
 import { toast } from 'sonner';
+import UserStore from '@/store/userStore';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
   const buttonList = ["Product Specs", "Description", "Reviews"];
-
+  const user = UserStore(state => state?.user);
+  const userId = user?.id;
   const [totalCartItem, setTotalCartItem] = useState<number>(1)
+  const [isWishListed, setIsWishlisted] = useState(false)
+  const [product, setProduct] = useState(null)
   const { id } = useParams();
 
-  const product = products.find(product => product.id === id);
-  const [previewimage, setPreviewimage] = useState<string>(product?.img)
+  const [previewimage, setPreviewimage] = useState<string>(product?.thumbnails)
   console.log(product)
 
 
@@ -32,6 +35,93 @@ const ProductDetail = () => {
     }, 1000)
   }
 
+  async function checkWishlisted() {
+    let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/check/${id}`, {
+      credentials: "include"
+    })
+
+    if (!res.ok) {
+      setIsWishlisted(false)
+    }
+
+    const data = await res.json();
+    if (data.success) {
+      setIsWishlisted(true)
+    }
+
+  }
+
+  async function addToWishList() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/add/${id}`, {
+      method: "POST",
+      credentials: "include"
+    })
+    if (res.ok) {
+      setIsWishlisted(true)
+      setTimeout(() => {
+        toast.success("Added Successfully")
+      }, 500)
+    } else {
+      const data = await res.json()
+      setTimeout(() => {
+        toast.error(data.message)
+      }, 500)
+    }
+  }
+
+  async function removeFromWishList() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/remove/${id}`, {
+      method: "DELETE",
+      credentials: "include"
+    })
+    if (res.ok) {
+      setIsWishlisted(false)
+      setTimeout(() => {
+        toast.success("Removed Successfully")
+      }, 500)
+    }
+  }
+  async function fetchProductDetail() {
+
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product/${id}`)
+    if (!res.ok) {
+      toast.error("Product not found")
+    }
+    const data = await res.json()
+    if (data.success) {
+      setProduct(data.data)
+      setPreviewimage(data.data.thumbnails)
+    }
+  }
+
+  useEffect(() => {
+    fetchProductDetail()
+    checkWishlisted();
+
+  }, [])
+  async function AddToCart() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/cart/add-to-cart`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: id,
+        quantity: totalCartItem
+      })
+    })
+    const data = await res.json()
+    if (data.success) {
+      toast.success("Product added to cart")
+    }
+
+  }
+
+
+
+  console.log(product)
   return (
     <div className='h-full w-full '>
 
@@ -45,7 +135,7 @@ const ProductDetail = () => {
             </button>
           </div>
           <div className="w-full h-30 grid grid-cols-5 gap-2 mt-6">
-            {product.relatedImages.map((img) => (
+            {product?.images?.map((img: string) => (
               <div className="h-25 w-25 overflow-hidden rounded-lg hover:border border-primary " onClick={() => setPreviewimage(img)}>
                 <img
                   src={img}
@@ -58,7 +148,7 @@ const ProductDetail = () => {
         </div>
         <div className='w-1/2 h-full p-4 flex flex-col justify-center gap-y-4'>
 
-          <h1 className='text-title font-bold'>{product.name}</h1>
+          <h1 className='text-title font-bold'>{product?.name}</h1>
 
           <div className='flex items-center gap-4 '>
             <div className='flex items-center gap-2'>
@@ -72,16 +162,29 @@ const ProductDetail = () => {
           </div>
           <div className='flex items-center gap-4 '>
 
-            <h2 className='text-title font-bold text-primary'>${product.price}</h2>
-            <h2 className='text-body text-gray-500 line-through'>${product.old}</h2>
-            <h2 className='text-title font-bold text-primary-light'>{product.discount}</h2>
+
+            <h2 className='text-title font-bold text-primary'>${product?.price}</h2>
+            <h2 className='text-body text-gray-500 line-through'>${product?.oldPrice}</h2>
+            <h2 className='text-title font-bold text-primary-light'>{product?.discount}</h2>
           </div>
           <div className='  px-3 py-1.5 rounded-xl border border-gray-300 bg-[#f1edec]'>
             <p className='flex items-center gap-4 mb-1'>
               <BiCheckCircle className='text-2xl text-accent-light' />
-              <span className='text-small font-semibold'>In Stock - {product.quantity} Left</span>
+              <span className='text-small font-semibold'>In Stock - {product?.stock} Left</span>
             </p>
             <p className='text-small font-semibold text-gray-500'>Order within 2h 15m for Same-Day Shipping.</p>
+          </div>
+          <div className='flex items-center gap-2'>
+            <p>Save For later </p>
+            {isWishListed ? (
+              <button className='w-5 h-5' onClick={removeFromWishList}>
+                <FiHeart fill='red' className='w-full h-full text-red-500' />
+              </button>
+            ) : (
+              <button className='w-5 h-5' onClick={addToWishList}>
+                <FiHeart className='h-full w-full' />
+              </button>
+            )}
           </div>
           <div className='flex flex-col gap-4 '>
             <p>
@@ -118,7 +221,7 @@ const ProductDetail = () => {
                 })}>+</button>
 
               </div>
-              <button className='w-full max-w-xl px-10 py-4 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300' onClick={handleAddToCart}>
+              <button className='w-full max-w-xl px-10 py-4 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300' onClick={AddToCart}>
                 <BiCart className='text-xl' /> Add To cart
               </button>
 

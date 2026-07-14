@@ -10,6 +10,7 @@ export interface CartItem {
 }
 
 export interface ProductCartType {
+    id: string
     image: string,
     name: string,
     price: string,

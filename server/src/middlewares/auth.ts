@@ -40,6 +40,7 @@ const generateRefreshToken = (user: TokenPayload) => {
 
 const generateAccessToken = (user: TokenPayload) => {
     const payload = {
+        id: user.id,
         email: user.email,
         role: user.role,
 
