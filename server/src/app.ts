@@ -4,6 +4,9 @@ import userRouter from './routes/userRouter.js'
 import wishlistRouter from "./routes/wishListRouter.js"
 import productRouter from "./routes/productRouter.js"
 import cartRouter from "./routes/cartRouter.js"
+import categoryRouter from "./routes/categoryRouter.js"
+import "./models/categoryModel.js";
+import "./models/brand.js";
 import cookieParser from "cookie-parser";
 const app = express();
 
@@ -20,6 +23,7 @@ app.use('/api/user', userRouter);
 app.use('/api/wishlist', wishlistRouter)
 app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter)
+app.use('/api/category', categoryRouter)
 app.get('/health-check', (req, res) => {
   const healthData = {
     uptime: process.uptime(),

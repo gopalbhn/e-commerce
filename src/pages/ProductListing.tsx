@@ -2,42 +2,154 @@ import { FaRegStar, FaStar } from "react-icons/fa"
 
 import ProductCart from "../components/productCart"
 import { useNavigate } from "react-router-dom"
-import { useState } from "react"
-import { products } from "@/lib/data"
+import { useEffect, useState } from "react"
+import { MdFilterAlt } from "react-icons/md"
+
 
 
 const ProductListing = () => {
     const navigate = useNavigate();
     const [currentIndex, setCurrentIndex] = useState<number>(8);
+    const [filters, setFilters] = useState({
+        category: "",
+        subCategory: "",
+        brand: "",
+        minPrice: "",
+        maxPrice: "",
+        rating: "",
+    })
+
+    const [brands, setBrands] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [category, setCategory] = useState(null);
+    const [subCategory, setSubCategory] = useState(null)
+    useEffect(() => {
+        fetchAllProduct()
+        fetchAllCategory();
+    }, [])
+
+    const fetchSubCategories = async (categoryId: string) => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND_URI}/api/category/subcategory/${categoryId}`
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+                setSubCategory(data.data);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const fetchAllProduct = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product`)
+            const data = await response.json();
+            console.log(data)
+            if (data.success) {
+                setProducts(data.data)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const fetchProducts = async (currentFilters = filters) => {
+        const query = new URLSearchParams();
+
+        if (currentFilters.category) {
+            console.log(currentFilters)
+            query.append("category", currentFilters.category);
+        }
+
+        if (currentFilters.subCategory) {
+            query.append("subcategory", currentFilters.subCategory);
+        }
+
+        if (currentFilters.brand) {
+            query.append("brand", currentFilters.brand);
+        }
+
+        if (currentFilters.minPrice) {
+
+            query.append("minPrice", currentFilters.minPrice);
+        }
+
+        if (currentFilters.maxPrice) {
+            query.append("maxPrice", currentFilters.maxPrice);
+        }
+
+        if (currentFilters.rating) {
+            query.append("rating", currentFilters.rating);
+            console.log("query", currentFilters)
+        }
+        const response = await fetch(
+            `${import.meta.env.VITE_BACKEND_URI}/api/product/filter?${query}`
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+            setProducts(data.data);
+        }
+    };
+
+    const fetchAllCategory = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/category`)
+            const data = await response.json();
+            console.log(data)
+            if (data.success) {
+                const dataObj = data.data;
+
+                const allCategory = Array.from(dataObj.map((item: any) => ({ name: item.name, id: item._id })))
+                console.log("all", allCategory)
+                setCategory(allCategory)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchBrands = async (categoryId: string) => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND_URI}/api/category/brands/${categoryId}`
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+                setBrands(data.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div className="h-full w-full px-10 flex ">
-            <CategoryList />
+            <CategoryList category={category} filters={filters} setFilters={setFilters} fetchProducts={fetchProducts} fetchSubCategories={fetchSubCategories} subCategory={subCategory} fetchBrands={fetchBrands} brands={brands} />
             <section className="h-full w-4/5 ml-10 mb-10">
                 <div className="w-full rounded-xl p-5 flex items-center justify-between ">
                     <h1 className="text-title font-semibold">Collection</h1>
-                    <div className="flex items-center gap-2">
-                        <p> Showing 4 out of 20 Products </p>
-                        <select className="rounded-lg p-2 border border-gray-300">
-                            <option>Default Sort</option>
-                            <option>Price Low to High</option>
-                            <option>Price High to Low</option>
-                            <option>Rating High to Low</option>
-                            <option>Rating Low to High</option>
-                        </select>
-                    </div>
+
                 </div>
                 <div className="h-[70%]  overflow-y-auto w-full grid grid-cols-3 gap-4">
                     {products.slice(0, currentIndex).map((product, index) => (
                         <ProductCart
+                            id={product._id}
                             key={index}
                             name={product.name}
+                            image={product.thumbnails}
                             price={product.price}
-                            old={product.old}
+                            old={product.oldPrice}
                             discount={product.discount}
-                            image={product.img}
                             isDiscounted={product.isDiscounted}
                             wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail`)}
+                            onclick={() => navigate(`/product-detail/${product._id}`)}
                         />
                     ))}
                 </div>
@@ -55,82 +167,183 @@ const ProductListing = () => {
     )
 }
 
-const CategoryList = () => {
+const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCategories, subCategory, fetchBrands, brands }: any) => {
+
+    const [currentSelectedCategory, setCurrentSelectedCategory] = useState('')
     return (
-        <div className="h-full w-1/5 rounded-xl p-4 border border-gray-300  mb-5 text-sm ">
+        <div className="h-full w-1/5 rounded-xl p-4 border border-gray-300  mb-5 text-sm " key={category}>
             <div >
                 <h3 className="text-body font-semibold mb-4">Categories</h3>
-                <ul className="flex flex-col gap-2">
-                    <li><a href="#">Electronics</a></li>
-                    <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Home Appliance</a></li>
-                    <li><a href="#">Beauty</a></li>
-                    <li><a href="#">Sports</a></li>
-                </ul>
+                <ul className="flex flex-col justify-start">
+                    {category?.map(item => (
+                        <button
+                            key={item.id}
+                            className={currentSelectedCategory == item.id ? "text-primary text-start" : "text-start"}
+                            onClick={() => {
+                                setCurrentSelectedCategory(item.id)
+                                const newFilters = {
+                                    ...filters,
+                                    category: item.id,
 
-            </div>
-            <div className="mt-2">
-                <h3 className="text-body font-semibold mb-4">Brand</h3>
-                <ul className="flex flex-col gap-2">
-                    <li className="flex items-center gap-2">
-                        <input type="checkbox" className="h-5 w-5 rounded-md accent-violet-500" />
-                        <label htmlFor="Luminia" className="text-sm">
-                            Luminia
-                        </label>
-                    </li>
-                    <li className="flex items-center gap-2">
-                        <input type="checkbox" className="h-5 w-5 rounded-md accent-violet-500" />
-                        <label htmlFor="Nordic" className="text-sm">
-                            Nordic Design
-                        </label>
-                    </li>
-                    <li className="flex items-center gap-2">
-                        <input type="checkbox" className="h-5 w-5 rounded-full accent-primary  " />
-                        <label htmlFor="Urban">
-                            Urban Edge
-                        </label>
-                    </li>
+                                };
+
+                                setFilters(newFilters);
+
+                                fetchSubCategories(item.id);
+                                fetchBrands(item.id)
+                                fetchProducts(newFilters);
+                            }}
+                        >
+                            {item.name}
+                        </button>
+
+                    ))}
 
                 </ul>
 
             </div>
-            <div className="mt-2">
-                <h3 className="text-body font-semibold mb-2 uppercase"> Price Range</h3>
-                <div className="w-full">
-                    <input type="range" className="h-2 w-full appearance-none 
-                    rounded-lg bg-gray-200 accent-primary " />
-                </div>
-                <div className="flex justify-between items-center">
-                    <p>$0</p>
-                    <p>$100</p>
-                </div>
-            </div>
-            <div className="mt-2">
-                <h3 className="text-body font-semibold mb-2 uppercase"> Ratings</h3>
-                <div className="space-y-3">
+            <div>
+                {subCategory && subCategory?.length > 0 && (
+                    <>
+                        <h3 className="text-body font-semibold mt-5 mb-2">
+                            Sub Categories
+                        </h3>
 
-                    {[5, 4, 3, 2, 1].map((rating) => (
-                        <div key={rating} className="flex  items-center gap-2">
+                        <ul className="flex flex-col">
+                            {subCategory.map((item: any) => (
+                                <button
+                                    key={item._id}
+                                    className="text-left mt-2 ml-3"
+                                    onClick={() => {
+                                        const newFilters = {
+                                            ...filters,
+                                            subCategory: item._id,
+
+                                        };
+
+                                        setFilters(newFilters);
+                                        fetchBrands(item._id)
+                                        fetchProducts(newFilters);
+                                    }}
+                                >
+                                    {item.name}
+                                </button>
+                            ))}
+                        </ul>
+                    </>
+                )}
+            </div>
+            {brands.map((brand: any) => (
+                <div className="mt-2" key={brand}>
+                    <h3 className="text-body font-semibold mb-4">Brand</h3>
+                    <ul className="flex flex-col gap-2">
+                        <li key={brand._id} className="flex items-center gap-2">
                             <input
                                 type="checkbox"
-                                className="h-5 w-5 rounded-md accent-primary"
+                                checked={filters.brand === brand._id}
+                                onChange={() => {
+                                    const newFilters = {
+                                        ...filters,
+                                        brand: brand._id,
+                                    };
+
+                                    setFilters(newFilters);
+                                    fetchProducts(newFilters);
+                                }}
+                                className="h-5 w-5 accent-primary"
+                            />
+
+                            <label>{brand.name}</label>
+                        </li>
+
+
+
+                    </ul>
+
+                </div>
+            ))}
+            <div className="mt-2">
+                <h3 className="text-body font-semibold mb-2 uppercase"> Price Range</h3>
+                <div className="w-full flex items-center gap-1">
+                    <input
+                        type="number"
+                        placeholder="Min"
+                        value={filters.minPrice}
+                        onChange={(e) =>
+                            setFilters({
+                                ...filters,
+                                minPrice: e.target.value,
+                            })
+                        }
+                        className="w-[45%] border border-gray-300 rounded-md px-2 py-1"
+                    />
+
+                    <p className="text-sm">to</p>
+
+                    <input
+                        type="number"
+                        placeholder="Max"
+                        value={filters.maxPrice}
+                        onChange={(e) =>
+                            setFilters({
+                                ...filters,
+                                maxPrice: e.target.value,
+                            })
+                        }
+                        className="w-[45%] border border-gray-300 rounded-md px-2 py-1"
+                    />
+                    <button
+                        className="w-8 h-8 bg-primary text-white rounded-md flex justify-center items-center"
+                        onClick={() => {
+
+                            fetchProducts(filters);
+                        }}
+                    >
+                        <MdFilterAlt />
+                    </button>
+                </div>
+
+            </div>
+            <div className="mt-2">
+                <h3 className="text-body font-semibold mb-2 uppercase">Ratings</h3>
+
+                <div className="space-y-3">
+                    {[5, 4, 3, 2, 1].map((rating) => (
+                        <div key={rating} className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={filters.rating === rating.toString()}
+                                onChange={() => {
+                                    setFilters({
+                                        ...filters,
+                                        rating:
+                                            filters.rating === rating.toString()
+                                                ? ""
+                                                : rating.toString(),
+                                    });
+                                    fetchProducts({ ...filters, rating: rating.toString() });
+                                }}
+                                className="h-5 w-5 accent-primary"
                             />
 
                             <div className="flex items-center">
                                 {[...Array(5)].map((_, index) =>
                                     index < rating ? (
-                                        <FaStar key={index} className="text-yellow-400" />
+                                        <FaStar
+                                            key={index}
+                                            className="text-yellow-400"
+                                        />
                                     ) : (
-                                        <FaRegStar key={index} className="text-gray-300" />
+                                        <FaRegStar
+                                            key={index}
+                                            className="text-gray-300"
+                                        />
                                     )
                                 )}
                             </div>
                         </div>
                     ))}
                 </div>
-            </div>
-            <div className="my-3">
-                <button className="w-full bg-primary text-white py-2 rounded-md">Apply Filters</button>
             </div>
         </div >
     )

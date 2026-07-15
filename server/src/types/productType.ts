@@ -10,7 +10,20 @@ export interface IProduct {
     images: string[],
     oldPrice: number,
     discount: number,
-    category: string,
+    category: object,
     isDeleted: boolean,
     seller: object
+    brand: object
+}
+
+
+export interface ICategory {
+    name: string,
+    parentCategory: string | null,
+
+}
+
+export interface IBrand {
+    name: string,
+    category: string | null
 }

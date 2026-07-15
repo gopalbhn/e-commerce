@@ -28,7 +28,7 @@ import { useEffect } from 'react'
 import UserStore from './store/userStore'
 
 function App() {
-  const location = useLocation();
+
 
 
   return (

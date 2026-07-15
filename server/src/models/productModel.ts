@@ -26,12 +26,18 @@ const productSchema = new Schema<IProduct>({
         required: true
     },
     category: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Category",
         required: true
     },
     seller: {
         type: Schema.Types.ObjectId,
         ref: "User",
+        required: true
+    },
+    brand: {
+        type: Schema.Types.ObjectId,
+        ref: "Brand",
         required: true
     },
     oldPrice: {

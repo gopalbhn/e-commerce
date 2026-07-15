@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { ProductCreateSchema, ProductUpdateSchema } from "../schemas/productSchema.js";
 import Product from "../models/productModel.js";
+import Category from "../models/categoryModel.js";
+import Brand from "../models/brand.js";
+import mongoose from "mongoose";
 
 const addProduct = async (req: Request, res: Response) => {
     try {
@@ -166,10 +169,74 @@ const getProductById = async (req: Request, res: Response) => {
     }
 }
 
+const getFilteredProduct = async (req: Request, res: Response) => {
+    try {
+        const { category, subcategory, brand, minPrice, maxPrice, rating, sort } = req.query;
+        console.log("req.query", req.query)
+        const filteredData: any = {}
+
+        if (subcategory) {
+            filteredData.category = subcategory;
+        } else if (category) {
+            filteredData.category = category;
+        }
+
+
+        if (brand) {
+            filteredData.brand = brand;
+        }
+
+        if (minPrice || maxPrice) {
+            filteredData.price = {};
+
+            if (minPrice && !isNaN(Number(minPrice))) {
+                filteredData.price.$gte = Number(minPrice);
+            }
+
+            if (maxPrice && !isNaN(Number(maxPrice))) {
+                filteredData.price.$lte = Number(maxPrice);
+            }
+        }
+
+
+
+        if (rating) {
+            filteredData.rating = Number(rating);
+        }
+
+
+        console.log("filterd data", filteredData)
+        const products = await Product.find(filteredData).populate([
+            {
+                path: "category",
+                select: "name"
+            },
+            {
+                path: "brand",
+                select: "name"
+            }
+        ]);
+
+
+        return res.status(200).json({
+            success: true,
+            message: "Products fetched successfully",
+            data: products
+        })
+
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 export {
     addProduct,
     updateProduct,
     deleteProduct,
     getAllProducts,
-    getProductById
+    getProductById,
+    getFilteredProduct
 }

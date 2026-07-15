@@ -9,9 +9,9 @@ const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isD
   return (
     <div className="group relative bg-white hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300" onClick={onclick}>
       {wishList && (
-        <div className='absolute top-4 right-4 bg-black/30 text-white h-8 w-8 rounded-full z-40 flex items-center justify-center'>
+        <button className='absolute top-4 right-4 bg-black/30 text-white h-8 w-8 rounded-full z-40 flex items-center justify-center'>
           <RxCross1 />
-        </div>
+        </button>
       )
       }
 
@@ -41,10 +41,10 @@ const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isD
 
           <div className="flex items-center gap-2">
             <span className="text-headline-sm font-bold text-primary">
-              {price}
+              $ {price}
             </span>
             <span className="text-body-sm text-outline line-through">
-              {old}
+              $ {old}
             </span>
           </div>
 

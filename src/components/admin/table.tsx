@@ -19,7 +19,7 @@ interface TableProps {
 
 export default function Table({ varaint, data }: TableProps) {
     const [popup, setPopup] = useState(false)
-    const [targetId, setTargetId] = useState("")
+    const [targetId, setTargetId] = useState<string | null>(null)
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
     const handlePopup = (id: string) => {

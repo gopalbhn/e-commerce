@@ -21,6 +21,18 @@ export interface ProductCartType {
     onclick?: () => void
 }
 
+export interface WishListItemType {
+    id: string,
+    image: string,
+    name: string,
+    price: string,
+    old: string,
+    discount?: string
+    isDiscounted: Boolean,
+    onclick?: () => void
+    onDelete?: () => void
+}
+
 export interface AdminTopBarProps {
     text: string,
     onclick?: () => void

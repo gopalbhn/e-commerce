@@ -246,10 +246,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
         images: [
             "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
-            "https://images.unsplash.com/photo-1546435770-a3e426bf472b",
-            "https://images.unsplash.com/photo-1484704849700-f032a568e944"
+            "https://images.unsplash.com/photo-1546435770-a3e426bf472b"
         ],
-        category: "Electronics",
+        category: "65c1a0000000000000000002", // Audio
+        brand: "65b2b0000000000000000001",    // Sony
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -263,10 +263,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
         images: [
             "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-            "https://images.unsplash.com/photo-1524805444758-089113d48a6d",
-            "https://images.unsplash.com/photo-1523170335258-f5ed11844a49"
+            "https://images.unsplash.com/photo-1524805444758-089113d48a6d"
         ],
-        category: "Accessories",
+        category: "65c1a0000000000000000007", // Accessories
+        brand: "65b2b0000000000000000003",    // Apple
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -280,10 +280,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62",
         images: [
             "https://images.unsplash.com/photo-1553062407-98eeb64c6a62",
-            "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3",
-            "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a"
+            "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3"
         ],
-        category: "Bags",
+        category: "65c1a0000000000000000009", // Bags
+        brand: "65b2b0000000000000000008",    // Peak Design
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -297,10 +297,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
         images: [
             "https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
-            "https://images.unsplash.com/photo-1534105615256-13940a56ff3b",
-            "https://images.unsplash.com/photo-1543198126-a8ad8e47fb22"
+            "https://images.unsplash.com/photo-1534105615256-13940a56ff3b"
         ],
-        category: "Home",
+        category: "65c1a0000000000000000010", // Home & Appliances
+        brand: "65b2b0000000000000000004",    // Samsung
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -314,10 +314,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b",
         images: [
             "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b",
-            "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6",
-            "https://images.unsplash.com/photo-1508685096489-7aacd5a7b3b1"
+            "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6"
         ],
-        category: "Wearables",
+        category: "65c1a0000000000000000008", // Wearables
+        brand: "65b2b0000000000000000004",    // Samsung
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -331,10 +331,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1527814050087-3793815479db",
         images: [
             "https://images.unsplash.com/photo-1527814050087-3793815479db",
-            "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7",
-            "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46"
+            "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7"
         ],
-        category: "Gaming",
+        category: "65c1a0000000000000000003", // Gaming
+        brand: "65b2b0000000000000000002",    // Logitech
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -348,10 +348,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
         images: [
             "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
-            "https://images.unsplash.com/photo-1587829741301-dc798b83add3",
-            "https://images.unsplash.com/photo-1595225476474-87563907a212"
+            "https://images.unsplash.com/photo-1587829741301-dc798b83add3"
         ],
-        category: "Gaming",
+        category: "65c1a0000000000000000003", // Gaming
+        brand: "65b2b0000000000000000002",    // Logitech
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -365,10 +365,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd",
         images: [
             "https://images.unsplash.com/photo-1502920917128-1aa500764cbd",
-            "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4",
-            "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+            "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4"
         ],
-        category: "Cameras",
+        category: "65c1a0000000000000000004", // Cameras
+        brand: "65b2b0000000000000000005",    // GoPro
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -382,10 +382,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1585386959984-a41552231693",
         images: [
             "https://images.unsplash.com/photo-1585386959984-a41552231693",
-            "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1",
-            "https://images.unsplash.com/photo-1545454675-3531b543be5d"
+            "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1"
         ],
-        category: "Audio",
+        category: "65c1a0000000000000000002", // Audio
+        brand: "65b2b0000000000000000001",    // Sony
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -399,10 +399,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633",
         images: [
             "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633",
-            "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d",
-            "https://images.unsplash.com/photo-1627123424574-724758594e93"
+            "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d"
         ],
-        category: "Accessories",
+        category: "65c1a0000000000000000007", // Accessories
+        brand: "65b2b0000000000000000008",    // Peak Design
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -416,10 +416,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
         images: [
             "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-            "https://images.unsplash.com/photo-1549298916-b41d501d3772",
-            "https://images.unsplash.com/photo-1460353581641-37baddab0fa2"
+            "https://images.unsplash.com/photo-1549298916-b41d501d3772"
         ],
-        category: "Footwear",
+        category: "65c1a0000000000000000007", // Accessories (Using as placeholder for active gear)
+        brand: "65b2b0000000000000000007",    // Nike
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -433,10 +433,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1517701550925-2f9c3e2f6c7d",
         images: [
             "https://images.unsplash.com/photo-1517701550925-2f9c3e2f6c7d",
-            "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085",
-            "https://images.unsplash.com/photo-1445116572660-236099ec97a0"
+            "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"
         ],
-        category: "Appliances",
+        category: "65c1a000000000000000010",  // Home & Appliances
+        brand: "65b2b0000000000000000009",    // DeLonghi
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -450,10 +450,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1587829741301-dc798b83add3",
         images: [
             "https://images.unsplash.com/photo-1587829741301-dc798b83add3",
-            "https://images.unsplash.com/photo-1516035069371-29a1b244cc32",
-            "https://images.unsplash.com/photo-1496181133206-80ce9b88a853"
+            "https://images.unsplash.com/photo-1516035069371-29a1b244cc32"
         ],
-        category: "Photography",
+        category: "65c1a0000000000000000004", // Cameras
+        brand: "65b2b0000000000000000005",    // GoPro
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -467,10 +467,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1593642634367-d91a135587b5",
         images: [
             "https://images.unsplash.com/photo-1593642634367-d91a135587b5",
-            "https://images.unsplash.com/photo-1625948515291-69613efd103f",
-            "https://images.unsplash.com/photo-1517336714731-489689fd1ca8"
+            "https://images.unsplash.com/photo-1625948515291-69613efd103f"
         ],
-        category: "Storage",
+        category: "65c1a0000000000000000005", // Storage
+        brand: "65b2b0000000000000000006",    // SanDisk
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -484,10 +484,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
         images: [
             "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-            "https://images.unsplash.com/photo-1508685096489-7aacd5a7b3b1",
-            "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d"
+            "https://images.unsplash.com/photo-1508685096489-7aacd5a7b3b1"
         ],
-        category: "Wearables",
+        category: "65c1a0000000000000000008", // Wearables
+        brand: "65b2b0000000000000000003",    // Apple
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -501,10 +501,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1585386959984-a41552231693",
         images: [
             "https://images.unsplash.com/photo-1585386959984-a41552231693",
-            "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1",
-            "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb"
+            "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1"
         ],
-        category: "Audio",
+        category: "65c1a0000000000000000002", // Audio
+        brand: "65b2b0000000000000000001",    // Sony
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -518,10 +518,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32",
         images: [
             "https://images.unsplash.com/photo-1516035069371-29a1b244cc32",
-            "https://images.unsplash.com/photo-1502920917128-1aa500764cbd",
-            "https://images.unsplash.com/photo-1492724441997-5dc865305da7"
+            "https://images.unsplash.com/photo-1502920917128-1aa500764cbd"
         ],
-        category: "Photography",
+        category: "65c1a0000000000000000004", // Cameras
+        brand: "65b2b0000000000000000002",    // Logitech
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -535,10 +535,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1598550476439-6847785fcea6",
         images: [
             "https://images.unsplash.com/photo-1598550476439-6847785fcea6",
-            "https://images.unsplash.com/photo-1586023492125-27b2c045efd7",
-            "https://images.unsplash.com/photo-1616627987099-1f9d8f6d5f44"
+            "https://images.unsplash.com/photo-1586023492125-27b2c045efd7"
         ],
-        category: "Gaming",
+        category: "65c1a0000000000000000003", // Gaming
+        brand: "65b2b0000000000000000002",    // Logitech
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -552,10 +552,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1543512214-318c7553f230",
         images: [
             "https://images.unsplash.com/photo-1543512214-318c7553f230",
-            "https://images.unsplash.com/photo-1589492477829-5e65395b66cc",
-            "https://images.unsplash.com/photo-1558089687-f282ffcbc126"
+            "https://images.unsplash.com/photo-1589492477829-5e65395b66cc"
         ],
-        category: "Smart Home",
+        category: "65c1a0000000000000000006", // Smart Home
+        brand: "65b2b0000000000000000003",    // Apple
         seller: "000000000000000000000000",
         isDeleted: false
     },
@@ -569,10 +569,10 @@ export const products = [
         thumbnails: "https://images.unsplash.com/photo-1526481280695-3c687fd5432c",
         images: [
             "https://images.unsplash.com/photo-1526481280695-3c687fd5432c",
-            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62",
-            "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3"
+            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
         ],
-        category: "Bags",
+        category: "65c1a0000000000000000009", // Bags
+        brand: "65b2b0000000000000000008",    // Peak Design
         seller: "000000000000000000000000",
         isDeleted: false
     }
@@ -593,6 +593,7 @@ const seedDatabase = async () => {
             images: blog.images,
             category: blog.category,
             seller: blog.seller,
+            brand: blog.brand,
             isDeleted: blog.isDeleted,
             discount: blog.discount,
             oldPrice: blog.oldPrice
