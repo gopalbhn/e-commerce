@@ -3,6 +3,7 @@ import Footer from "../components/Footer"
 import ProductCart from "../components/productCart"
 
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 
 
@@ -36,6 +37,23 @@ const WishList = () => {
             window.location.reload();
         }
     }
+    async function handleDelete(id: string) {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/remove/${id}`, {
+            method: "DELETE",
+            credentials: "include"
+        })
+        if (res.ok) {
+            const data = await res.json()
+            if (data.success) {
+                toast.success("Removed Successfully")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
+            }
+
+        }
+    }
+
     if (products?.length == 0) {
         return (
             <div className="h-full w-full flex flex-col">
@@ -66,7 +84,7 @@ const WishList = () => {
                 <div className="h-full grid grid-cols-4 items-center gap-5 mt-5">
                     {
                         products.map((product, index) => {
-                            return <ProductCart key={index} id={product._id} image={product.thumbnails} name={product.name} price={product.price} old={product.oldPrice} discount={product.discount} isDiscounted={product.isDiscounted} wishList={true} />
+                            return <ProductCart key={index} id={product._id} image={product.thumbnails} name={product.name} price={product.price} old={product.oldPrice} discount={product.discount} isDiscounted={product.isDiscounted} wishList={true} onDelete={() => handleDelete(product._id)} />
                         })
                     }
                 </div>

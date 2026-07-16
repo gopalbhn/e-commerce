@@ -5,7 +5,9 @@ import { create } from "zustand";
 
 const UserStore = create<UserState>((set) => ({
     user: null,
-    setUser: (user: User) => set({ user })
+    isloading: true,
+    setUser: (user: User) => set({ user }),
+    setIsLoading: (loading: boolean) => set({ isloading: loading })
 }))
 
 export default UserStore;

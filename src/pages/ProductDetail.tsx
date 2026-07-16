@@ -165,7 +165,7 @@ const ProductDetail = () => {
 
             <h2 className='text-title font-bold text-primary'>${product?.price}</h2>
             <h2 className='text-body text-gray-500 line-through'>${product?.oldPrice}</h2>
-            <h2 className='text-title font-bold text-primary-light'>{product?.discount}</h2>
+            <h2 className='text-title font-bold text-primary-light'>{product?.discount}%</h2>
           </div>
           <div className='  px-3 py-1.5 rounded-xl border border-gray-300 bg-[#f1edec]'>
             <p className='flex items-center gap-4 mb-1'>
@@ -212,8 +212,9 @@ const ProductDetail = () => {
                 })}>-</button>
                 <span className='text-sm font-semibold'>{totalCartItem}</span>
                 <button className='px-4 py-2.5 hover:bg-gray-200' onClick={() => setTotalCartItem(prev => {
-                  if (prev >= product.quantity) {
-                    return product.quantity;
+                  if (prev >= product.stock) {
+                    toast.error("Out of Stock")
+                    return product.stock;
                   } else {
                     prev++;
                     return prev;

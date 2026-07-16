@@ -8,6 +8,8 @@ import categoryRouter from "./routes/categoryRouter.js"
 import "./models/categoryModel.js";
 import "./models/brand.js";
 import cookieParser from "cookie-parser";
+import addressRouter from "./routes/addressRouter.js";
+import orderRouter from "./routes/orderRoute.js"
 const app = express();
 
 app.use(cookieParser());
@@ -24,6 +26,8 @@ app.use('/api/wishlist', wishlistRouter)
 app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/category', categoryRouter)
+app.use('/api/address', addressRouter)
+app.use('/api/order', orderRouter)
 app.get('/health-check', (req, res) => {
   const healthData = {
     uptime: process.uptime(),

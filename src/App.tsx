@@ -26,6 +26,7 @@ import { Toaster } from 'sonner'
 import VerifyEmail from './pages/verifyEmail'
 import { useEffect } from 'react'
 import UserStore from './store/userStore'
+import { Loader } from 'lucide-react'
 
 function App() {
 
@@ -50,43 +51,57 @@ function App() {
 
 function Init() {
   const location = useLocation();
-  const setUser = UserStore((state: any) => state.setUser);
   const user = UserStore((state: any) => state.user);
+  const setUser = UserStore((state: any) => state.setUser);
+  const loading = UserStore(state => state.isloading)
+  const setIsLoading = UserStore(state => state.setIsLoading)
   const email = user?.id
   const role = user?.role;
   async function fetchMyInfo() {
-    let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/me`, {
-      credentials: "include"
-    });
-
-    if (!res.ok) {
-      const refreshRes = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/refresh-token`, {
-        method: "GET",
+    try {
+      setIsLoading(true)
+      let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/me`, {
         credentials: "include"
-      })
-
-      if (!refreshRes.ok) {
-        setUser(null)
-        return
-      }
-
-      res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/me`, {
-        method: "GET",
-        credentials: "include"
-      })
-
-    }
-    const data = await res.json();
-    console.log(data);
-
-    if (data.success) {
-      setUser({
-        id: data.data._id,
-
-        role: data.data.role,
-
-
       });
+
+      if (!res.ok) {
+        const refreshRes = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/refresh-token`, {
+          method: "GET",
+          credentials: "include"
+        })
+
+        if (!refreshRes.ok) {
+          setUser(null)
+          return
+        }
+
+        res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/me`, {
+          method: "GET",
+          credentials: "include"
+        })
+
+      }
+      const data = await res.json();
+      console.log(data);
+
+      if (data.success) {
+        setUser({
+          id: data.data._id,
+
+          role: data.data.role,
+
+
+        });
+      } else {
+        setUser(null)
+      }
+    } catch (error) {
+      console.log(error)
+      setUser(null)
+      setIsLoading(false)
+    } finally {
+
+      setIsLoading(false)
     }
   }
 
@@ -96,7 +111,13 @@ function Init() {
     fetchMyInfo();
 
   }, []);
-
+  if (loading) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    )
+  }
   return (
     <>
       {role !== "Seller" && role !== "Admin " && location.pathname !== "/login" && <NavBar />}

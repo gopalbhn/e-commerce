@@ -4,12 +4,12 @@ import type { ProductCartType } from '../types/types'
 
 import { RxCross1 } from 'react-icons/rx'
 
-const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isDiscounted, id }: ProductCartType) => {
+const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isDiscounted, id, onDelete }: ProductCartType) => {
   console.log(wishList)
   return (
     <div className="group relative bg-white hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300" onClick={onclick}>
       {wishList && (
-        <button className='absolute top-4 right-4 bg-black/30 text-white h-8 w-8 rounded-full z-40 flex items-center justify-center'>
+        <button className='absolute top-4 right-4 bg-black/30 text-white h-8 w-8 rounded-full z-40 flex items-center justify-center' onClick={onDelete}>
           <RxCross1 />
         </button>
       )
@@ -41,10 +41,10 @@ const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isD
 
           <div className="flex items-center gap-2">
             <span className="text-headline-sm font-bold text-primary">
-              $ {price}
+              ${price}
             </span>
             <span className="text-body-sm text-outline line-through">
-              $ {old}
+              ${old}
             </span>
           </div>
 

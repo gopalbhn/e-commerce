@@ -14,14 +14,14 @@ const SellerRegistration = () => {
             <section className="w-full h-full px-10 mt-5 flex flex-col items-center">
                 <div className="h-15 w-[60%] mx-auto relative flex items-center justify-between gap-2 mt-10">
                     <div className=" flex flex-col items-center">
-                        <div className="h-8 w-8 rounded-full bg-primary text-white font-bold flex items-center justify-center">
+                        <div className={`h-8 w-8 rounded-full  font-bold flex items-center justify-center ${step >= 1 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
                             1
                         </div>
                         <p className="text-sm text-primary">Shiping</p>
                     </div>
                     <div className="relative h-0.5 bg-primary flex-1 -mt-6" />
                     <div className="flex flex-col items-center">
-                        <div className="h-8 w-8 rounded-full bg-primary text-white font-bold flex items-center justify-center">
+                        <div className={`h-8 w-8 rounded-full  font-bold flex items-center justify-center ${step > 2 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
                             2
                         </div>
                         <p className="text-sm text-primary">Payment</p>
@@ -29,7 +29,7 @@ const SellerRegistration = () => {
                     <div className="relative h-0.5 bg-gray-400 flex-1 -mt-6" />
 
                     <div className=" flex flex-col items-center">
-                        <div className="h-8 w-8 rounded-full bg-white border border-primary text-primary font-bold flex items-center justify-center">
+                        <div className={`h-8 w-8 rounded-full bg-white border border-primary text-primary font-bold flex items-center justify-center ${step > 3 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
                             3
                         </div>
                         <p className="text-sm text-primary">Review</p>

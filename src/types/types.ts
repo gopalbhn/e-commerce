@@ -19,6 +19,7 @@ export interface ProductCartType {
     wishList?: Boolean
     isDiscounted: Boolean
     onclick?: () => void
+    onDelete?: () => void
 }
 
 export interface WishListItemType {
@@ -30,7 +31,7 @@ export interface WishListItemType {
     discount?: string
     isDiscounted: Boolean,
     onclick?: () => void
-    onDelete?: () => void
+    handleDelete?: (id: string) => void
 }
 
 export interface AdminTopBarProps {
@@ -45,4 +46,13 @@ export interface User {
 export interface UserState {
     user: User | null;
     setUser: (user: User) => void
+    isloading: boolean,
+    setIsLoading: (isloading: boolean) => void
+}
+
+export interface ShippingAddressState {
+    state: string
+    district: string
+    city: string
+    street: string
 }

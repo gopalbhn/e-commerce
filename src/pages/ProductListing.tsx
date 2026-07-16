@@ -263,7 +263,7 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                 </div>
             ))}
             <div className="mt-2">
-                <h3 className="text-body font-semibold mb-2 uppercase"> Price Range</h3>
+                <h3 className="text-body font-semibold my-4"> Price Range</h3>
                 <div className="w-full flex items-center gap-1">
                     <input
                         type="number"
@@ -305,7 +305,7 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
 
             </div>
             <div className="mt-2">
-                <h3 className="text-body font-semibold mb-2 uppercase">Ratings</h3>
+                <h3 className="text-body font-semibold mb-2 ">Ratings</h3>
 
                 <div className="space-y-3">
                     {[5, 4, 3, 2, 1].map((rating) => (
