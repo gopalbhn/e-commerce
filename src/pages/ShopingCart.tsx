@@ -128,15 +128,16 @@ const ShopingCart = () => {
                                     <div className="h-30 w-30 overflow-hidden rounded-xl">
                                         <img src={item?.thumbnails} alt="Product Image" className="w-full h-full object-cover" />
                                     </div>
-                                    <div className='h-full w-full flex flex-col gap-y-10 '>
-                                        <div className="w-full flex justify-between">
+                                    <div className='h-full w-full flex flex-col gap-y-8 '>
+                                        <div className="w-full flex items-center justify-between">
                                             <div className="w-full ">
                                                 <p>{item.name}</p>
-                                                <p>Total quantity {item.quantity}</p>
+                                                <p>Total quantity: {item.quantity}</p>
+                                                <p> Price: ${item.price}</p>
                                                 {/* <p>Size: {item.variants.size} | Color: {item.variants.color}</p> */}
                                             </div>
                                             <div className='flex justify-end'>
-                                                {item.price}
+                                                <p> ${item.price * item.quantity}</p>
                                             </div>
                                         </div>
                                         <div className="w-full flex justify-between">

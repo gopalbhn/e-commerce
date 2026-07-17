@@ -32,7 +32,7 @@ const Checkout = () => {
 
 
   async function fetchCartItems() {
-    const res = await fetch("http://localhost:3000/api/cart/cart", {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/cart/cart`, {
       credentials: "include",
     });
 
@@ -76,14 +76,15 @@ const Checkout = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          paymentMethod: "esewa",
-          totalPrice: total,
-          products: products.map((item) => ({
-            id: item.id,
-            quantity: item.quantity,
-          })),
+          paymentMethod: "esewa"
         }),
       })
+
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Item Purchased successfully")
+      }
+
     } catch (error: any) {
       console.log(error)
     }
@@ -388,7 +389,7 @@ const OrderSummary = ({ products }: any) => {
               <p className="text-sm ">Qty: {item.quantity}</p>
             </div>
 
-            <p className="font-semibold text-sm">${item.price}</p>
+            <p className="font-semibold text-sm">${item.price * item.quantity}</p>
           </div>
         </div>
       ))

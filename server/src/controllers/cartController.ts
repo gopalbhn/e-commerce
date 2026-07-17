@@ -54,6 +54,20 @@ const addToCart = async (req: Request, res: Response) => {
         if (cart) {
             const existingProduct = cart.products.find((item) => item.productId.toString() === productId)
             if (existingProduct) {
+                const product = await Product.findById(productId);
+                console.log("product", product)
+                if (!product) {
+                    return res.status(404).json({
+                        success: false,
+                        message: "Product not found"
+                    })
+                }
+                if (product.stock <= existingProduct.quantity) {
+                    return res.status(404).json({
+                        success: false,
+                        message: "Quantity is greater than available stock"
+                    })
+                }
                 existingProduct.quantity += quantity;
                 await cart.save();
                 return res.status(200).json({
@@ -114,6 +128,7 @@ const removeFromCart = async (req: Request, res: Response) => {
                 message: "Product not found in cart"
             })
         }
+
         console.log("existingproduct", existingProduct)
         const result = await cart.updateOne(
             { userId: req.user.id },
@@ -156,10 +171,25 @@ const updateCart = async (req: Request, res: Response) => {
             })
         }
         const existingProduct = cart.products.find((item) => item.productId.toString() === cartItemId)
+        console.log("existingproduct", existingProduct)
         if (!existingProduct) {
             return res.status(404).json({
                 success: false,
                 message: "Product not found in cart"
+            })
+        }
+        const product = await Product.findById(existingProduct.productId);
+        console.log("product", product)
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            })
+        }
+        if (product.stock < quantity) {
+            return res.status(404).json({
+                success: false,
+                message: "Quantity is greater than available stock"
             })
         }
         existingProduct.quantity = quantity;

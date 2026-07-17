@@ -8,9 +8,19 @@ const orderSchema = new Schema({
     },
     items: [
         {
-            type: Schema.Types.ObjectId,
-            ref: "Product",
-            required: true
+            product: {
+                type: Schema.Types.ObjectId,
+                ref: "Product",
+                required: true
+            },
+            quantity: {
+                type: Number,
+                required: true
+            },
+            price: {
+                type: Number,
+                required: true
+            }
         }
     ],
     totalPrice: {
@@ -29,7 +39,7 @@ const orderSchema = new Schema({
     orderStatus: {
         type: String,
         required: true,
-        enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
+        enum: ["Pending", "Confirmed", "Processing", "Shipped", "Out for Delivery", "Delivered", "Cancelled"],
         default: "Pending"
     }
 })

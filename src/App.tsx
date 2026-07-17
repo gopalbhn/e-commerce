@@ -7,7 +7,7 @@ import ProductDetail from './pages/ProductDetail'
 import ShopingCart from './pages/ShopingCart'
 import ProductListing from './pages/ProductListing'
 import WishList from './pages/WishList'
-import MyOrders from './pages/MyOrders'
+import MyOrders from './pages/OrdersDetail'
 import Checkout from './pages/Checkout'
 import PurchaseHistory from './pages/PurchaseHistory'
 import Login from './pages/Login'
@@ -27,6 +27,8 @@ import VerifyEmail from './pages/verifyEmail'
 import { useEffect } from 'react'
 import UserStore from './store/userStore'
 import { Loader } from 'lucide-react'
+import MyOrder from './pages/MyOrder'
+import OrderDetail from './pages/OrdersDetail'
 
 function App() {
 
@@ -136,7 +138,8 @@ function Init() {
         } />
         <Route path='/wishlist' element={<WishList />} />
         <Route path='/category' element={<ProductListing />} />
-        <Route path='/myorder' element={<MyOrders />} />
+        <Route path='/myorder' element={<MyOrder />} />
+        <Route path="/orders/:id" element={<OrderDetail />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/purchase-history' element={<PurchaseHistory />} />
 

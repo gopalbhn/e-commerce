@@ -1,6 +1,10 @@
 import Footer from "../components/Footer"
 
 const PurchaseHistory = () => {
+
+
+
+
     return (
         <div className="h-full w-full ">
             <section className="h-full w-full mb-15 px-10">
