@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SellerSideBar from "../../components/Sellers/SellerSideBar";
 import { MdMenu } from "react-icons/md";
 
@@ -13,6 +13,7 @@ import { Bar } from "react-chartjs-2";
 
 import { FiEdit } from "react-icons/fi";
 import { products } from "@/lib/data";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
@@ -77,13 +78,52 @@ const cards = [
 
 const SellerDashboard = () => {
     const [open, setOpen] = useState(true);
+    const [lowStockProduct, setLowStockProduct] = useState<any | []>([])
+    const [pendingOrder, setPendingOrder] = useState<any | []>([])
+    const navigate = useNavigate();
+    async function fetchLowStockProduct() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product/low-stock`, {
+                method: "GET",
+                credentials: "include"
+            })
+            const data = await res.json()
+            console.log(data)
+            if (data.success) {
+                setLowStockProduct(data.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
+    async function fetchPendingOrder() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/pending`, {
+                method: "GET",
+                credentials: "include"
+            })
+            const data = await res.json()
+            console.log(data)
+            if (data.success) {
+                setPendingOrder(data.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        fetchLowStockProduct(),
+            fetchPendingOrder()
+    }, [])
+    console.log(lowStockProduct)
+    console.log(pendingOrder)
     return (
         <div className="min-h-screen bg-gray-100 flex">
             <SellerSideBar open={open} />
 
             <section
-                className={`flex-1 transition-all duration-300 ${open ? "ml-[25%]" : "ml-0"
+                className={`flex-1 transition-all duration-300 ${open ? "ml-[15%]" : "ml-0"
                     }`}
             >
                 {/* Header */}
@@ -113,25 +153,25 @@ const SellerDashboard = () => {
                 <div className="w-full p-4">
                     <h1 className="text-primary text-title font-semibold">Low Stocks</h1>
                     <div className="w-full flex flex-col gap-2">
-                        {products.slice(0, 2).map(product => (
+                        {lowStockProduct.map(product => (
 
                             <div className="h-full w-full flex items-center gap-2 p-2 shadow-sm">
 
                                 <div className="h-15 w-15 flex items-center justify-center overflow-hidden rounded-xl mt-2">
-                                    <img src={product.img} className="h-full w-full object-cover" alt="" />
+                                    <img src={product.thumbnails} className="h-full w-full object-cover" alt="" />
                                 </div>
                                 <div className=" w-full flex items-center justify-between mt-2">
                                     <div className="flex flex-col gap-1">
                                         <p className="font-semibold text-primary">{product.name}</p>
-                                        <p>Quantity: {product.quantity}</p>
+                                        <p>Quantity: {product.stock}</p>
                                     </div>
-                                    <button className="bg-primary-hover/5 p-2 rounded-lg mr-10"><FiEdit color="" /></button>
+                                    <button className="bg-primary-hover/5 p-2 rounded-lg mr-10" onClick={() => navigate(`/seller/edit-product/${product._id}`)}><FiEdit color="" /></button>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-                <PendingOrdersTable />
+                <PendingOrdersTable pendingOrder={pendingOrder} />
             </section>
         </div>
     );
@@ -198,7 +238,9 @@ const StatsCard = ({
     );
 };
 
-const PendingOrdersTable = () => {
+const PendingOrdersTable = ({ pendingOrder }: any) => {
+    console.log("table pending order", pendingOrder)
+    const navigate = useNavigate();
     const pendingOrders = [
         {
             id: "#ORD-90210",
@@ -243,72 +285,77 @@ const PendingOrdersTable = () => {
                         View All Orders
                     </button>
                 </div>
-
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="text-left text-xs uppercase tracking-wider text-gray-400 border-b">
-                                <th className="pb-4">Order ID</th>
-                                <th className="pb-4">Customer</th>
-                                <th className="pb-4">Date</th>
-                                <th className="pb-4">Total</th>
-                                <th className="pb-4">Status</th>
-                                <th className="pb-4 text-right">Actions</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {pendingOrders.map((order) => (
-                                <tr
-                                    key={order.id}
-                                    className="  hover:bg-gray-50 transition"
-                                >
-                                    <td className="py-5 font-semibold text-sm text-gray-800">
-                                        {order.id}
-                                    </td>
-
-                                    <td className="py-5">
-                                        <div className="flex items-center gap-3">
+                {pendingOrder.length <= 0 ? (
+                    <div className="text-center">No Pending Prdocut</div>
+                ) : (
 
 
-                                            <span className="text-gray-700">{order.customer}</span>
-                                        </div>
-                                    </td>
-
-                                    <td className="py-5 text-gray-600">{order.date}</td>
-
-                                    <td className="py-5 font-semibold text-sm">{order.total}</td>
-
-                                    <td className="py-5">
-                                        <span
-                                            className={`px-3 py-1 rounded-full text-xs font-medium
-                  ${order.status === "Processing"
-                                                    ? "bg-orange-100 text-orange-700"
-                                                    : order.status === "Awaiting Payment"
-                                                        ? "bg-gray-200 text-gray-700"
-                                                        : "bg-green-100 text-green-700"
-                                                }`}
-                                        >
-                                            {order.status}
-                                        </span>
-                                    </td>
-
-                                    <td className="py-5 text-right">
-                                        {order.action === "Ship Now" ? (
-                                            <button className="bg-[#8B4B39] hover:bg-[#733a2b] text-white px-5 py-2 rounded-lg text-sm font-medium">
-                                                Ship Now
-                                            </button>
-                                        ) : (
-                                            <button className="text-[#8B4B39] hover:underline font-medium">
-                                                Details
-                                            </button>
-                                        )}
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="text-left text-xs uppercase tracking-wider text-gray-400 border-b">
+                                    <th className="pb-4">Order ID</th>
+                                    <th className="pb-4">Customer</th>
+                                    <th className="pb-4">Date</th>
+                                    <th className="pb-4">Total</th>
+                                    <th className="pb-4">Status</th>
+                                    <th className="pb-4 text-right">Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+
+                            <tbody>
+                                {pendingOrder.map((order) => (
+                                    <tr
+                                        key={order._id}
+                                        className="  hover:bg-gray-50 transition"
+                                    >
+                                        <td className="py-5 font-semibold text-sm text-gray-800">
+                                            {order._id}
+                                        </td>
+
+                                        <td className="py-5">
+                                            <div className="flex items-center gap-3">
+
+
+                                                <span className="text-gray-700">{order.buyer.name}</span>
+                                            </div>
+                                        </td>
+
+                                        <td className="py-5 text-gray-600">{order.createdAt}</td>
+
+                                        <td className="py-5 font-semibold text-sm">{order.totalPrice}</td>
+
+                                        <td className="py-5">
+                                            <span
+                                                className={`px-3 py-1 rounded-full text-xs font-medium
+                  ${order.orderStatus === "pending"
+                                                        ? "bg-orange-100 text-orange-700"
+                                                        : order.orderStatus === "awaiting_payment"
+                                                            ? "bg-gray-200 text-gray-700"
+                                                            : "bg-green-100 text-green-700"
+                                                    }`}
+                                            >
+                                                {order.orderStatus}
+                                            </span>
+                                        </td>
+
+                                        <td className="py-5 text-right">
+                                            {order.action === "Ship Now" ? (
+                                                <button className="bg-[#8B4B39] hover:bg-[#733a2b] text-white px-5 py-2 rounded-lg text-sm font-medium">
+                                                    Ship Now
+                                                </button>
+                                            ) : (
+                                                <button className="text-[#8B4B39] hover:underline font-medium" onClick={() => navigate(`/orders/${order._id}`)}>
+                                                    Details
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
         </div>
     )

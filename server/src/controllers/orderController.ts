@@ -6,6 +6,47 @@ import Product from "../models/productModel.js";
 
 
 
+const getSellerOrder = async (req: Request, res: Response) => {
+    try {
+        const products = await Product.find({
+            seller: req.user.id,
+
+        })
+        console.log("products", products)
+
+        if (products.length == 0) {
+            return res.status(200).json({
+                success: false,
+                message: "Pending Product Not found",
+
+            });
+        }
+        const productId = products.map(prod => prod._id)
+        console.log("ProductId", productId)
+        const pendingOrder = await Order.find({
+            "items.product": {
+                "$in": productId
+            }
+        }).populate({
+            path: "buyer",
+            select: "name email"
+        }).populate({
+            path: "shippingAddress",
+            select: "state district city street"
+        })
+        console.log("Pending Order", pendingOrder)
+        res.status(200).json({
+            success: true,
+            data: pendingOrder
+        })
+
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
 const getMyOrder = async (req: Request, res: Response) => {
     try {
         const orders = await Order.find({
@@ -32,8 +73,6 @@ const getMyOrder = async (req: Request, res: Response) => {
         })
     }
 }
-
-
 const getOrder = async (req: Request, res: Response) => {
     try {
         console.log("Request here")
@@ -132,9 +171,79 @@ const createOrder = async (req: Request, res: Response) => {
     }
 }
 
+const getPendingOrders = async (req: Request, res: Response) => {
 
+    try {
+        const products = await Product.find({
+            seller: req.user.id,
+
+        })
+        console.log("products", products)
+
+        if (products.length == 0) {
+            return res.status(200).json({
+                success: false,
+                message: "Pending Product Not found",
+
+            });
+        }
+        const productId = products.map(prod => prod._id)
+        console.log("ProductId", productId)
+        const pendingOrder = await Order.find({
+            "items.product": {
+                "$in": productId
+            },
+            orderStatus: "Pending"
+        }).populate({
+            path: "buyer",
+            select: "name email"
+        }).populate({
+            path: "shippingAddress",
+            select: "state district city street"
+        })
+        console.log("Pending Order", pendingOrder)
+        res.status(200).json({
+            success: true,
+            data: pendingOrder
+        })
+
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+const updateOrderStatus = async (req: Request, res: Response) => {
+    const orderId = req.params.id;
+    const { status } = req.body;
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found"
+            })
+        }
+        order.orderStatus = status;
+        await order.save();
+        res.status(200).json({
+            success: true,
+            message: "Order status updated successfully",
+            orderId: order._id
+        })
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
 export {
     getMyOrder,
     getOrder,
-    createOrder
+    createOrder,
+    getPendingOrders,
+    updateOrderStatus
 }

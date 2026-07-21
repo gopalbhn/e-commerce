@@ -38,7 +38,7 @@ const productSchema = new Schema<IProduct>({
     brand: {
         type: Schema.Types.ObjectId,
         ref: "Brand",
-        required: true
+        required: false
     },
     oldPrice: {
         type: Number,

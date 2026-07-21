@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import Footer from "../components/Footer";
-import CreditCardImage from "../assets/credit-card-icon.webp"
-import EsewaImage from "../assets/esewa.webp"
-import KhaltiImage from "../assets/khalti-icon.webp"
+import Footer from "@/components/normal/Footer";
+import CreditCardImage from "@/assets/credit-card-icon.webp"
+import EsewaImage from "@/assets/esewa.webp"
+import KhaltiImage from "@/assets/khalti-icon.webp"
 import type { ShippingAddressState } from "@/types/types";
-import Loader from "@/components/Loader";
+import Loader from "@/components/normal/Loader";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -69,7 +69,7 @@ const Checkout = () => {
     const shipping = 10
     const total = subtotal + tax + shipping
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order`, {
+      let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -81,7 +81,27 @@ const Checkout = () => {
       })
 
       const data = await res.json();
+      console.log(data)
       if (data.success) {
+
+        res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/payment/initiate`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderId: data.data._id,
+            amount: total,
+            gateway: "ESEWA"
+          })
+        })
+        const paymentRes = await res.json();
+        console.log("paymentRes", paymentRes)
+        if (paymentRes.success) {
+          toast.success("fetched")
+          redirectURI(paymentRes.paymentUrl, paymentRes.data)
+        }
         toast.success("Item Purchased successfully")
       }
 
@@ -90,6 +110,29 @@ const Checkout = () => {
     }
   }
 
+  function redirectURI(url, obj) {
+    const form = document.createElement("form")
+
+    form.method = "POST",
+      form.action = url,
+
+      Object.entries(obj).forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.type = "hidden";
+        input.name = key;
+        input.value = String(value);
+        form.appendChild(input);
+      })
+
+    document.body.appendChild(form)
+    form.submit();
+    document.body.removeChild(form);
+
+  }
+
+  // async function handlePay() {
+
+  // }
   console.log("address", address)
   return (
     <div className="w-full h-full">
@@ -168,6 +211,8 @@ const ShippingAddressForm = ({ nextStep }: any) => {
     }
     setLoading(false)
   }
+
+
   return (
     <div className="h-full w-full">
       <h1 className="text-title font-semibold">Shipping Address</h1>

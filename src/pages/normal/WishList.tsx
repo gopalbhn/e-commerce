@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
-import Footer from "../components/Footer"
-import ProductCart from "../components/productCart"
+import Footer from "@/components/normal/Footer"
+import ProductCart from "@/components/normal/productCart"
 
 import { useEffect, useState } from "react"
 import { toast } from "sonner"

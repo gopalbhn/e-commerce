@@ -4,14 +4,15 @@ import { BiCart, BiCheckCircle } from 'react-icons/bi'
 import { FiHeart, FiStar } from 'react-icons/fi'
 import { HiMiniMagnifyingGlassPlus } from 'react-icons/hi2'
 
-import Footer from '../components/Footer';
-import { useParams, useSearchParams } from 'react-router-dom';
+import Footer from '../../components/normal/Footer';
+import { useParams } from 'react-router-dom';
 
 
 import useCartStore from '@/store/cartStore';
 import { products } from '@/lib/data';
 import { toast } from 'sonner';
 import UserStore from '@/store/userStore';
+import SuccessModal from '@/components/normal/successModal';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
@@ -21,7 +22,9 @@ const ProductDetail = () => {
   const [totalCartItem, setTotalCartItem] = useState<number>(1)
   const [isWishListed, setIsWishlisted] = useState(false)
   const [product, setProduct] = useState(null)
+  const [buttonDisabled, setButtonDisabled] = useState(false)
   const { id } = useParams();
+  const [successModalOpen, setSuccessModalOpen] = useState(false)
 
   const [previewimage, setPreviewimage] = useState<string>(product?.thumbnails)
   console.log(product)
@@ -46,6 +49,7 @@ const ProductDetail = () => {
 
     const data = await res.json();
     if (data.success) {
+
       setIsWishlisted(true)
     }
 
@@ -62,6 +66,14 @@ const ProductDetail = () => {
         toast.success("Added Successfully")
       }, 500)
     } else {
+
+      if (res.status == 429) {
+        setTimeout(() => {
+          toast.error("Too many requests, please wait for some time")
+        }, 500)
+        return;
+      }
+
       const data = await res.json()
       setTimeout(() => {
         toast.error(data.message)
@@ -101,6 +113,7 @@ const ProductDetail = () => {
 
   }, [])
   async function AddToCart() {
+    setButtonDisabled(true)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/cart/add-to-cart`, {
       method: "POST",
       credentials: "include",
@@ -114,7 +127,13 @@ const ProductDetail = () => {
     })
     const data = await res.json()
     if (data.success) {
-      toast.success("Product added to cart")
+      // toast.success("Product added to cart")
+      setSuccessModalOpen(true)
+      setTimeout(() => {
+        setButtonDisabled(false)
+        setSuccessModalOpen(false)
+      }, 2 * 1000)
+
     }
 
   }
@@ -123,8 +142,10 @@ const ProductDetail = () => {
 
   console.log(product)
   return (
-    <div className='h-full w-full '>
-
+    <div className='h-full w-full relative'>
+      {successModalOpen && (
+        <SuccessModal text="Product added to cart" onclick={() => setSuccessModalOpen(false)} />
+      )}
       <h1 className='text-primary text-md px-14 font-semibold '>Home / Electornics / HeadPhone</h1>
       <section className='w-full h-[90vh] rounded-lg flex items-center justify-center gap-1 px-10'>
         <div className='w-1/2 h-full p-4 group'>
@@ -222,7 +243,7 @@ const ProductDetail = () => {
                 })}>+</button>
 
               </div>
-              <button className='w-full max-w-xl px-10 py-4 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300' onClick={AddToCart}>
+              <button disabled={buttonDisabled} className={`w-full max-w-xl px-10 py-4 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300 ${buttonDisabled ? "opacity-50 cursor-not-allowed" : ""}`} onClick={AddToCart}>
                 <BiCart className='text-xl' /> Add To cart
               </button>
 

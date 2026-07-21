@@ -10,9 +10,15 @@ import "./models/brand.js";
 import cookieParser from "cookie-parser";
 import addressRouter from "./routes/addressRouter.js";
 import orderRouter from "./routes/orderRoute.js"
+import { appLimiter } from "./middlewares/rateLimiter.js";
+import sellerRouter from "./routes/sellerRouter.js";
+import paymentRouter from "./routes/paymentRouter.js";
+import couponRouter from "./routes/couponRouter.js";
 const app = express();
 
 app.use(cookieParser());
+app.use(appLimiter)
+
 app.use(cors(
   {
     origin: process.env.FRONTEND_URI,
@@ -28,6 +34,10 @@ app.use('/api/cart', cartRouter)
 app.use('/api/category', categoryRouter)
 app.use('/api/address', addressRouter)
 app.use('/api/order', orderRouter)
+app.use('/api/seller', sellerRouter)
+app.use('/api/payment', paymentRouter)
+app.use('/api/coupon', couponRouter)
+
 app.get('/health-check', (req, res) => {
   const healthData = {
     uptime: process.uptime(),

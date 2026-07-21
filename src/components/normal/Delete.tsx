@@ -2,10 +2,10 @@ import { Button } from "../ui/button"
 
 interface DeleteModalProps {
     onCancel: () => void
-
+    onConfirm: () => void
 }
 
-const DeleteModal = ({ onCancel }: DeleteModalProps) => {
+const DeleteModal = ({ onCancel, onConfirm }: DeleteModalProps) => {
 
     return (
         <div className="fixed top-0 left-0 inset-0 w-full h-full flex items-center justify-center bg-black/20 z-100 ">
@@ -14,7 +14,7 @@ const DeleteModal = ({ onCancel }: DeleteModalProps) => {
                 <div className="flex gap-x-5 justify-end">
                     <Button variant={"outline"} onClick={onCancel}>Cancel</Button>
 
-                    <Button>Delete</Button>
+                    <Button variant={"default"} onClick={onConfirm}>Delete</Button>
                 </div>
             </div>
         </div>

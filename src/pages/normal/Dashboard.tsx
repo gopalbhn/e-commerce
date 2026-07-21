@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
-import CategoryCart from "../components/categoryCart"
-import Footer from "../components/Footer"
-import ProductCart from "../components/productCart"
+import CategoryCart from "../../components/normal/categoryCart"
+import Footer from "../../components/normal/Footer"
+import ProductCart from "../../components/normal/productCart"
 import { category } from "@/lib/data.js"
 import { toast } from "sonner"
 
@@ -153,26 +152,7 @@ const HeroCarousel = () => {
             </div>
 
             {/* Prev / Next arrows */}
-            <button
-                onClick={prev}
-                aria-label="Previous slide"
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-30
-                           w-10 h-10 flex items-center justify-center
-                           bg-white/70 hover:bg-white rounded-full shadow
-                           transition-colors duration-200"
-            >
-                <IoChevronBackOutline className="text-xl text-secondary" />
-            </button>
-            <button
-                onClick={next}
-                aria-label="Next slide"
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-30
-                           w-10 h-10 flex items-center justify-center
-                           bg-white/70 hover:bg-white rounded-full shadow
-                           transition-colors duration-200"
-            >
-                <IoChevronForwardOutline className="text-xl text-secondary" />
-            </button>
+
 
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-2">
                 {heroSlides.map((_, i) => (

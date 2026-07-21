@@ -1,12 +1,12 @@
 import { FaVanShuttle } from "react-icons/fa6";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { TiTick } from "react-icons/ti";
-import { VscLocation } from "react-icons/vsc";
 
-import Footer from "../components/Footer";
+
+import Footer from "../../components/normal/Footer";
 import { useEffect, useState } from "react";
-import Loader from "@/components/Loader";
+import Loader from "@/components/normal/Loader";
 import { useParams } from "react-router-dom";
+import { GrLocation } from "react-icons/gr"
 
 const OrderDetail = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -34,7 +34,7 @@ const OrderDetail = () => {
 
           status: datas.orderStatus,
           shippingAddress: datas.shippingAddress,
-          totalAmount: datas.totalPrice,
+          totalAmount: datas.items.reduce((acc: number, item: any) => acc + item.price, 0),
         }
         console.log("orderdata", orderData)
         setOrders(orderData)
@@ -49,7 +49,7 @@ const OrderDetail = () => {
   useEffect(() => {
     fetchMyOrder();
   }, [])
-
+  const step = 1
   if (loading) {
     return <Loader />
   }
@@ -76,68 +76,31 @@ const OrderDetail = () => {
               </div>
             </div>
 
-            <div className="w-full border border-gray-300 rounded-md p-6">
-              <div className="relative flex items-start justify-between">
-
-                <div className="absolute top-7 left-[8%] right-[8%] h-1 bg-gray-300"></div>
-
-
-                <div className="absolute top-7 left-[8%] w-[62%] h-1 bg-primary"></div>
-
-                <div className="relative z-10 flex-1 flex flex-col items-center">
-                  <div className="h-14 w-14 rounded-full bg-primary flex items-center justify-center">
-                    <TiTick className="text-white" size={24} />
-                  </div>
-
-                  <p className="mt-3 text-lg font-medium">Order Confirmed</p>
-                  <p className="text-gray-500 text-sm">
-                    Expected Delivery: 2023-10-20
-                  </p>
+            <div className="h-15 w-[60%] mx-auto relative flex items-center justify-between gap-2 mt-10">
+              <div className=" flex flex-col items-center">
+                <div className={`h-15 w-15 rounded-full  font-bold flex items-center justify-center ${step >= 1 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
+                  <IoMdCheckmarkCircleOutline className="text-white" size={30} />
                 </div>
-
-
-                <div className="relative z-10 flex-1 flex flex-col items-center">
-                  <div className="h-14 w-14 rounded-full bg-primary flex items-center justify-center">
-                    <TiTick className="text-white" size={24} />
-                  </div>
-
-                  <p className="mt-3 text-lg font-medium">Processing</p>
-                  <p className="text-gray-500 text-sm">Completed: 2023-10-20</p>
-                </div>
-
-
-                <div className="relative z-10 flex-1 flex flex-col items-center">
-                  <div className="h-14 w-14 rounded-full bg-primary flex items-center justify-center">
-                    <FaVanShuttle className="text-white" size={24} />
-                  </div>
-
-                  <p className="mt-3 text-lg font-medium">Shipped</p>
-                  <p className="text-gray-500 text-sm">Completed: 2023-10-20</p>
-                </div>
-
-
-                <div className="relative z-10 flex-1 flex flex-col items-center">
-                  <div className="h-14 w-14 rounded-full border-2 border-primary bg-white flex items-center justify-center">
-                    <VscLocation className="text-primary" size={24} />
-                  </div>
-
-                  <p className="mt-3 text-lg font-medium">Out for Delivery</p>
-                  <p className="text-gray-500 text-sm">Today</p>
-                </div>
-
-
-                <div className="relative z-10 flex-1 flex flex-col items-center">
-                  <div className="h-14 w-14 rounded-full bg-gray-200 border-2 border-primary flex items-center justify-center">
-                    <IoMdCheckmarkCircleOutline
-                      className="text-primary"
-                      size={24}
-                    />
-                  </div>
-
-                  <p className="mt-3 text-lg font-medium">Delivered</p>
-                  <p className="text-gray-500 text-sm">Pending</p>
-                </div>
+                <p className="text-sm text-primary">Pending</p>
               </div>
+              <div className="relative h-0.5 bg-primary flex-1 -mt-6" />
+              <div className="flex flex-col items-center">
+                <div className={`h-15 w-15 rounded-full  font-bold flex items-center justify-center ${step > 2 ? `bg-primary text-white` : `bg-gray-200 text-gray-200`}`}>
+
+                  <FaVanShuttle className="text-white" size={30} />
+                </div>
+                <p className="text-sm text-primary">Shipped</p>
+              </div>
+              <div className="relative h-0.5 bg-gray-400 flex-1 -mt-6" />
+
+              <div className=" flex flex-col items-center">
+                <div className={`h-15 w-15 rounded-full bg-white border border-primary text-primary font-bold flex items-center justify-center ${step > 3 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
+                  <GrLocation className="text-primary" size={30} />
+
+                </div>
+                <p className="text-sm text-primary">Delivered</p>
+              </div>
+
             </div>
             <div className="w-full mt-10 flex gap-10">
               <div className="h-full w-2/3 shadow-sm rounded-xl ">

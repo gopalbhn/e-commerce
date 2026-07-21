@@ -1,6 +1,6 @@
 import { FaRegStar, FaStar } from "react-icons/fa"
 
-import ProductCart from "../components/productCart"
+import ProductCart from "../../components/normal/productCart"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { MdFilterAlt } from "react-icons/md"

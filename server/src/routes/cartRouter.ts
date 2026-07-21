@@ -2,11 +2,12 @@ import { Router } from "express";
 
 import { authenticateUser } from "../middlewares/auth.js";
 import { addToCart, getAllCartItem, removeFromCart, updateCart } from "../controllers/cartController.js";
+import { addToCartLimiter } from "../middlewares/rateLimiter.js";
 
 const router = Router();
 
 router.get("/cart", authenticateUser, getAllCartItem)
-router.post("/add-to-cart", authenticateUser, addToCart)
+router.post("/add-to-cart", authenticateUser, addToCartLimiter, addToCart)
 router.delete("/remove/:id", authenticateUser, removeFromCart)
 router.put("/update-cart", authenticateUser, updateCart)
 

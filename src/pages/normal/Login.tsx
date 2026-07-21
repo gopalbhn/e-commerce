@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import heroImage from "../assets/hero.png";
+import heroImage from "../../assets/hero.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 

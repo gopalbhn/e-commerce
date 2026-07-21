@@ -6,11 +6,12 @@ import { CiHeart } from "react-icons/ci"
 import { FaRegUserCircle } from "react-icons/fa"
 import { IoCartOutline, IoSearchOutline } from "react-icons/io5"
 import { Link, useNavigate } from "react-router-dom"
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 import { toast } from "sonner"
 
 const NavBar = () => {
     const [color, setColor] = useState<string>("")
+    const [open, setOpen] = useState(false)
     const navigate = useNavigate();
     const cartItem = useCartStore(state => state?.products)
     const cartItemLength = cartItem?.length;
@@ -83,12 +84,18 @@ const NavBar = () => {
                 </button>
                 {
                     userId ? (
-                        // <button className="p-2 rounded-full transition hover:bg-gray-100 " >
-                        //     <FaRegUserCircle className="text-2xl" />
-                        // </button>
-                        <Button variant={"default"} onClick={handleLogOut}>
-                            Logout
-                        </Button>
+                        <button className="p-2 rounded-full transition hover:bg-gray-100 relative" onClick={() => setOpen(!open)}>
+                            <FaRegUserCircle className="text-2xl" />
+                            {open && (
+                                <div className="absolute top-12 -right-5 bg-white shadow-lg rounded-lg w-28 flex flex-col items-center justify-center overflow-hidden">
+                                    <button className="text-secondary hover:text-primary w-full  p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/myorder")}>My Orders</button>
+                                    <button className="text-secondary hover:text-primary w-full p-2 cursor-pointer hover:bg-primary/30" onClick={handleLogOut}>Logout</button>
+                                </div>
+                            )}
+                        </button>
+                        // <Button variant={"default"} onClick={handleLogOut}>
+                        //     Logout
+                        // </Button>
                     ) : (
                         <Button variant={"default"} onClick={() => navigate('/login')}>
                             Login

@@ -1,16 +1,68 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MdMenu } from 'react-icons/md'
 import SellerSideBar from '../../components/Sellers/SellerSideBar'
 
 import { FaCalendarAlt, FaCar } from 'react-icons/fa'
+import Popup from '@/components/normal/Popup'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import { toast } from 'sonner'
 
 const AllOrders = () => {
     const [open, setOpen] = useState<boolean>(true)
+    const [order, setOrder] = useState<[] | any[] | null>([])
+    const [view, setView] = useState<string>("all")
+    async function fetchAllOrder() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order`, {
+                credentials: 'include'
+            })
+
+            const data = await res.json();
+
+            if (data.success) {
+                setOrder(data.data)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('all order', order)
+    useEffect(() => {
+        fetchAllOrder()
+    }, [])
+
+    function handlePendingOrder() {
+        setView("pending")
+        setOrder(order.filter((item: any) => item.orderStatus === "Pending"))
+    }
+    function handleCompletedOrder() {
+        setView("completed")
+        setOrder(order.filter((item: any) => item.orderStatus === "Delivered"))
+    }
+
+    async function updateStatus(status, id) {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/update/${id}`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                status
+            })
+        })
+
+        const data = await res.json()
+        if (data.success) {
+            toast.success(data.message)
+            fetchAllOrder()
+        }
+    }
     return (
         <div className="h-full w-full bg-gray-50 flex">
             <SellerSideBar open={open} />
 
-            <section className={`w-full h-full ${open ? "ml-[25%] p-4" : "ml-0 "} transition-all duration-300 px-10`}>
+            <section className={`w-full h-full ${open ? "ml-[15%] p-4" : "ml-0 "} transition-all duration-300 px-10`}>
                 <div className="h-15 w-full flex items-center ">
                     <div className="flex gap-3 items-center">
                         <button
@@ -30,11 +82,14 @@ const AllOrders = () => {
 
                 <div className="w-full h-full mt-5">
                     <div className='px-5 py-2 flex gap-2'>
-                        <button className='px-8 py-2 rounded-full bg-primary-hover text-white shadow-sm text-sm font-medium transition-all hover:shadow-md'>All</button>
-                        <button className='px-8 py-2 rounded-full bg-white border border-gray-200 text-gray-600 shadow-sm text-sm font-medium hover:bg-primary-hover hover:text-white hover:border-primary-hover transition-all'>Pending</button>
-                        <button className='px-8 py-2 rounded-full bg-white border border-gray-200 text-gray-600 shadow-sm text-sm font-medium hover:bg-primary-hover hover:text-white hover:border-primary-hover transition-all'>Completed</button>
+                        <button onClick={() => {
+                            fetchAllOrder()
+                            setView("all")
+                        }} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "all" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>All</button>
+                        <button onClick={handlePendingOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "pending" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Pending</button>
+                        <button onClick={handleCompletedOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "completed" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Completed</button>
                     </div>
-                    <OrderTable />
+                    <OrderTable order={order} updateStatus={updateStatus} />
                 </div>
             </section>
         </div>
@@ -87,17 +142,14 @@ const statusConfig: Record<string, { label: string; className: string }> = {
     Processing: { label: 'Processing', className: 'bg-purple-100 text-purple-700 border border-purple-200' },
 }
 
-const OrderTable = () => {
-    const orderDetail = [
-        { id: 'ORD-1001', date: '2026-07-08', customerName: 'John Smith', price: 129.99, status: 'Delivered' },
-        { id: 'ORD-1002', date: '2026-07-08', customerName: 'Emma Johnson', price: 59.49, status: 'Pending' },
-        { id: 'ORD-1003', date: '2026-07-07', customerName: 'Michael Brown', price: 249.99, status: 'Shipped' },
-        { id: 'ORD-1004', date: '2026-07-07', customerName: 'Sophia Davis', price: 89.95, status: 'Cancelled' },
-        { id: 'ORD-1005', date: '2026-07-06', customerName: 'William Wilson', price: 179.50, status: 'Delivered' },
-        { id: 'ORD-1006', date: '2026-07-06', customerName: 'Olivia Martinez', price: 39.99, status: 'Pending' },
-        { id: 'ORD-1007', date: '2026-07-05', customerName: 'James Anderson', price: 399.99, status: 'Processing' },
-        { id: 'ORD-1008', date: '2026-07-05', customerName: 'Ava Thomas', price: 74.99, status: 'Delivered' },
-    ]
+const OrderTable = ({ order, updateStatus }: { order: any[]; updateStatus: (status: string, id: string) => void }) => {
+    const [targetId, setTargetId] = useState<string | null>(null)
+    const [popup, setPopup] = useState<boolean>(false)
+
+    const handlePopup = (id: string) => {
+        setPopup(!popup)
+        setTargetId(id)
+    }
 
     return (
         <div className="w-full h-full bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100">
@@ -109,27 +161,72 @@ const OrderTable = () => {
                         <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Customer Name</th>
                         <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Price</th>
                         <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Status</th>
+                        <th className='text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3'>Action</th>
                     </tr>
                 </thead>
 
                 <tbody className="text-sm font-normal text-gray-700">
-                    {orderDetail.slice(0, 3).map((order, index) => {
-                        const status = statusConfig[order.status] ?? { label: order.status, className: 'bg-gray-100 text-gray-600' }
+                    {order.map((order: any, index: number) => {
+                        const status = statusConfig[order.orderStatus] ?? { label: order.orderStatus, className: 'bg-gray-100 text-gray-600' }
                         return (
                             <tr
                                 key={index}
                                 className="bg-gray-50 hover:bg-primary-light/10 transition-colors group rounded-lg"
                             >
                                 <td className="p-3 rounded-l-lg">
-                                    <span className="font-semibold text-primary">{order.id}</span>
+                                    <span className="font-semibold text-primary">{order._id}</span>
                                 </td>
-                                <td className="p-3 text-gray-500">{order.date}</td>
-                                <td className="p-3 font-medium text-gray-800">{order.customerName}</td>
-                                <td className="p-3 font-semibold text-gray-900">${order.price.toFixed(2)}</td>
+                                <td className="p-3 text-gray-500">{order.createdAt}</td>
+                                <td className="p-3 font-medium text-gray-800">{order.buyer.name}</td>
+                                <td className="p-3 font-semibold text-gray-900">${order.totalPrice}</td>
                                 <td className="p-3 rounded-r-lg">
                                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${status.className}`}>
                                         {status.label}
                                     </span>
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-500 flex relative ">
+
+                                    <button className="p-4 hover:bg-gray-100 rounded-xl" onClick={() => handlePopup(order._id)}>
+                                        <BsThreeDotsVertical size={20} />
+                                    </button>
+
+                                    {order._id === targetId && popup && (
+                                        <>
+                                            <div
+                                                className="fixed inset-0 z-40"
+                                                onClick={() => {
+                                                    setPopup(false);
+                                                    setTargetId(null);
+                                                }}
+                                            />
+
+
+                                            <div
+                                                className="absolute right-0 top-12 z-50"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <Popup
+                                                    varaint='order'
+                                                    id={order._id}
+                                                    onDelete={() => {
+                                                        setPopup(false);
+                                                        setTargetId(null);
+                                                        updateStatus("Cancelled", order._id)
+                                                    }}
+                                                    onDeliver={() => {
+                                                        setPopup(false);
+                                                        setTargetId(null);
+                                                        updateStatus("Delivered", order._id)
+                                                    }}
+                                                    onShip={() => {
+                                                        setPopup(false);
+                                                        setTargetId(null);
+                                                        updateStatus("Shipped", order._id)
+                                                    }}
+                                                />
+                                            </div>
+                                        </>
+                                    )}
                                 </td>
                             </tr>
                         )

@@ -1,6 +1,6 @@
 
 import { FaShoppingCart } from 'react-icons/fa'
-import type { ProductCartType } from '../types/types'
+import type { ProductCartType } from '../../types/types'
 
 import { RxCross1 } from 'react-icons/rx'
 

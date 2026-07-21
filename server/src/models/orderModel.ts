@@ -39,10 +39,16 @@ const orderSchema = new Schema({
     orderStatus: {
         type: String,
         required: true,
-        enum: ["Pending", "Confirmed", "Processing", "Shipped", "Out for Delivery", "Delivered", "Cancelled"],
+        enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
+        default: "Pending"
+    },
+    paymentStatus: {
+        type: String,
+        required: true,
+        enum: ["Paid", "Pending"],
         default: "Pending"
     }
-})
+}, { timestamps: true })
 
 const Order = model("Order", orderSchema)
 

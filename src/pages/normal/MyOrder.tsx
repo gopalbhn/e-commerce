@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import Loader from "@/components/Loader";
-import Footer from "../components/Footer";
+import Loader from "@/components/normal/Loader";
+import Footer from "../../components/normal/Footer";
 import { useNavigate } from "react-router-dom";
 
 function OrderComponent({ order }: { order: any }) {
     const navigate = useNavigate();
     const { id, status, createdAt, totalAmount } = order;
-
+    const finalTotal = totalAmount + totalAmount * 0.13 + 10;
     const formattedDate = new Date(createdAt).toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
@@ -31,7 +31,7 @@ function OrderComponent({ order }: { order: any }) {
                     </p>
 
                     <p className="text-2xl font-bold text-primary">
-                        ${totalAmount.toFixed(2)}
+                        ${finalTotal}
                     </p>
                 </div>
 
@@ -72,6 +72,9 @@ const MyOrder = () => {
             const data = await res.json();
 
             if (data.success) {
+                console.log("data.data log", data.data)
+
+
                 const transformed = data.data.map((item: any) => ({
                     id: item._id,
                     status: item.orderStatus,
@@ -79,15 +82,11 @@ const MyOrder = () => {
                         item.createdAt ||
                         item.created_at ||
                         new Date().toISOString(),
-                    totalAmount: item.items.reduce(
-                        (sum: number, prod: any) =>
-                            sum +
-                            prod.product.price * prod.quantity,
-                        0
-                    ),
+                    totalAmount: item.items.reduce((sum: Number, prod: any) => sum + prod.price, 0),
+
                     raw: item,
                 }));
-
+                console.log("transformed output", transformed)
                 setOrders(transformed);
             }
         } catch (err) {
@@ -100,7 +99,7 @@ const MyOrder = () => {
     useEffect(() => {
         fetchOrders();
     }, []);
-
+    console.log("order", orders)
     if (loading) return <Loader />;
 
     return (

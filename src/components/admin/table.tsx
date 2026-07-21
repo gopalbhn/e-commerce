@@ -1,8 +1,8 @@
 import { productData } from "@/lib/data"
 import { useState } from "react"
 import { BsThreeDotsVertical } from "react-icons/bs"
-import Popup from "./Popup"
-import DeleteModal from "./Delete"
+import Popup from "../normal/Popup"
+import DeleteModal from "../normal/Delete"
 
 
 
@@ -38,7 +38,9 @@ export default function Table({ varaint, data }: TableProps) {
                     {showDeleteConfirm && <DeleteModal onCancel={() => {
                         setPopup(false)
                         setShowDeleteConfirm(false)
-                    }} />}
+                    }}
+                        onConfirm={() => { console.log("product deleted") }}
+                    />}
                     <thead>
                         <tr className="border-b border-gray-500">
 
@@ -153,7 +155,9 @@ export default function Table({ varaint, data }: TableProps) {
                     {showDeleteConfirm && <DeleteModal onCancel={() => {
                         setPopup(false)
                         setShowDeleteConfirm(false)
-                    }} />}
+                    }}
+                        onConfirm={() => { console.log("deleted") }}
+                    />}
                     <thead>
                         <tr>
                             {UserColumn.map((column, index) => (

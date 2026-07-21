@@ -1,16 +1,15 @@
 
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import './App.css'
-import NavBar from './components/navbar'
-import Dashboard from './pages/Dashboard'
-import ProductDetail from './pages/ProductDetail'
-import ShopingCart from './pages/ShopingCart'
-import ProductListing from './pages/ProductListing'
-import WishList from './pages/WishList'
-import MyOrders from './pages/OrdersDetail'
-import Checkout from './pages/Checkout'
-import PurchaseHistory from './pages/PurchaseHistory'
-import Login from './pages/Login'
+import NavBar from './components/normal/navbar'
+import Dashboard from './pages/normal/Dashboard'
+import ProductDetail from './pages/normal/ProductDetail'
+import ShopingCart from './pages/normal/ShopingCart'
+import ProductListing from './pages/normal/ProductListing'
+import WishList from './pages/normal/WishList'
+import Checkout from './pages/normal/Checkout'
+import PurchaseHistory from './pages/normal/PurchaseHistory'
+import Login from './pages/normal/Login'
 import SellerDashboard from './pages/seller/SellerDashboard'
 import MyProducts from './pages/seller/MyProducts'
 import AllOrders from './pages/seller/AllOrders'
@@ -23,12 +22,13 @@ import AdminProduct from './pages/admin/AdminProduct'
 import AllAdminOrders from './pages/admin/AllAdminOrders'
 import AllUsers from './pages/admin/AllUser'
 import { Toaster } from 'sonner'
-import VerifyEmail from './pages/verifyEmail'
+import VerifyEmail from './pages/normal/verifyEmail'
 import { useEffect } from 'react'
 import UserStore from './store/userStore'
 import { Loader } from 'lucide-react'
-import MyOrder from './pages/MyOrder'
-import OrderDetail from './pages/OrdersDetail'
+import MyOrder from './pages/normal/MyOrder'
+import OrderDetail from './pages/normal/OrdersDetail'
+import PaymentSuccess from './pages/normal/PaymentSuccess'
 
 function App() {
 
@@ -122,7 +122,7 @@ function Init() {
   }
   return (
     <>
-      {role !== "Seller" && role !== "Admin " && location.pathname !== "/login" && <NavBar />}
+      {role !== "Seller" && role !== "Admin" && location.pathname !== "/login" && <NavBar />}
       <Routes>
         <Route path='/' element={
           role === "Seller" ? <SellerDashboard /> : role === "Admin" ? <AdminDashboard /> : <Dashboard />
@@ -136,6 +136,7 @@ function Init() {
 
 
         } />
+        <Route path='/payment' element={<PaymentSuccess />} />
         <Route path='/wishlist' element={<WishList />} />
         <Route path='/category' element={<ProductListing />} />
         <Route path='/myorder' element={<MyOrder />} />
@@ -148,8 +149,8 @@ function Init() {
             <>
               <Route path='/seller/product' element={<MyProducts />} />
               <Route path='/seller/orders' element={<AllOrders />} />
-              <Route path='/seller/add-product' element={<AddProduct />} />
-              <Route path='/seller/edit-product' element={<EditProduct />} />
+              <Route path='/seller/add-product' element={<EditProduct />} />
+              <Route path='/seller/edit-product/:id' element={<EditProduct />} />
               <Route path="/seller/registration" element={<SellerRegistration />} />
               <Route path="/seller/coupons" element={<CouponManagement />} />
             </>
