@@ -14,6 +14,7 @@ import { appLimiter } from "./middlewares/rateLimiter.js";
 import sellerRouter from "./routes/sellerRouter.js";
 import paymentRouter from "./routes/paymentRouter.js";
 import couponRouter from "./routes/couponRouter.js";
+import adminRouter from "./routes/adminRouter.js"
 const app = express();
 
 app.use(cookieParser());
@@ -37,7 +38,7 @@ app.use('/api/order', orderRouter)
 app.use('/api/seller', sellerRouter)
 app.use('/api/payment', paymentRouter)
 app.use('/api/coupon', couponRouter)
-
+app.use('/api/admin', adminRouter)
 app.get('/health-check', (req, res) => {
   const healthData = {
     uptime: process.uptime(),

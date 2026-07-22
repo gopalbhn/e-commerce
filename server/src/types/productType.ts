@@ -14,6 +14,8 @@ export interface IProduct {
     isDeleted: boolean,
     seller: object
     brand: object
+    createdAt?: Date,
+    updatedAt?: Date
 }
 
 

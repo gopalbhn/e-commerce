@@ -14,6 +14,8 @@ export interface IUser {
     role: "Consumer" | "Seller" | "Admin";
     isDeleted: boolean;
     comparePassword(password: string): Promise<boolean>;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface TokenPayload {

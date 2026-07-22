@@ -26,7 +26,6 @@ const MetricChart = ({
             <div className="flex justify-between items-center mb-2">
                 <p className="text-xs font-bold text-gray-600">{title}</p>
             </div>
-
             <ResponsiveContainer width="100%" height={150}>
                 <BarChart data={data}>
                     <XAxis dataKey="week" className="text-sm" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
@@ -44,10 +43,11 @@ const MetricChart = ({
     );
 };
 
-function CustomTooltip() {
+
+function CustomTooltip({ payload }: any) {
     return (
         <div className="text-xl text-white">
-            10
+            {payload?.[0]?.value}
         </div>
     )
 }
