@@ -18,7 +18,6 @@ import EditProduct from './pages/seller/EditProduct'
 import SellerRegistration from './pages/seller/SellerRegistration'
 import CouponManagement from './pages/seller/CouponManagement'
 import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminProduct from './pages/admin/AdminProduct'
 import AllAdminOrders from './pages/admin/AllAdminOrders'
 import AllUsers from './pages/admin/AllUser'
 import { Toaster } from 'sonner'
@@ -29,6 +28,7 @@ import { Loader } from 'lucide-react'
 import MyOrder from './pages/normal/MyOrder'
 import OrderDetail from './pages/normal/OrdersDetail'
 import PaymentSuccess from './pages/normal/PaymentSuccess'
+import AdminProduct from './pages/admin/AdminProduct'
 
 function App() {
 
@@ -149,7 +149,7 @@ function Init() {
             <>
               <Route path='/seller/product' element={<MyProducts />} />
               <Route path='/seller/orders' element={<AllOrders />} />
-              <Route path='/seller/add-product' element={<EditProduct />} />
+              <Route path='/seller/add-product' element={<AddProduct />} />
               <Route path='/seller/edit-product/:id' element={<EditProduct />} />
               <Route path="/seller/registration" element={<SellerRegistration />} />
               <Route path="/seller/coupons" element={<CouponManagement />} />

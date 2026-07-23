@@ -178,7 +178,7 @@ const OrderTable = ({ order, updateStatus }: { order: any[]; updateStatus: (stat
                                 </td>
                                 <td className="p-3 text-gray-500">{order.createdAt}</td>
                                 <td className="p-3 font-medium text-gray-800">{order.buyer.name}</td>
-                                <td className="p-3 font-semibold text-gray-900">${order.totalPrice}</td>
+                                <td className="p-3 font-semibold text-gray-900">Npr.{order.totalPrice}</td>
                                 <td className="p-3 rounded-r-lg">
                                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${status.className}`}>
                                         {status.label}

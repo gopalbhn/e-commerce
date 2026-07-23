@@ -41,10 +41,10 @@ const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isD
 
           <div className="flex items-center gap-2">
             <span className="text-headline-sm font-bold text-primary">
-              ${price}
+              Rs.{price}
             </span>
             <span className="text-body-sm text-outline line-through">
-              ${old}
+              Rs.{old}
             </span>
           </div>
 

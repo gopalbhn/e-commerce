@@ -38,6 +38,11 @@ const paymentHndler = async (req: Request, res: Response) => {
             gateway,
             status: "pending",
         })
+        const message = `total_amount=${amount},transaction_uuid=${transactionUUID},product_code=${productCode}`;
+        const signature = generateSignature(
+            message,
+            process.env.ESEWA_SECRET_KEY!
+        );
         res.json({
             success: true,
             paymentUrl: "https://rc-epay.esewa.com.np/api/epay/main/v2/form",
@@ -53,7 +58,7 @@ const paymentHndler = async (req: Request, res: Response) => {
                 success_url: `${process.env.FRONTEND_URI}/order-success`,
                 failure_url: `${process.env.FRONTEND_URI}/order-failed`,
                 signed_field_names: "total_amount,transaction_uuid,product_code",
-                signature: generateSignature(transactionUUID + "," + amount + "," + process.env.ESEWA_PRODUCT_CODE, process.env.ESEWA_SECRET_KEY!),
+                signature
 
 
             }
@@ -64,4 +69,26 @@ const paymentHndler = async (req: Request, res: Response) => {
 }
 
 
-export { paymentHndler }
+const verifyEsewaPayment = async (req: Request, res: Response) => {
+    const {
+        transaction_uuid,
+        amount,
+        product_code,
+        status,
+        signed_field_names,
+        signature,
+    } = req.body;
+
+    const expectedMessage =
+        "total_amount=" + amount +
+        ",transaction_uuid=" + transaction_uuid +
+        ",product_code=" + product_code;
+
+    // Recalculate signature using your backend secret
+    const expectedSignature = generateSignature(
+        expectedMessage,
+        process.env.ESEWA_SECRET_KEY!   // ← same secret as init
+    );
+}
+
+export { paymentHndler, verifyEsewaPayment }

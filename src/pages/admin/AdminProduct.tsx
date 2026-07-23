@@ -1,11 +1,29 @@
 import AdminSideBar from "@/components/admin/AdminSideBar"
 import AdminTopBar from "@/components/admin/AdminTopBar"
 import Table from "@/components/admin/table"
-import { productData } from "@/lib/data"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const AdminProduct = () => {
   const [open, setOpen] = useState<boolean>(true)
+  const [products, setProducts] = useState([])
+
+  const fetchAllProduct = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product`)
+      const data = await response.json();
+      console.log(data)
+      if (data.success) {
+        setProducts(data.data)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchAllProduct();
+  }, []);
   return (
     <div className='h-full w-full'>
       <AdminSideBar open={open} />
@@ -27,7 +45,7 @@ const AdminProduct = () => {
             />
 
           </div>
-          <Table varaint="product" data={productData} />
+          <Table varaint="product" data={products} />
         </div>
       </section>
     </div>

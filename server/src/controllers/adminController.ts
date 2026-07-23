@@ -110,11 +110,19 @@ const getDashboardStats = async (req: Request, res: Response) => {
         const customer = await userDistribution.filter(user => user.role === "Consumer").length
 
         return res.status(200).json({
-            success: true, userWeeklyCounts, productsWeeklyCount, orderWeeklyCounts, seller, customer
+            success: true,
+            userWeeklyCounts,
+            productsWeeklyCount,
+            orderWeeklyCounts,
+            seller,
+            customer
         });
 
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal Server Error", error });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
@@ -124,9 +132,15 @@ const pendingSellerApproval = async (req: Request, res: Response) => {
             role: "Seller",
             isVerified: false
         })
-        return res.status(200).json({ success: true, message: "Pending Seller Approvals", sellers });
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal Server Error", error });
+        return res.status(200).json({
+            success: true,
+            sellers
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
@@ -141,9 +155,15 @@ const approveSeller = async (req: Request, res: Response) => {
         if (!seller) {
             return res.status(404).json({ success: false, message: "Seller Not Found" });
         }
-        return res.status(200).json({ success: true, message: "Seller Approved", seller });
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal Server Error", error });
+        return res.status(200).json({
+            success: true,
+            seller
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
@@ -152,11 +172,20 @@ const rejectSeller = async (req: Request, res: Response) => {
         const { id } = req.params;
         const seller = await User.findByIdAndDelete(id);
         if (!seller) {
-            return res.status(404).json({ success: false, message: "Seller Not Found" });
+            return res.status(404).json({
+                success: false,
+                message: "Seller Not Found"
+            });
         }
-        return res.status(200).json({ success: true, message: "Seller Rejected", seller });
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal Server Error", error });
+        return res.status(200).json({
+            success: true,
+            seller
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
@@ -165,36 +194,135 @@ const mostSoldProduct = async (req: Request, res: Response) => {
         const products = await Product.find({}).sort({
             sold: -1
         }).limit(10)
-        return res.status(200).json({ success: true, message: "Most Sold Products", products });
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal Server Error", error });
+        return res.status(200).json({
+            success: true,
+            message: "Most Sold Products",
+            products
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
 const recentProduct = async (req: Request, res: Response) => {
     try {
         const products = await Product.find({
-            createdAt: {
-                $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-            }
+            isDeleted: false,
+        }).populate({
+            path: "category",
+            select: "name"
         }).sort({
-            createdAt: -1
-        }).limit(10)
-        return res.status(200).json({ success: true, message: "Recent Products", products });
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal Server Error", error });
+            updatedAt: -1
+        }).limit(4)
+        return res.status(200).json({
+            success: true,
+            products
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
 const deleteProduct = async (req: Request, res: Response) => {
+    console.log("control from delete")
     try {
         const { id } = req.params;
-        const product = await Product.findByIdAndDelete(id);
-        return res.status(200).json({ success: true, message: "Product Deleted", product });
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal Server Error", error });
+        const product = await Product.findByIdAndUpdate(id, {
+            isDeleted: true
+        })
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product Not Found"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            product
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
 
-export { getDashboardStats, pendingSellerApproval, approveSeller, rejectSeller, mostSoldProduct }
+const AllOrder = async (req: Request, res: Response) => {
+    try {
+        const orders = await Order.find({}).populate({
+            path: "items.product",
+            select: "name image"
+        })
+        return res.status(200).json({ success: true, message: "All Orders", orders });
+    } catch (error: any) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+const AllUsers = async (req: Request, res: Response) => {
+    try {
+        const users = await User.find({
+            isDeleted: false,
+            role: {
+                $ne: "Admin"
+            }
+        }).select("name email role")
+
+        if (users.length == 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Users not found",
+            })
+        }
+
+        return res.status(200).json({ success: true, users });
+    } catch (error: any) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+const deleteUser = async (req: Request, res: Response) => {
+    try {
+
+        const userId = req.params.id;
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "userId not found"
+            })
+        }
+
+        const user = await User.findById(userId);
+
+
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "User Not Found"
+            })
+        }
+
+        user.isDeleted = true;
+
+        user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "User Deleted Successfully",
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
+export { getDashboardStats, pendingSellerApproval, approveSeller, rejectSeller, mostSoldProduct, recentProduct, deleteProduct, AllOrder, AllUsers, deleteUser }

@@ -133,11 +133,11 @@ const ShopingCart = () => {
                                             <div className="w-full ">
                                                 <p>{item.name}</p>
                                                 <p>Total quantity: {item.quantity}</p>
-                                                <p> Price: ${item.price}</p>
+                                                <p> Price: Npr.{item.price}</p>
                                                 {/* <p>Size: {item.variants.size} | Color: {item.variants.color}</p> */}
                                             </div>
                                             <div className='flex justify-end'>
-                                                <p> ${item.price * item.quantity}</p>
+                                                <p> Npr.{item.price * item.quantity}</p>
                                             </div>
                                         </div>
                                         <div className="w-full flex justify-between">

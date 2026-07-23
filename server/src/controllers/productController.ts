@@ -205,7 +205,10 @@ const deleteProduct = async (req: Request, res: Response) => {
 
 const getAllProducts = async (req: Request, res: Response) => {
     try {
-        const product = await Product.find({ isDeleted: false })
+        const product = await Product.find({ isDeleted: false }).populate({
+            path: "category",
+            select: "name"
+        })
         return res.status(200).json({
             success: true,
             message: "Products fetched successfully",
@@ -285,7 +288,7 @@ const getFilteredProduct = async (req: Request, res: Response) => {
 
 
         if (rating) {
-            filteredData.rating = Number(rating);
+            filteredData.rating = { $gte: Number(rating) };
         }
 
 

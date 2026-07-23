@@ -228,7 +228,7 @@ const ProductTable = ({ products, setShowDeleteConfirm, setDeleteItemId }: { pro
                     {product.category.name}
                   </span>
                 </td>
-                <td className="p-3 font-semibold text-gray-900">${product.price}</td>
+                <td className="p-3 font-semibold text-gray-900"> Rs.{product.price}</td>
                 <td className="p-3">
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${stock.className}`}>
                     {product.stock} in stock

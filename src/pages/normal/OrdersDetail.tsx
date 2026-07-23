@@ -175,20 +175,20 @@ function OrderSummary({ order }: any) {
       <h1 className="text-title font-semibold">Order Summary</h1>
       <div className="flex justify-between items-center">
         <p className="text-body ">Subtotal</p>
-        <p className="text-body  text-primary">$ {subtotal}</p>
+        <p className="text-body  text-primary">Npr. {subtotal}</p>
       </div>
       <div className="flex justify-between items-center">
         <p className="text-body ">Shipping</p>
-        <p className="text-body  text-primary">$ {shipping}</p>
+        <p className="text-body  text-primary">Npr. {shipping}</p>
       </div>
       <div className="flex justify-between items-center">
         <p className="text-body ">Tax</p>
-        <p className="text-body  text-primary">$ {tax}</p>
+        <p className="text-body  text-primary">Npr. {tax}</p>
       </div>
       <hr className="mt-10" />
       <div className="flex justify-between items-center mt-4">
         <p className="text-title font-semibold">Total</p>
-        <p className="text-title font-semibold text-primary">$ {total}</p>
+        <p className="text-title font-semibold text-primary">Npr. {total}</p>
       </div>
       <div className=" h-30 w-[75%] mx-auto mt-5 border border-primary/20 rounded-xl text-sm p-3">
         <p className="uppercase text-primary">Shipping Address</p>

@@ -1,7 +1,7 @@
 import { Cell, Pie, PieChart, Tooltip } from "recharts"
 import { PieChartData } from "../../lib/data.js"
 
-const UserPieChart = ({ data }: { data: any }) => {
+const UserPieChart = ({ data }: any) => {
     return (
         <PieChart
             style={{ width: "100%", maxWidth: '500px', maxHeight: "60vh", aspectRatio: "1/1" }}
@@ -24,7 +24,7 @@ const UserPieChart = ({ data }: { data: any }) => {
                 fill="#793A2E"
             >
                 <Tooltip />
-                {PieChartData.map((entry, index) => (
+                {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
             </Pie>

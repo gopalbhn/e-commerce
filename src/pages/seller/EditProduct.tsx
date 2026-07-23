@@ -148,20 +148,6 @@ const EditProduct = () => {
         fetchOneProduct();
     }, [])
     async function handleUpdateProduct() {
-        // const payload = {
-        //     name: title,
-        //     description: description,
-        //     category: category,
-        //     subcategory: subcategory,
-        //     price: basePrice,
-        //     discountRate: discountRate,
-        //     sku: sku,
-        //     stock: stock,
-        //     images: images,
-        //     thumbnails: thumbnails,
-        //     specs: specs
-
-        // }
         if (title === "" || category === "" || subcategory === "" || basePrice === 0 || discountRate === 0 || sku === "" || stock === 0 || images.length === 0 || thumbnails === null || specs.length === 0) {
             toast.error("Please fill all the fields");
             return;
@@ -195,6 +181,9 @@ const EditProduct = () => {
 
         const data = await res.json();
         console.log(data);
+        if (data.success) {
+            toast.success("Product Updated Successfully")
+        }
     }
 
     return (
@@ -320,7 +309,7 @@ const EditProduct = () => {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Base Price</label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">Npr.</span>
 
                                     <input
                                         type="number"

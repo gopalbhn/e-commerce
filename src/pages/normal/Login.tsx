@@ -4,7 +4,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import heroImage from "../../assets/hero.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
+import Logo from "@/assets/ecom_logo.webp"
 
 interface StrengthResult {
   score: number;
@@ -349,7 +349,9 @@ const Login = () => {
 
             {/* Brand */}
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-primary">ShopKaro</h1>
+              <div className="h-12 w-40">
+                <img src={Logo} className="h-full w-full object-cover" />
+              </div>
               <p className="text-sm text-secondary mt-1">
                 {tab === "login" ? "Welcome back! Sign in to continue." : "Create your account to get started."}
               </p>

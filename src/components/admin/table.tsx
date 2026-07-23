@@ -3,13 +3,15 @@ import { useState } from "react"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import Popup from "../normal/Popup"
 import DeleteModal from "../normal/Delete"
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
 
 
 
 
 const UserColumn = ["Id", "Name", "Email", "Role", "Action"]
 const ProductColumn = ["Id", "Product Name", "Price", "Stock", "Image", "Category", "Action"]
-const OrderColumn = ["Id", "Product", "Quantity", "Price", "Stock", "Image", "Status"]
+const OrderColumn = ["Id", "Total Items", "Price", "Status", "Action"]
 const MostSellingProductColumn = ["Id", "Product Name", "Price", "Total Sold", "Image", "Category", "Seller"]
 
 interface TableProps {
@@ -21,15 +23,52 @@ export default function Table({ varaint, data }: TableProps) {
     const [popup, setPopup] = useState(false)
     const [targetId, setTargetId] = useState<string | null>(null)
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+    const [type, setType] = useState<string | null>(null)
 
     const handlePopup = (id: string) => {
         setPopup(!popup)
         setTargetId(id)
     }
 
+    const handleProductDelete = async (productId: string) => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/delete-product/${productId}`, {
+                method: "DELETE",
+                credentials: "include"
+            })
+            const data = await res.json()
 
+            if (data.success) {
+                toast.success("Product deleted successfully")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
+    const handleUserDelete = async (userId: string) => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/delete-user/${userId}`, {
+                method: "DELETE",
+                credentials: "include"
+            })
+            const data = await res.json()
 
+            if (data.success) {
+                toast.success("User deleted successfully")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const navigate = useNavigate();
     switch (varaint) {
         case "product":
             return (
@@ -39,7 +78,11 @@ export default function Table({ varaint, data }: TableProps) {
                         setPopup(false)
                         setShowDeleteConfirm(false)
                     }}
-                        onConfirm={() => { console.log("product deleted") }}
+                        onConfirm={() => {
+                            if (type == "product") {
+                                handleProductDelete(targetId!)
+                            }
+                        }}
                     />}
                     <thead>
                         <tr className="border-b border-gray-500">
@@ -52,7 +95,7 @@ export default function Table({ varaint, data }: TableProps) {
                         </tr>
                     </thead>
                     <tbody>
-                        {productData.slice(0, 4).map(product => (
+                        {data?.map(product => (
                             <tr key={product._id} className="border-b border-gray-300">
                                 <td className="px-6 py-4 text-sm text-gray-500">
                                     {product._id}
@@ -69,11 +112,11 @@ export default function Table({ varaint, data }: TableProps) {
                                 <td className="px-6 py-4 text-sm text-gray-500">
                                     <div className="h-15 w-15 rounded-xl overflow-hidden">
 
-                                        <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+                                        <img src={product.thumbnails} alt={product.name} className="h-full w-full object-cover" />
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-500">
-                                    {product.category}
+                                    {product.category.name}
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-500 flex relative ">
 
@@ -86,8 +129,9 @@ export default function Table({ varaint, data }: TableProps) {
                                             varaint="product"
                                             id={product._id}
                                             onDelete={() => {
+                                                setType("product")
                                                 setPopup(false)
-                                                setTargetId(null)
+                                                setTargetId(product._id)
                                                 setShowDeleteConfirm(true)
                                             }}
 
@@ -121,26 +165,20 @@ export default function Table({ varaint, data }: TableProps) {
                                 <td className="px-6 py-4 text-sm text-gray-500">
                                     {item._id}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
-                                    {item.productName}
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
-                                    {item.quantity}
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
-                                    {item.price}
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
-                                    {item.stock}
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
-                                    <div className="h-15 w-15 rounded-xl overflow-hidden">
 
-                                        <img src={item.image} alt={item.productName} className="h-full w-full object-cover" />
-                                    </div>
+                                <td className="px-6 py-4 text-sm text-gray-500">
+                                    {item.items.length}
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-500">
-                                    {item.status}
+                                    {item.totalPrice}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-500">
+                                    {item.orderStatus}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-500">
+                                    <button className="p-4 hover:bg-gray-100 rounded-xl text-primary underline" onClick={() => navigate(`/order/${item._id}`)}>
+                                        View Order
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -156,7 +194,7 @@ export default function Table({ varaint, data }: TableProps) {
                         setPopup(false)
                         setShowDeleteConfirm(false)
                     }}
-                        onConfirm={() => { console.log("deleted") }}
+                        onConfirm={() => { handleUserDelete(targetId!) }}
                     />}
                     <thead>
                         <tr>
@@ -197,7 +235,7 @@ export default function Table({ varaint, data }: TableProps) {
                                             id={user._id}
                                             onDelete={() => {
                                                 setPopup(false)
-                                                setTargetId(null)
+                                                setTargetId(user._id)
                                                 setShowDeleteConfirm(true)
                                             }}
 

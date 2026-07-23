@@ -184,8 +184,8 @@ const ProductDetail = () => {
           <div className='flex items-center gap-4 '>
 
 
-            <h2 className='text-title font-bold text-primary'>${product?.price}</h2>
-            <h2 className='text-body text-gray-500 line-through'>${product?.oldPrice}</h2>
+            <h2 className='text-title font-bold text-primary'>Npr.{product?.price}</h2>
+            <h2 className='text-body text-gray-500 line-through'>Npr.{product?.oldPrice}</h2>
             <h2 className='text-title font-bold text-primary-light'>{product?.discount}%</h2>
           </div>
           <div className='  px-3 py-1.5 rounded-xl border border-gray-300 bg-[#f1edec]'>

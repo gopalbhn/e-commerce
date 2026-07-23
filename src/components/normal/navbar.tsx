@@ -8,6 +8,7 @@ import { IoCartOutline, IoSearchOutline } from "react-icons/io5"
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "../ui/button"
 import { toast } from "sonner"
+import Logo from "@/assets/ecom_logo.webp"
 
 const NavBar = () => {
     const [color, setColor] = useState<string>("")
@@ -54,8 +55,8 @@ const NavBar = () => {
 
     return (
         <div className={`h-15 w-full flex items-center gap-8 px-10 inset-0 sticky ${color} top-0 left-0 z-100`}>
-            <div className="text-2xl font-bold text-primary">
-                Logo
+            <div className="h-12 w-40  flex items-center justify-center text-white">
+                <img src={Logo} alt="logo" className="w-full h-full object-cover " />
             </div>
             <div className="flex  items-center gap-6">
                 {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => (

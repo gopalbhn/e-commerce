@@ -202,10 +202,10 @@ const CouponManagement = () => {
                                                             <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                                                                 <div
                                                                     className={`h-full rounded-full ${usagePct >= 100
-                                                                            ? "bg-red-400"
-                                                                            : usagePct >= 70
-                                                                                ? "bg-yellow-400"
-                                                                                : "bg-primary"
+                                                                        ? "bg-red-400"
+                                                                        : usagePct >= 70
+                                                                            ? "bg-yellow-400"
+                                                                            : "bg-primary"
                                                                         }`}
                                                                     style={{ width: `${usagePct}%` }}
                                                                 />

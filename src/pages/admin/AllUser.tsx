@@ -2,10 +2,33 @@ import AdminSideBar from "@/components/admin/AdminSideBar"
 import AdminTopBar from "@/components/admin/AdminTopBar"
 import Table from "@/components/admin/table"
 import { userData } from "@/lib/data.js"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const AllUsers = () => {
     const [open, setOpen] = useState<boolean>(true)
+    const [users, setUsers] = useState<any>([])
+
+    async function fetchAllUser() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/all-users`, {
+                method: "GET",
+                credentials: "include"
+            })
+            const data = await res.json()
+            if (data.success) {
+                console.log(data)
+                setUsers(data.users)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchAllUser();
+    }, []);
+
+
     return (
         <div className='h-full w-full'>
             <AdminSideBar open={open} />
@@ -26,7 +49,7 @@ const AllUsers = () => {
                         />
 
                     </div>
-                    <Table varaint="user" data={userData} />
+                    <Table varaint="user" data={users} />
                 </div>
             </section>
         </div>

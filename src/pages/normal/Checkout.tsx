@@ -158,8 +158,8 @@ const Checkout = () => {
               3
             </div>
             <p className="text-sm text-primary">Review</p>
-          </div>
-        </div>
+          </div >
+        </div >
         <div className="w-full mt-10 flex gap-10  ">
 
           <div className="w-2/3 h-full shadow-sm rounded-xl  p-4">
@@ -170,9 +170,9 @@ const Checkout = () => {
           </div>
           {step !== 3 && <OrderSummary products={products} />}
         </div>
-      </section>
+      </section >
       <Footer />
-    </div>
+    </div >
   );
 };
 
@@ -292,12 +292,13 @@ const PaymentSetup = ({ nextStep, onpay }: any) => {
           </div>
           <p className="text-sm font-semibold">E-sewa</p>
         </div>
-        <div onClick={() => setPaymentMethod("khalti")} className={`p-1 rounded-xl flex justify-center items-center gap-2 ${paymentMethod === "khalti" ? `border border-primary shadow-sm` : ``}`} >
+        <div onClick={() => setPaymentMethod("khalti")} className={`p-1 rounded-xl flex justify-center items-center gap-2 ${paymentMethod === "khalti" ? `border border-primary shadow-sm` : ``}`
+        } >
           <div className={`h-10 w-10 rounded-xl overflow-hidden `}>
             <img src={KhaltiImage} alt="Credit Card Icon" className="h-full w-full object-cover" />
           </div>
           <p className="text-sm font-semibold">Khalti</p>
-        </div>
+        </div >
       </div >
       <div>
         {paymentMethod == "credit-card" && (
@@ -434,7 +435,7 @@ const OrderSummary = ({ products }: any) => {
               <p className="text-sm ">Qty: {item.quantity}</p>
             </div>
 
-            <p className="font-semibold text-sm">${item.price * item.quantity}</p>
+            <p className="font-semibold text-sm">Npr.{item.price * item.quantity}</p>
           </div>
         </div>
       ))
@@ -447,17 +448,17 @@ const OrderSummary = ({ products }: any) => {
       <div className="space-y-4 text-sm">
         <div className="flex justify-between">
           <span className="text-gray-600">Subtotal</span>
-          <span>${Subtotal}</span>
+          <span>Npr.{Subtotal}</span>
         </div>
 
         <div className="flex justify-between">
           <span className="text-gray-600">Shipping</span>
-          <span className="text-green-600 font-semibold">${shipping}</span>
+          <span className="text-green-600 font-semibold">Npr.{shipping}</span>
         </div>
 
         <div className="flex justify-between">
           <span className="text-gray-600">Tax</span>
-          <span>${tax}</span>
+          <span>Npr.{tax}</span>
         </div>
       </div>
 
@@ -465,7 +466,7 @@ const OrderSummary = ({ products }: any) => {
 
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-bold">Total</h2>
-        <h2 className="text-lg font-bold text-orange-700">${total}</h2>
+        <h2 className="text-lg font-bold text-orange-700">Npr.{total}</h2>
       </div>
     </div>
   )

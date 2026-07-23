@@ -2,10 +2,33 @@ import AdminSideBar from "@/components/admin/AdminSideBar"
 import AdminTopBar from "@/components/admin/AdminTopBar"
 import Table from "@/components/admin/table"
 import { orderData } from "@/lib/data.js"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const AllAdminOrders = () => {
     const [open, setOpen] = useState<boolean>(true)
+    const [orders, setOrders] = useState([])
+
+    const fetchAllOrder = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/order`, {
+                credentials: "include"
+            })
+            const data = await response.json();
+            console.log(data)
+            if (data.success) {
+
+                setOrders(data.orders)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchAllOrder();
+    }, []);
+
     return (
         <div className='h-full w-full'>
             <AdminSideBar open={open} />
@@ -26,7 +49,7 @@ const AllAdminOrders = () => {
                         />
 
                     </div>
-                    <Table varaint="order" data={orderData} />
+                    <Table varaint="order" data={orders} />
                 </div>
             </section>
         </div>

@@ -33,9 +33,9 @@ const SellerRegistration = () => {
                             3
                         </div>
                         <p className="text-sm text-primary">Review</p>
-                    </div>
+                    </div >
 
-                </div>
+                </div >
                 <div className="h-full w-full ">
                     <div className="mt-5">
                         <p className="text-2xl font-bold">Create Seller Account</p>
@@ -174,22 +174,24 @@ const SellerRegistration = () => {
                                     </div>
                                 </div >
                             )}
-                            {step == 3 && (
-                                <div className="w-full h-full space-y-3">
-                                    <div className="w-full flex flex-col">
-                                        <label htmlFor="review">Review</label>
-                                        <input className="border rounded-xl px-5 py-2" type="text" name="review" id="review" />
+                            {
+                                step == 3 && (
+                                    <div className="w-full h-full space-y-3">
+                                        <div className="w-full flex flex-col">
+                                            <label htmlFor="review">Review</label>
+                                            <input className="border rounded-xl px-5 py-2" type="text" name="review" id="review" />
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </form>
-                    </div>
-                </div>
-            </section>
+                                )
+                            }
+                        </form >
+                    </div >
+                </div >
+            </section >
             <div className="h-full w-full overflow-hidden">
                 <img src={heroImage} alt="" className="w-full h-full object-cover" />
             </div>
-        </div>
+        </div >
     )
 }
 

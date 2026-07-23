@@ -149,7 +149,7 @@ const ProductListing = () => {
                             discount={product.discount}
                             isDiscounted={product.isDiscounted}
                             wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail/${product._id}`)}
+                            onclick={() => navigate(`/product-detail/{product._id}`)}
                         />
                     ))}
                 </div>
@@ -308,7 +308,7 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                 <h3 className="text-body font-semibold mb-2 ">Ratings</h3>
 
                 <div className="space-y-3">
-                    {[5, 4, 3, 2, 1].map((rating) => (
+                    {[4, 3, 2, 1].map((rating) => (
                         <div key={rating} className="flex items-center gap-2">
                             <input
                                 type="checkbox"
@@ -327,20 +327,16 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                             />
 
                             <div className="flex items-center">
-                                {[...Array(5)].map((_, index) =>
-                                    index < rating ? (
+                                {[...Array(4)].map((_, index) =>
+                                    index < rating && (
                                         <FaStar
                                             key={index}
                                             className="text-yellow-400"
                                         />
-                                    ) : (
-                                        <FaRegStar
-                                            key={index}
-                                            className="text-gray-300"
-                                        />
                                     )
                                 )}
                             </div>
+                            <p className="text-xs">({rating} & Above)</p>
                         </div>
                     ))}
                 </div>

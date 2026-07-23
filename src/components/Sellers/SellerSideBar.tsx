@@ -6,7 +6,8 @@ import { MdOutlineDashboard } from "react-icons/md"
 import { RiCoupon3Line } from "react-icons/ri"
 import { Link, useLocation } from "react-router-dom"
 import { toast } from "sonner"
-
+import Logo from "@/assets/ecom_logo.webp"
+import UserStore from "@/store/userStore"
 
 const SellerSideBar = ({ open }: { open: boolean }) => {
     const location = useLocation();
@@ -16,7 +17,9 @@ const SellerSideBar = ({ open }: { open: boolean }) => {
         { id: 3, title: "Orders", link: "/seller/orders", icon: IoBagOutline },
         { id: 4, title: "Coupons", link: "/seller/coupons", icon: RiCoupon3Line },
     ]
-
+    const user = UserStore(state => state.user)
+    const role = user?.role;
+    console.log(role)
     async function handleLogOut() {
         const res = await fetch("http://localhost:3000/api/user/logout", {
             method: "POST",
@@ -36,9 +39,10 @@ const SellerSideBar = ({ open }: { open: boolean }) => {
 
     return (
         <div className={`h-screen w-[15%] flex flex-col fixed top-0 left-0 z-20 bg-white shadow-sm border-r border-gray-400 p-4 transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}>
-            <div className="flex items-center justify-center">
 
-                <h1 className="text-xl text-center  font-bold text-primary tracking-tight">Logo</h1>
+            <div className="h-12 w-40  flex items-center justify-center text-white">
+                <img src={Logo} alt="logo" className="w-full h-full object-cover " />
+
             </div>
             <div className="px-3 py-2.5 my-5 flex items-center gap-3.5 rounded-xl shadow-sm ">
                 <div className="h-8 w-8 rounded-full border border-primary bg-gray-400">

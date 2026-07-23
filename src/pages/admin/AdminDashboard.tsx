@@ -34,6 +34,8 @@ interface DashboardStats {
 const AdminDashboard = () => {
   const [open, setOpen] = useState<boolean>(true)
   const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [mostSoldProduct, setMostSoldProduct] = useState([])
+  const [recentProducts, setRecentProducts] = useState([])
   async function fetchstats() {
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/dashboard-stats`, {
@@ -47,19 +49,59 @@ const AdminDashboard = () => {
       console.log(error.message)
     }
   }
+
+  async function fetchMostSoldProduct() {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/most`, {
+        credentials: "include"
+      })
+
+      const data = await res.json()
+      if (data.success) {
+        setMostSoldProduct(data.data)
+      }
+
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }
+
+  async function fetchRecentProducts() {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/recent-products`, {
+        credentials: "include"
+      })
+
+      const data = await res.json()
+      if (data.success) {
+        setRecentProducts(data.products)
+      }
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }
+
   useEffect(() => {
     fetchstats()
+    fetchMostSoldProduct()
+    fetchRecentProducts()
   }, [])
-  const piechartData = {
-    labels: ["Consumer", "Seller"],
-    datasets: [
-      {
-        data: [stats?.customer, stats?.seller],
-        backgroundColor: ["#793A2E5C", "#E5B7A7"],
-        hoverBackgroundColor: ["#793A2E5C", "#E5B7A7"]
-      }
-    ]
-  }
+  const piechartData = [
+
+    {
+      name: "Consumers",
+      value: stats?.customer,
+      color: "#A16207", // amber
+    },
+    {
+      name: "Sellers",
+      value: stats?.seller,
+      color: "#793A2E5C", // teal
+    },
+
+  ]
+
+
   return (
     <div className='h-full w-full relative'>
 
@@ -80,7 +122,7 @@ const AdminDashboard = () => {
               { week: "Week 4", value: stats?.userWeeklyCounts["Week 4"] },
             ]}
           />
-          {console.log("stats?.productsWeeklyCounts", stats?.productsWeeklyCount)}
+
           <MetricChart
             title="Products"
 
@@ -139,7 +181,7 @@ const AdminDashboard = () => {
           <div className='w-full bg-white rounded-xl p-4 shadow-sm'>
             <h1 className='font-semibold text-body mb-4'>Users Distribution</h1>
             <div className='w-full  mt-5'>
-              <UserPieChart pieChartData={piechartData} />
+              <UserPieChart data={piechartData} />
             </div>
             <div className='w-full flex items-center justify-center gap-10'>
               <div className='flex items-center gap-2'>
@@ -160,7 +202,7 @@ const AdminDashboard = () => {
         </div>
         <div className='w-full mt-10'>
           <h1 className='text-body font-semibold mb-4'>Recent Products</h1>
-          <Table varaint='product' data={AdminSideProducts} />
+          <Table varaint='product' data={recentProducts} />
         </div>
       </section>
     </div>
