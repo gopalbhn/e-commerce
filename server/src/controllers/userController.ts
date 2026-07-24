@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { LoginSchema, RegisterSchema } from "../schemas/userSchema.js";
+import { LoginSchema, RegisterSchema, SellerRegisterSchema } from "../schemas/userSchema.js";
 import User from "../models/userModel.js";
 
 import sendMail from "../utils/nodemailer.js";
@@ -8,6 +8,7 @@ import { generateAccessToken, generateRefreshToken } from "../middlewares/auth.j
 import RefreshToken from "../models/RefreshTokenModel.js";
 import { google } from 'googleapis'
 import { TokenPayload } from "../types/userType.js";
+import Seller from "../models/sellerModel.js";
 
 
 
@@ -63,6 +64,64 @@ const registerUser = async (req: Request, res: Response) => {
 
 
 }
+
+const registerSeller = async (req: Request, res: Response) => {
+    try {
+
+        const data = SellerRegisterSchema.safeParse(req.body);
+        if (!data.success) {
+            return res.status(400).json({
+                success: false,
+                message: data.error.issues[0].message
+            })
+        }
+        const { name, email, password, confirmPassword, phoneNumber, shopName, address, storeType } = data.data;
+        const ExistingUser = await User.findOne({ email })
+
+        if (ExistingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "User Already Exists"
+            })
+        }
+
+        const user = new User({
+            name,
+            email,
+            password,
+            confirmPassword,
+            phoneNumber,
+            role: "Seller"
+        })
+        await user.save();
+
+        const SellerProfile = new Seller({
+            userId: user._id,
+            shopName,
+            address,
+            storeType,
+        })
+        await SellerProfile.save();
+        const token = jwt.sign({ email }, process.env.JWT_SECRET!, { expiresIn: "1h" })
+
+        await sendMail(
+            email,
+            "WelCome to Ecommerce app",
+            `<h1>Verify Your Email</h1> <a href ="${process.env.FRONTEND_URI}/verify/${token}">Click here to verify your email</a>`
+        )
+        return res.status(201).json({
+            success: true,
+            message: "Seller profile created . Check Your email and verify",
+        })
+    } catch (err: any) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+
+}
+
 
 const loginUser = async (req: Request, res: Response) => {
     const data = LoginSchema.safeParse(req.body);
@@ -290,17 +349,40 @@ const googleCallback = async (req: Request, res: Response) => {
 
 const getInfo = async (req: Request, res: Response) => {
     try {
-        const user = await User.findOne({ email: req.user.email }).select("-isDeleted -password -refreshToken -createdAt -updatedAt -__v");
+        let responseObj: any = {};
+        const user = await User.findOne({ email: req.user.email });
         if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "User not found"
             })
         }
-
+        responseObj = {
+            id: user._id,
+            email: user.email,
+            name: user.name,
+            role: user.role
+        }
+        if (user.role === "Seller") {
+            const seller = await Seller.findOne({ userId: user._id, isDeleted: false })
+            if (!seller) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Seller not found"
+                })
+            }
+            responseObj.storeName = seller.shopName
+            responseObj.storeAproved = seller.approved
+            responseObj.address = seller.address
+            responseObj.storeType = seller.storeType
+            return res.status(200).json({
+                success: true,
+                data: responseObj
+            })
+        }
         return res.status(200).json({
             success: true,
-            data: user
+            data: responseObj
         })
     } catch (err: any) {
         return res.status(500).json({
@@ -370,4 +452,4 @@ const refreshToken = async (req: Request, res: Response) => {
     }
 }
 
-export { registerUser, loginUser, logOutUser, loginWithGoogle, googleCallback, verifyMagicLink, getInfo, refreshToken };
+export { registerUser, registerSeller, loginUser, logOutUser, loginWithGoogle, googleCallback, verifyMagicLink, getInfo, refreshToken };

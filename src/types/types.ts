@@ -41,7 +41,11 @@ export interface AdminTopBarProps {
 
 export interface User {
     role: String,
-    id: string
+    id: string,
+    storeApproved: boolean,
+    storeName: string,
+    storeImage: string,
+    storeAddress: string,
 }
 export interface UserState {
     user: User | null;

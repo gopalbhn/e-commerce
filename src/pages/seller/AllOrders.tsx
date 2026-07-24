@@ -13,7 +13,7 @@ const AllOrders = () => {
     const [view, setView] = useState<string>("all")
     async function fetchAllOrder() {
         try {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order`, {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/seller`, {
                 credentials: 'include'
             })
 
@@ -30,7 +30,10 @@ const AllOrders = () => {
     useEffect(() => {
         fetchAllOrder()
     }, [])
-
+    function handleShippedOrder() {
+        setView("shipped");
+        setOrder(order.filter((item: any) => item.orderStatus === "Shipped"))
+    }
     function handlePendingOrder() {
         setView("pending")
         setOrder(order.filter((item: any) => item.orderStatus === "Pending"))
@@ -87,6 +90,7 @@ const AllOrders = () => {
                             setView("all")
                         }} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "all" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>All</button>
                         <button onClick={handlePendingOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "pending" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Pending</button>
+                        <button onClick={handleShippedOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "shipped" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Shipped</button>
                         <button onClick={handleCompletedOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "completed" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Completed</button>
                     </div>
                     <OrderTable order={order} updateStatus={updateStatus} />
@@ -176,7 +180,7 @@ const OrderTable = ({ order, updateStatus }: { order: any[]; updateStatus: (stat
                                 <td className="p-3 rounded-l-lg">
                                     <span className="font-semibold text-primary">{order._id}</span>
                                 </td>
-                                <td className="p-3 text-gray-500">{order.createdAt}</td>
+                                <td className="p-3 text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
                                 <td className="p-3 font-medium text-gray-800">{order.buyer.name}</td>
                                 <td className="p-3 font-semibold text-gray-900">Npr.{order.totalPrice}</td>
                                 <td className="p-3 rounded-r-lg">

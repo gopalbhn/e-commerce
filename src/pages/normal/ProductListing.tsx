@@ -149,7 +149,7 @@ const ProductListing = () => {
                             discount={product.discount}
                             isDiscounted={product.isDiscounted}
                             wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail/{product._id}`)}
+                            onclick={() => navigate(`/product-detail/${product._id}`)}
                         />
                     ))}
                 </div>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FiChevronDown, FiEye, FiEyeOff, FiShoppingCart, FiUser } from "react-icons/fi";
 import heroImage from "../../assets/hero.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -161,10 +161,8 @@ function LoginForm() {
   );
 }
 
-// ──────────────────────────────────────────
-// Register form
-// ──────────────────────────────────────────
-function RegisterForm() {
+
+function ConsumerRegistrationForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -187,7 +185,7 @@ function RegisterForm() {
 
   const passwordsMatch = confirmPassword === "" || password === confirmPassword;
 
-  async function handleRegister() {
+  async function handleConsumerRegister() {
 
     if (phone.length !== 10) {
       toast.error("Phone number must be 10 digits", {
@@ -228,8 +226,6 @@ function RegisterForm() {
       toast.error(data.message)
     }
   }
-
-
 
   return (
     <div className="flex flex-col gap-4">
@@ -321,21 +317,258 @@ function RegisterForm() {
 
       <button
         disabled={!canSubmit}
-        onClick={handleRegister}
+        onClick={handleConsumerRegister}
         className={`w-full rounded-lg py-2.5 text-sm font-semibold text-white transition-colors mt-1
           ${canSubmit ? "bg-primary hover:bg-primary-hover cursor-pointer" : "bg-secondary-light text-secondary cursor-not-allowed"}`}
       >
         Create Account
       </button>
     </div>
-  );
+  )
 }
 
+function SellerRegistrationForm() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const [shopName, setShopName] = useState("");
+  const [address, setAddress] = useState("");
+  const [storeType, setStoreType] = useState("");
+
+  const strength = useMemo(() => getPasswordStrength(password), [password]);
+
+  const canSubmit =
+    firstName.trim() !== "" &&
+    lastName.trim() !== "" &&
+    phone.trim() !== "" &&
+    email.trim() !== "" &&
+    password.trim() !== "" &&
+    confirmPassword.trim() !== "" &&
+    password === confirmPassword;
+
+  const passwordsMatch = confirmPassword === "" || password === confirmPassword;
+
+  async function handleSellerRegistration() {
+    if (phone.length !== 10) {
+      toast.error("Phone number must be 10 digits", {
+        duration: 1000
+      })
+      return
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match", {
+        duration: 1000
+      })
+      return
+    }
+    const name = `${firstName} ${lastName}`;
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/register-seller`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        confirmPassword,
+        phoneNumber: phone,
+        shopName,
+        address,
+        storeType
+      })
+    })
+    const data = await res.json()
+    if (data.success) {
+      toast.success("Check Your Email for verificcation Email", {
+        duration: 5000
+      })
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
+    } else {
+      toast.error(data.message)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-2 gap-3">
+        <Field
+          label="First Name"
+          value={firstName}
+          placeholder="John"
+          onChange={setFirstName}
+        />
+        <Field
+          label="Last Name"
+          value={lastName}
+          placeholder="Doe"
+          onChange={setLastName}
+        />
+      </div>
+
+      <Field
+        label="Phone Number"
+        type="tel"
+        value={phone}
+        placeholder="+977 98XXXXXXXX"
+        onChange={setPhone}
+      />
+
+      <Field
+        label="Email"
+        type="email"
+        value={email}
+        placeholder="you@example.com"
+        onChange={setEmail}
+      />
+
+      {/* Password with strength checker */}
+      <div className="flex flex-col gap-1">
+        <Field
+          label="Password"
+          type={showPw ? "text" : "password"}
+          value={password}
+          placeholder="••••••••"
+          onChange={setPassword}
+          rightSlot={
+            <span onClick={() => setShowPw((p) => !p)}>
+              {showPw ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+            </span>
+          }
+        />
+        {password.length > 0 && (
+          <div className="flex flex-col gap-1 mt-1">
+            <div className="flex gap-1">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 flex-1 rounded-full transition-colors ${i <= strength.score ? strength.color : "bg-secondary-light"
+                    }`}
+                />
+              ))}
+            </div>
+            <span className={`text-xs font-medium ${strength.score <= 1 ? "text-red-500"
+              : strength.score === 2 ? "text-yellow-500"
+                : strength.score === 3 ? "text-blue-500"
+                  : "text-green-500"
+              }`}>
+              {strength.label}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Confirm password */}
+      <div className="flex flex-col gap-1">
+        <Field
+          label="Confirm Password"
+          type={showConfirm ? "text" : "password"}
+          value={confirmPassword}
+          placeholder="••••••••"
+          onChange={setConfirmPassword}
+          rightSlot={
+            <span onClick={() => setShowConfirm((p) => !p)}>
+              {showConfirm ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+            </span>
+          }
+        />
+        {!passwordsMatch && (
+          <span className="text-xs text-red-500">Passwords do not match</span>
+        )}
+      </div>
+      <Field
+        label="Store Name"
+        value={shopName}
+        placeholder="Store Name"
+        onChange={setShopName}
+      />
+      <Field
+        label="Address"
+        value={address}
+        placeholder="Address"
+        onChange={setAddress}
+      />
+      <Field
+        label="Store Type"
+        value={storeType}
+        placeholder="Store Type (eg. Electronic, Clothing)"
+        onChange={setStoreType}
+
+      />
+      <button
+        disabled={!canSubmit}
+        onClick={handleSellerRegistration}
+        className={`w-full rounded-lg py-2.5 text-sm font-semibold text-white transition-colors mt-1
+          ${canSubmit ? "bg-primary hover:bg-primary-hover cursor-pointer" : "bg-secondary-light text-secondary cursor-not-allowed"}`}
+      >
+        Create Account
+      </button>
+    </div>
+  )
+}
+
+interface RegestrationSectionProps {
+  onSelect: (type: "consumer" | "seller") => void;
+}
+
+function RegestrationSection({ onSelect }: RegestrationSectionProps) {
+  return (
+    <div className="space-y-4">
+
+      <h1 className="text-xl font-semibold text-center ">Register as</h1>
+      <p className="text-sm text-secondary text-center ">
+        Choose your path to join our platform
+      </p>
+      <div className="grid grid-cols-2 gap-4 mt-6">
+        <button
+          onClick={() => onSelect("consumer")}
+          className="border rounded-xl p-6 text-left hover:border-primary hover:bg-primary/5 transition cursor-pointer shadow-sm"
+        >
+          <div className="flex gap-3 items-center">
+            <FiUser size={30} />
+
+            <h3 className="font-semibold text-lg">Consumer</h3>
+          </div>
+          <p className="text-sm text-secondary mt-2">
+            Browse products, place orders, track deliveries and manage your
+            purchases.
+          </p>
+        </button>
+        <button
+          onClick={() => onSelect("seller")}
+          className="border rounded-xl p-6 text-left hover:border-primary hover:bg-primary/5 transition cursor-pointer shadow-sm"
+        >
+          <div className="flex gap-3 items-center">
+            <FiShoppingCart size={30} />
+
+            <h3 className="font-semibold text-lg">Seller</h3>
+          </div>
+          <p className="text-sm text-secondary mt-2">
+            Open your own store, upload products and manage customer orders.
+          </p>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+
+
 type Tab = "login" | "register";
+type registerType = "consumer" | "seller" | null;
 
 const Login = () => {
   const [tab, setTab] = useState<Tab>("login");
-
+  const [registerType, setRegisterType] = useState<registerType>(null);
 
 
   return (
@@ -360,14 +593,20 @@ const Login = () => {
             {/* Toggle tabs */}
             <div className="flex rounded-lg border border-secondary-light p-1 mb-5">
               <button
-                onClick={() => setTab("login")}
+                onClick={() => {
+                  setTab("login")
+                  setRegisterType(null)
+                }}
                 className={`flex-1 rounded-md py-2 text-sm font-semibold transition-colors cursor-pointer
                   ${tab === "login" ? "bg-primary text-white" : "text-secondary hover:text-primary"}`}
               >
                 Login
               </button>
               <button
-                onClick={() => setTab("register")}
+                onClick={() => {
+                  setTab("register")
+                  setRegisterType(null)
+                }}
                 className={`flex-1 rounded-md py-2 text-sm font-semibold transition-colors cursor-pointer
                   ${tab === "register" ? "bg-primary text-white" : "text-secondary hover:text-primary"}`}
               >
@@ -376,7 +615,14 @@ const Login = () => {
             </div>
 
 
-            {tab === "login" ? <LoginForm /> : <RegisterForm />}
+            {tab === "login" ?
+              (<LoginForm />) : registerType == null ? (
+                <RegestrationSection onSelect={setRegisterType} />
+              ) : registerType == "consumer" ? (
+                <ConsumerRegistrationForm />
+              ) : (
+                <SellerRegistrationForm />
+              )}
           </div>
         </div>
 

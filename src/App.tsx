@@ -88,9 +88,10 @@ function Init() {
 
       if (data.success) {
         setUser({
-          id: data.data._id,
+          id: data.data.id,
 
           role: data.data.role,
+          storeApproved: data.data.storeAproved,
 
 
         });
@@ -120,6 +121,7 @@ function Init() {
       </div>
     )
   }
+
   return (
     <>
       {role !== "Seller" && role !== "Admin" && location.pathname !== "/login" && <NavBar />}

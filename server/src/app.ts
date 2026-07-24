@@ -54,5 +54,5 @@ app.get('/health-check', (req, res) => {
   }
 
 })
-
+console.log(JSON.stringify(process.env.ESEWA_SECRET_KEY), process.env.ESEWA_SECRET_KEY?.length);
 export default app;

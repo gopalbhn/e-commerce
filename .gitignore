@@ -22,7 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
+/src/docs
 .env
 server/.env
 server/node_modules

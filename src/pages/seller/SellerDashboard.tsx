@@ -14,6 +14,8 @@ import { Bar } from "react-chartjs-2";
 import { FiEdit } from "react-icons/fi";
 import { products } from "@/lib/data";
 import { useNavigate } from "react-router-dom";
+import UserStore from "@/store/userStore";
+import { Button } from "@/components/ui/button";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
@@ -80,6 +82,11 @@ const SellerDashboard = () => {
     const [open, setOpen] = useState(true);
     const [lowStockProduct, setLowStockProduct] = useState<any | []>([])
     const [pendingOrder, setPendingOrder] = useState<any | []>([])
+    const [sellerProfile, setSellerProfile] = useState<any | []>([])
+    const user = UserStore(state => state?.user);
+    console.log("user seller", user)
+    const isStoreApproved = user?.storeApproved
+    console.log('from store aproved', isStoreApproved)
     const navigate = useNavigate();
     async function fetchLowStockProduct() {
         try {
@@ -112,12 +119,36 @@ const SellerDashboard = () => {
             console.log(error)
         }
     }
+    async function fetchSellerProfile() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/me`, {
+                method: "GET",
+                credentials: "include"
+            })
+            const data = await res.json()
+            console.log(data)
+            if (data.success) {
+                setSellerProfile(data.data)
+            }
+        } catch (error) {
+
+        }
+    }
     useEffect(() => {
         fetchLowStockProduct(),
-            fetchPendingOrder()
+            fetchPendingOrder(),
+            fetchSellerProfile()
     }, [])
     console.log(lowStockProduct)
     console.log(pendingOrder)
+    if (isStoreApproved === false) {
+        return (
+            <div className="min-h-screen bg-gray-100 flex flex-col gap-y-4 items-center justify-center">
+                <h1 className="text-2xl font-bold">Your Store is Not Approved Yet</h1>
+                <Button onClick={() => navigate("/")} className={"mx-auto"}>Go Back</Button>
+            </div>
+        )
+    }
     return (
         <div className="min-h-screen bg-gray-100 flex">
             <SellerSideBar open={open} />
@@ -153,22 +184,26 @@ const SellerDashboard = () => {
                 <div className="w-full p-4">
                     <h1 className="text-primary text-title font-semibold">Low Stocks</h1>
                     <div className="w-full flex flex-col gap-2">
-                        {lowStockProduct.map(product => (
+                        {lowStockProduct.length == 0 ? (
+                            <div className="text-md mx-auto mt-3">You Dont have Any Product Now</div>
+                        ) : (
+                            lowStockProduct.map(product => (
 
-                            <div className="h-full w-full flex items-center gap-2 p-2 shadow-sm">
+                                <div className="h-full w-full flex items-center gap-2 p-2 shadow-sm">
 
-                                <div className="h-15 w-15 flex items-center justify-center overflow-hidden rounded-xl mt-2">
-                                    <img src={product.thumbnails} className="h-full w-full object-cover" alt="" />
-                                </div>
-                                <div className=" w-full flex items-center justify-between mt-2">
-                                    <div className="flex flex-col gap-1">
-                                        <p className="font-semibold text-primary">{product.name}</p>
-                                        <p>Quantity: {product.stock}</p>
+                                    <div className="h-15 w-15 flex items-center justify-center overflow-hidden rounded-xl mt-2">
+                                        <img src={product.thumbnails} className="h-full w-full object-cover" alt="" />
                                     </div>
-                                    <button className="bg-primary-hover/5 p-2 rounded-lg mr-10" onClick={() => navigate(`/seller/edit-product/${product._id}`)}><FiEdit color="" /></button>
+                                    <div className=" w-full flex items-center justify-between mt-2">
+                                        <div className="flex flex-col gap-1">
+                                            <p className="font-semibold text-primary">{product.name}</p>
+                                            <p>Quantity: {product.stock}</p>
+                                        </div>
+                                        <button className="bg-primary-hover/5 p-2 rounded-lg mr-10" onClick={() => navigate(`/seller/edit-product/${product._id}`)}><FiEdit color="" /></button>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        )}
                     </div>
                 </div>
                 <PendingOrdersTable pendingOrder={pendingOrder} />
@@ -321,9 +356,9 @@ const PendingOrdersTable = ({ pendingOrder }: any) => {
                                             </div>
                                         </td>
 
-                                        <td className="py-5 text-gray-600">{order.createdAt}</td>
+                                        <td className="py-5 text-gray-600">{new Date(order.createdAt).toLocaleDateString()}</td>
 
-                                        <td className="py-5 font-semibold text-sm">{order.totalPrice}</td>
+                                        <td className="py-5 font-semibold text-sm">Npr.{order.totalPrice}</td>
 
                                         <td className="py-5">
                                             <span

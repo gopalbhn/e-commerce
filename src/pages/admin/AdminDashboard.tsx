@@ -6,6 +6,7 @@ import { AdminSideProducts, AprovalRequestData, mostSellingData } from "../../li
 import { useEffect, useState } from 'react'
 import UserPieChart from '@/components/admin/UserPieChart.js'
 import Table from '@/components/admin/table.js'
+import { toast } from 'sonner'
 
 interface DashboardStats {
   userWeeklyCounts: {
@@ -36,6 +37,7 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [mostSoldProduct, setMostSoldProduct] = useState([])
   const [recentProducts, setRecentProducts] = useState([])
+  const [sellerRequests, setSellerRequests] = useState([])
   async function fetchstats() {
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/dashboard-stats`, {
@@ -81,10 +83,65 @@ const AdminDashboard = () => {
     }
   }
 
+  async function fetchSellerRequests() {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/seller-requests`, {
+        credentials: "include"
+      })
+      const data = await res.json()
+      if (data.success) {
+        console.log("seller request", data)
+        setSellerRequests(data.sellers)
+      }
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }
+
+  async function handleAcceptRequest(id) {
+    console.log(id)
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/seller-approve/${id}`, {
+        method: "PUT",
+        credentials: "include"
+      })
+
+      const data = await res.json()
+      if (data.success) {
+        toast.success(`Seller Request Accepted`)
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async function handleRejectRequest(id) {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/seller-reject/${id}`, {
+        method: "PUT",
+        credentials: "include"
+      })
+
+      const data = await res.json();
+
+      if (data.success) {
+        toast.message("User Rejected Successfully")
+        setTimeout(() => {
+          window.location.reload();
+        }, 500)
+      }
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
     fetchstats()
     fetchMostSoldProduct()
     fetchRecentProducts()
+    fetchSellerRequests()
   }, [])
   const piechartData = [
 
@@ -153,24 +210,24 @@ const AdminDashboard = () => {
             <h1 className='font-semibold text-body mb-4'>Pending Seller Approval</h1>
 
             <div className="w-full">
-              {AprovalRequestData.map((data) => (
+              {sellerRequests.map((data) => (
                 <div
-                  key={data.email}
+                  key={data.userId._id}
                   className="w-full flex justify-between items-center  rounded-xl p-4 mb-3 bg-gray-50"
                 >
                   <div className="flex flex-col">
-                    <h1 className="text-sm font-bold">{data.sotre}</h1>
-                    <p className='text-small text-gray-700 '>Owner: {data.owner}</p>
-                    <p className="text-small text-gray-700">{data.email}</p>
-                    <p className='text-small text-gray-700'>Requested On {data.requestedOn}</p>
+                    <h1 className="text-sm font-bold">{data.shopName}</h1>
+                    <p className='text-small text-gray-700 '>Owner: {data.userId.name}</p>
+                    <p className="text-small text-gray-700">Email: {data.userId.email}</p>
+                    <p className='text-small text-gray-700'>Requested On {new Date(data.createdAt).toDateString()}</p>
                   </div>
 
                   <div className="flex gap-2">
-                    <button className="px-3 py-1 rounded-full bg-primary text-white">
+                    <button className="px-3 py-1 rounded-full bg-primary text-white" onClick={() => handleAcceptRequest(data.userId._id)}>
                       Accept
                     </button>
 
-                    <button className="px-3 py-1 rounded-full border border-primary">
+                    <button className="px-3 py-1 rounded-full border border-primary" onClick={() => handleRejectRequest(data.userId._id)}>
                       Reject
                     </button>
                   </div>

@@ -5,6 +5,7 @@ import Product from "../models/productModel.js";
 import Order from "../models/orderModel.js";
 import Coupon from "../models/couponModel.js";
 import { use } from "react";
+import Seller from "../models/sellerModel.js";
 
 
 const getDashboardStats = async (req: Request, res: Response) => {
@@ -128,9 +129,13 @@ const getDashboardStats = async (req: Request, res: Response) => {
 
 const pendingSellerApproval = async (req: Request, res: Response) => {
     try {
-        const sellers = await User.find({
-            role: "Seller",
-            isVerified: false
+
+        const sellers = await Seller.find({
+            approved: false,
+            isDeleted: false
+        }).populate({
+            path: "userId",
+            select: "name email"
         })
         return res.status(200).json({
             success: true,
@@ -146,15 +151,14 @@ const pendingSellerApproval = async (req: Request, res: Response) => {
 
 const approveSeller = async (req: Request, res: Response) => {
     try {
-        const { sellerId } = req.params;
-        const seller = await User.findByIdAndUpdate(sellerId, {
-            isVerified: true
-        }, {
-            new: true
-        }).select("-password")
+        const sellerId = req.params.id;
+
+        const seller = await Seller.findOne({ userId: sellerId })
         if (!seller) {
-            return res.status(404).json({ success: false, message: "Seller Not Found" });
+            return res.status(404).json({ success: false, message: "Seller Store Not Found" });
         }
+        seller.approved = true;
+        await seller.save();
         return res.status(200).json({
             success: true,
             seller
@@ -169,14 +173,17 @@ const approveSeller = async (req: Request, res: Response) => {
 
 const rejectSeller = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        const seller = await User.findByIdAndDelete(id);
+        const sellerId = req.params.id;
+        const seller = await Seller.findOne({ userId: sellerId, isDeleted: false })
         if (!seller) {
             return res.status(404).json({
                 success: false,
                 message: "Seller Not Found"
             });
         }
+        seller.isDeleted = true;
+        seller.approved = false;
+        await seller.save();
         return res.status(200).json({
             success: true,
             seller

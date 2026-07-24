@@ -245,5 +245,6 @@ export {
     getOrder,
     createOrder,
     getPendingOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    getSellerOrder
 }
