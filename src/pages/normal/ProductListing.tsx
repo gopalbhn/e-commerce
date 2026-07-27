@@ -1,4 +1,4 @@
-import { FaRegStar, FaStar } from "react-icons/fa"
+import { FaStar } from "react-icons/fa"
 
 import ProductCart from "../../components/normal/productCart"
 import { useNavigate } from "react-router-dom"

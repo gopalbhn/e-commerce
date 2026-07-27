@@ -29,6 +29,7 @@ import MyOrder from './pages/normal/MyOrder'
 import OrderDetail from './pages/normal/OrdersDetail'
 import PaymentSuccess from './pages/normal/PaymentSuccess'
 import AdminProduct from './pages/admin/AdminProduct'
+import PaymentFailed from './pages/normal/PaymentFailed'
 
 function App() {
 
@@ -144,8 +145,10 @@ function Init() {
         <Route path='/myorder' element={<MyOrder />} />
         <Route path="/orders/:id" element={<OrderDetail />} />
         <Route path='/checkout' element={<Checkout />} />
-        <Route path='/purchase-history' element={<PurchaseHistory />} />
 
+        <Route path='/purchase-history' element={<PurchaseHistory />} />
+        <Route path='/payment-success' element={<PaymentSuccess />} />
+        <Route path='/payment-failed' element={<PaymentFailed />} />
         {
           role === "Seller" && (
             <>

@@ -115,7 +115,7 @@ const MyOrder = () => {
                     </p>
                 </div>
 
-                {orders.length === 0 ? (
+                {orders?.length === 0 ? (
                     <div className="bg-white rounded-2xl shadow-sm border border-dashed border-gray-300 p-16 text-center">
                         <div className="text-6xl mb-4">📦</div>
 

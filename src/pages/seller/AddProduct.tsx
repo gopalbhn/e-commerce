@@ -4,14 +4,7 @@ import { FiPlus, FiTrash2, FiUploadCloud } from "react-icons/fi";
 import SellerSideBar from "../../components/Sellers/SellerSideBar";
 import { toast } from "sonner";
 
-const categories = ["Home Decor", "Electronics", "Fashion", "Beauty", "Sports"];
-const subcategories: Record<string, string[]> = {
-    "Home Decor": ["Vases & Vessels", "Wall Art", "Lighting", "Textiles"],
-    Electronics: ["Phones", "Laptops", "Accessories", "Cameras"],
-    Fashion: ["Tops", "Bottoms", "Footwear", "Accessories"],
-    Beauty: ["Skincare", "Haircare", "Fragrance", "Makeup"],
-    Sports: ["Gym Equipment", "Outdoor", "Footwear", "Apparel"],
-};
+
 
 interface Spec {
     key: string;
@@ -30,7 +23,7 @@ const AddProduct = () => {
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [selectedSubCategory, setSelectedSubCategory] = useState(null)
     const [selectedBrand, setSelectedBrand] = useState(null)
-    // Pricing & Inventory
+
     const [basePrice, setBasePrice] = useState<number | null>(null);
     const [discountRate, setDiscountRate] = useState<number | null>(null);
     const [sku, setSku] = useState("");
@@ -135,20 +128,7 @@ const AddProduct = () => {
 
     }, [])
     async function handleAddProduct() {
-        // const payload = {
-        //     name: title,
-        //     description: description,
-        //     category: category,
-        //     subcategory: subcategory,
-        //     price: basePrice,
-        //     discountRate: discountRate,
-        //     sku: sku,
-        //     stock: stock,
-        //     images: images,
-        //     thumbnails: thumbnails,
-        //     specs: specs
 
-        // }
         if (title === "" || category === "" || subcategory === "" || basePrice === 0 || discountRate === 0 || sku === "" || stock === 0 || images.length === 0 || thumbnails === null || specs.length === 0) {
             toast.error("Please fill all the fields");
             return;

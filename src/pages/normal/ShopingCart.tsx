@@ -1,11 +1,10 @@
-import { BiHeart, BiTrash } from "react-icons/bi";
+import { BiTrash } from "react-icons/bi";
 import Footer from "../../components/normal/Footer";
-import useCartStore from "@/store/cartStore";
+
 
 
 import { Button } from "@/components/ui/button";
-import { products } from "@/lib/data";
-import productCart from "@/components/normal/productCart";
+
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { FiHeart } from "react-icons/fi";

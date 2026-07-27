@@ -2,42 +2,22 @@
 import AdminSideBar from '@/components/admin/AdminSideBar'
 import AdminTopBar from '@/components/admin/AdminTopBar'
 import MetricChart from '@/components/admin/MetricCard'
-import { AdminSideProducts, AprovalRequestData, mostSellingData } from "../../lib/data.js"
+import { mostSellingData } from "../../lib/data.js"
 import { useEffect, useState } from 'react'
 import UserPieChart from '@/components/admin/UserPieChart.js'
 import Table from '@/components/admin/table.js'
 import { toast } from 'sonner'
+import type { DashboardStats, SellerRequest } from '@/types/adminTypes.js'
 
-interface DashboardStats {
-  userWeeklyCounts: {
-    week1: number;
-    week2: number;
-    week3: number;
-    week4: number;
-  };
-  productsWeeklyCount: {
-    week1: number;
-    week2: number;
-    week3: number;
-    week4: number;
-  };
-  orderWeeklyCounts: {
-    week1: number;
-    week2: number;
-    week3: number;
-    week4: number;
-  };
-  seller: number;
-  customer: number;
-}
+
 
 
 const AdminDashboard = () => {
   const [open, setOpen] = useState<boolean>(true)
   const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [mostSoldProduct, setMostSoldProduct] = useState([])
-  const [recentProducts, setRecentProducts] = useState([])
-  const [sellerRequests, setSellerRequests] = useState([])
+  const [, setMostSoldProduct] = useState<any[]>([])
+  const [recentProducts, setRecentProducts] = useState<any[]>([])
+  const [sellerRequests, setSellerRequests] = useState<SellerRequest[]>([])
   async function fetchstats() {
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/dashboard-stats`, {
@@ -98,7 +78,7 @@ const AdminDashboard = () => {
     }
   }
 
-  async function handleAcceptRequest(id) {
+  async function handleAcceptRequest(id: string) {
     console.log(id)
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/seller-approve/${id}`, {
@@ -118,7 +98,7 @@ const AdminDashboard = () => {
     }
   }
 
-  async function handleRejectRequest(id) {
+  async function handleRejectRequest(id: string) {
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/seller-reject/${id}`, {
         method: "PUT",
@@ -173,10 +153,10 @@ const AdminDashboard = () => {
           <MetricChart
             title="Users"
             data={[
-              { week: "Week 1", value: stats?.userWeeklyCounts["Week 1"] },
-              { week: "Week 2", value: stats?.userWeeklyCounts["Week 2"] },
-              { week: "Week 3", value: stats?.userWeeklyCounts["Week 3"] },
-              { week: "Week 4", value: stats?.userWeeklyCounts["Week 4"] },
+              { week: "Week 1", value: stats?.userWeeklyCounts?.["Week 1"] },
+              { week: "Week 2", value: stats?.userWeeklyCounts?.["Week 2"] },
+              { week: "Week 3", value: stats?.userWeeklyCounts?.["Week 3"] },
+              { week: "Week 4", value: stats?.userWeeklyCounts?.["Week 4"] },
             ]}
           />
 
@@ -184,10 +164,10 @@ const AdminDashboard = () => {
             title="Products"
 
             data={[
-              { week: "Week 1", value: stats?.productsWeeklyCount["Week 1"] },
-              { week: "Week 2", value: stats?.productsWeeklyCount["Week 2"] },
-              { week: "Week 3", value: stats?.productsWeeklyCount["Week 3"] },
-              { week: "Week 4", value: stats?.productsWeeklyCount["Week 4"] },
+              { week: "Week 1", value: stats?.productsWeeklyCount?.["Week 1"] },
+              { week: "Week 2", value: stats?.productsWeeklyCount?.["Week 2"] },
+              { week: "Week 3", value: stats?.productsWeeklyCount?.["Week 3"] },
+              { week: "Week 4", value: stats?.productsWeeklyCount?.["Week 4"] },
             ]}
           />
 
@@ -195,10 +175,10 @@ const AdminDashboard = () => {
             title="Orders"
 
             data={[
-              { week: "Week 1", value: stats?.orderWeeklyCounts["Week 1"] },
-              { week: "Week 2", value: stats?.orderWeeklyCounts["Week 2"] },
-              { week: "Week 3", value: stats?.orderWeeklyCounts["Week 3"] },
-              { week: "Week 4", value: stats?.orderWeeklyCounts["Week 4"] },
+              { week: "Week 1", value: stats?.orderWeeklyCounts?.["Week 1"] },
+              { week: "Week 2", value: stats?.orderWeeklyCounts?.["Week 2"] },
+              { week: "Week 3", value: stats?.orderWeeklyCounts?.["Week 3"] },
+              { week: "Week 4", value: stats?.orderWeeklyCounts?.["Week 4"] },
             ]}
           />
 
@@ -210,6 +190,9 @@ const AdminDashboard = () => {
             <h1 className='font-semibold text-body mb-4'>Pending Seller Approval</h1>
 
             <div className="w-full">
+              {sellerRequests.length == 0 && (
+                <h1 className='text-center text-body mt-10 font-semibold'>No pending seller requests</h1>
+              )}
               {sellerRequests.map((data) => (
                 <div
                   key={data.userId._id}

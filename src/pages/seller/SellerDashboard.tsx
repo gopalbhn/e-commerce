@@ -16,6 +16,7 @@ import { products } from "@/lib/data";
 import { useNavigate } from "react-router-dom";
 import UserStore from "@/store/userStore";
 import { Button } from "@/components/ui/button";
+import OrderDetailComponent from "@/components/normal/orderDetail";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
@@ -83,11 +84,30 @@ const SellerDashboard = () => {
     const [lowStockProduct, setLowStockProduct] = useState<any | []>([])
     const [pendingOrder, setPendingOrder] = useState<any | []>([])
     const [sellerProfile, setSellerProfile] = useState<any | []>([])
+    const [orderDetail, setOrderDetail] = useState<any | []>([])
+    const [viewOrder, setViewOrder] = useState(false)
     const user = UserStore(state => state?.user);
     console.log("user seller", user)
     const isStoreApproved = user?.storeApproved
     console.log('from store aproved', isStoreApproved)
     const navigate = useNavigate();
+
+    async function fetchOrderDetail(id: string) {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/${id}`, {
+                method: "GET",
+                credentials: "include"
+            })
+            const data = await res.json()
+            console.log(data)
+            if (data.success) {
+                setOrderDetail(data.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     async function fetchLowStockProduct() {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product/low-stock`, {
@@ -152,7 +172,7 @@ const SellerDashboard = () => {
     return (
         <div className="min-h-screen bg-gray-100 flex">
             <SellerSideBar open={open} />
-
+            {viewOrder && <OrderDetailComponent onclose={() => setViewOrder(false)} orders={orderDetail} />}
             <section
                 className={`flex-1 transition-all duration-300 ${open ? "ml-[15%]" : "ml-0"
                     }`}
@@ -206,7 +226,7 @@ const SellerDashboard = () => {
                         )}
                     </div>
                 </div>
-                <PendingOrdersTable pendingOrder={pendingOrder} />
+                <PendingOrdersTable pendingOrder={pendingOrder} setViewOrder={setViewOrder} fetchOrderDetail={fetchOrderDetail} />
             </section>
         </div>
     );
@@ -273,43 +293,17 @@ const StatsCard = ({
     );
 };
 
-const PendingOrdersTable = ({ pendingOrder }: any) => {
+const PendingOrdersTable = ({ pendingOrder, setViewOrder, fetchOrderDetail }: any) => {
     console.log("table pending order", pendingOrder)
-    const navigate = useNavigate();
-    const pendingOrders = [
-        {
-            id: "#ORD-90210",
-            customer: "Elena Smith",
-            initials: "ES",
-            color: "bg-gray-200",
-            date: "Oct 24, 2024",
-            total: "$124.50",
-            status: "Processing",
-            action: "Ship Now",
-        },
-        {
-            id: "#ORD-90211",
-            customer: "Marcus Johnson",
-            initials: "MJ",
-            color: "bg-teal-300",
-            date: "Oct 24, 2024",
-            total: "$56.00",
-            status: "Awaiting Payment",
-            action: "Details",
-        },
-        {
-            id: "#ORD-90212",
-            customer: "Lucas White",
-            initials: "LW",
-            color: "bg-orange-300",
-            date: "Oct 23, 2024",
-            total: "$210.00",
-            status: "Ready to Ship",
-            action: "Ship Now",
-        },
-    ];
+
+    async function handleViewOrder(id: string) {
+        setViewOrder(true)
+        fetchOrderDetail(id)
+    }
+
     return (
         <div className="p-6">
+
             <div className="bg-white rounded-2xl shadow-sm p-6">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-semibold text-gray-800">
@@ -380,7 +374,7 @@ const PendingOrdersTable = ({ pendingOrder }: any) => {
                                                     Ship Now
                                                 </button>
                                             ) : (
-                                                <button className="text-[#8B4B39] hover:underline font-medium" onClick={() => navigate(`/orders/${order._id}`)}>
+                                                <button className="text-[#8B4B39] hover:underline font-medium" onClick={() => handleViewOrder(order._id)}>
                                                     Details
                                                 </button>
                                             )}

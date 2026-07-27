@@ -6,19 +6,14 @@ import { HiMiniMagnifyingGlassPlus } from 'react-icons/hi2'
 
 import Footer from '../../components/normal/Footer';
 import { useParams } from 'react-router-dom';
-
-
-import useCartStore from '@/store/cartStore';
-import { products } from '@/lib/data';
 import { toast } from 'sonner';
-import UserStore from '@/store/userStore';
+
 import SuccessModal from '@/components/normal/successModal';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
   const buttonList = ["Product Specs", "Description", "Reviews"];
-  const user = UserStore(state => state?.user);
-  const userId = user?.id;
+
   const [totalCartItem, setTotalCartItem] = useState<number>(1)
   const [isWishListed, setIsWishlisted] = useState(false)
   const [product, setProduct] = useState(null)
@@ -30,13 +25,6 @@ const ProductDetail = () => {
   console.log(product)
 
 
-  const addToCart = useCartStore(state => state?.addToCart)
-  const handleAddToCart = () => {
-    addToCart(product?.id, totalCartItem)
-    setTimeout(() => {
-      toast.success("Product added to cart")
-    }, 1000)
-  }
 
   async function checkWishlisted() {
     let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/check/${id}`, {
@@ -246,7 +234,6 @@ const ProductDetail = () => {
               <button disabled={buttonDisabled} className={`w-full max-w-xl px-10 py-4 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300 ${buttonDisabled ? "opacity-50 cursor-not-allowed" : ""}`} onClick={AddToCart}>
                 <BiCart className='text-xl' /> Add To cart
               </button>
-
             </div>
 
             <button className='w-full max-w-xl px-10 py-4 rounded-xl bg-black text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300'>

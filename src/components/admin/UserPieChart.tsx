@@ -1,7 +1,8 @@
+import type { userPieChartDataType } from "../../types/adminTypes"
 import { Cell, Pie, PieChart, Tooltip } from "recharts"
-import { PieChartData } from "../../lib/data.js"
 
-const UserPieChart = ({ data }: any) => {
+
+const UserPieChart = ({ data }: { data: userPieChartDataType[] }) => {
     return (
         <PieChart
             style={{ width: "100%", maxWidth: '500px', maxHeight: "60vh", aspectRatio: "1/1" }}

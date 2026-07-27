@@ -1,10 +1,11 @@
-import { productData } from "@/lib/data"
+
 import { useState } from "react"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import Popup from "../normal/Popup"
 import DeleteModal from "../normal/Delete"
 import { toast } from "sonner"
 import { useNavigate } from "react-router-dom"
+import { FaRegEye, FaTrash } from "react-icons/fa"
 
 
 
@@ -25,10 +26,6 @@ export default function Table({ varaint, data }: TableProps) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [type, setType] = useState<string | null>(null)
 
-    const handlePopup = (id: string) => {
-        setPopup(!popup)
-        setTargetId(id)
-    }
 
     const handleProductDelete = async (productId: string) => {
         try {
@@ -118,7 +115,7 @@ export default function Table({ varaint, data }: TableProps) {
                                 <td className="px-6 py-4 text-sm text-gray-500">
                                     {product.category.name}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-500 flex relative ">
+                                {/* <td className="px-6 py-4 text-sm text-gray-500 flex relative ">
 
                                     <button className="p-4 hover:bg-gray-100 rounded-xl" onClick={() => handlePopup(product._id)}>
                                         <BsThreeDotsVertical size={20} />
@@ -137,6 +134,15 @@ export default function Table({ varaint, data }: TableProps) {
 
                                         />
                                     )}
+                                </td> */}
+                                <td className="px-6 py-4 text-gray-500 flex items-center gap-x-6">
+                                    <button onClick={() => navigate(`/product-detail/${product._id}`)}>
+                                        <FaRegEye />
+                                    </button>
+
+                                    <button onClick={() => handleProductDelete(product._id)} className=" text-red-500 hover:text-red-700">
+                                        <FaTrash />
+                                    </button>
                                 </td>
                             </tr>
                         ))}
