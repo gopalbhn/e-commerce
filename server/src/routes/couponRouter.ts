@@ -8,7 +8,7 @@ import { createCoupon, deleteCoupon, getAllCoupons, updateCoupon, useCoupon } fr
 const router = Router();
 
 router.get('/', authenticateUser, getAllCoupons);
-router.get('/:code', authenticateUser, useCoupon)
+router.get('/apply/:code', authenticateUser, useCoupon)
 router.post('/', authenticateUser, createCoupon)
 router.put('/:id', authenticateUser, updateCoupon)
 router.delete('/:id', authenticateUser, deleteCoupon)

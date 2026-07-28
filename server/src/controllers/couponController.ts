@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import Coupon from "../models/couponModel.js";
 import { couponSchema } from "../schemas/couponSchema.js";
+import { Cart } from "../models/cartModel.js";
 
 const createCoupon = async (req: Request, res: Response) => {
     try {
+        console.log(req.body)
         const data = couponSchema.safeParse(req.body)
         if (!data.success) {
             return res.status(400).json({
@@ -27,10 +29,12 @@ const createCoupon = async (req: Request, res: Response) => {
 const deleteCoupon = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
-        const coupon = await Coupon.findByIdAndDelete(id)
+        const coupon = await Coupon.findById(id)
         if (!coupon) {
             return res.status(404).json({ message: "Coupon not found" })
         }
+        coupon.isDeleted = true;
+        await coupon.save();
         res.json({ message: "Coupon deleted successfully" })
     } catch (error) {
         console.log(error)
@@ -56,7 +60,7 @@ const updateCoupon = async (req: Request, res: Response) => {
 const getAllCoupons = async (req: Request, res: Response) => {
     try {
         const seller = req.user.id
-        const coupons = await Coupon.find({ seller })
+        const coupons = await Coupon.find({ seller, isDeleted: false })
         if (coupons.length == 0) {
             return res.status(404).json({ success: false, message: "No coupons found" })
         }
@@ -72,6 +76,7 @@ const getAllCoupons = async (req: Request, res: Response) => {
 const useCoupon = async (req: Request, res: Response) => {
     try {
         const { code } = req.params
+        const userId = req.user.id;
         const coupon = await Coupon.findOne({ code })
         if (!coupon) {
             return res.status(404).json({ success: false, message: "Coupon not found" })
@@ -82,6 +87,18 @@ const useCoupon = async (req: Request, res: Response) => {
         if (coupon.usedCount >= coupon.maxUses) {
             return res.status(400).json({ success: false, message: "Coupon is used up" })
         }
+
+        const cart = await Cart.findOne({ userId: userId });
+        if (!cart) {
+            return res.status(404).json({ success: false, message: "Cart not found" });
+        }
+        if (cart.couponApplied) {
+            return res.status(400).json({ success: false, message: "Coupon is already applied" })
+        }
+        cart.coupon = coupon._id;
+        cart.couponApplied = true;
+        await cart.save();
+
         coupon.usedCount++
         await coupon.save()
         res.status(200).json({ success: true, coupon })

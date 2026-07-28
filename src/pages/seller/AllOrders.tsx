@@ -3,14 +3,18 @@ import { MdMenu } from 'react-icons/md'
 import SellerSideBar from '../../components/Sellers/SellerSideBar'
 
 import { FaCalendarAlt, FaCar } from 'react-icons/fa'
-import Popup from '@/components/normal/Popup'
-import { BsThreeDotsVertical } from 'react-icons/bs'
+import { BsBoxSeamFill } from 'react-icons/bs'
 import { toast } from 'sonner'
+import Table from '@/components/normal/table'
+import { Eye } from 'lucide-react'
+import { CiDeliveryTruck } from 'react-icons/ci'
+import { useNavigate } from 'react-router-dom'
 
 const AllOrders = () => {
     const [open, setOpen] = useState<boolean>(true)
     const [order, setOrder] = useState<[] | any[] | null>([])
     const [view, setView] = useState<string>("all")
+    const navigate = useNavigate();
     async function fetchAllOrder() {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/seller`, {
@@ -61,6 +65,85 @@ const AllOrders = () => {
             fetchAllOrder()
         }
     }
+
+    const OrderColumn = [
+        {
+            header: "Order Id",
+            accessor: "_id"
+        },
+        {
+            header: "Date",
+            render: (order: any) => new Date(order.createdAt).toLocaleDateString(),
+        },
+        {
+            header: "Customer",
+            render: (order: any) => order.buyer.name,
+        },
+        {
+            header: "Price",
+            render: (order: any) => `Npr.${order.totalPrice}`,
+        },
+        {
+            header: "Status",
+            render: (order: any) => order.orderStatus,
+        },
+        {
+            header: "Actions",
+            render: (order: any) => (
+                <div className='flex items-center gap-x-3'>
+
+                    <button
+                        onClick={() => {
+                            navigate(`/seller/order/${order._id}`)
+                        }}
+                        className="text-gray-400 hover:text-primary-hover transition-colors"
+                        title="View Order"
+                    >
+                        <Eye size={20} />
+                    </button>
+                    {order.orderStatus !== "Shipped" ? (
+                        <button
+                            onClick={() => {
+                                updateStatus("Shipped", order._id)
+                            }}
+                            className="text-gray-400 hover:text-primary-hover transition-colors"
+                            title="Ship Order"
+                        >
+                            <CiDeliveryTruck size={20} />
+                        </button>
+                    ) : (
+                        <button
+                            disabled
+                            className="text-gray-400/50 cursor-not-allowed hover:bg-transparent transition-colors"
+                            title="Order Shipped Already"
+                        >
+                            <CiDeliveryTruck size={20} />
+                        </button>
+                    )}
+                    {order.orderStatus !== "Delivered" ? (
+                        <button
+                            onClick={() => {
+                                updateStatus("Delivered", order._id)
+                            }}
+                            className="text-gray-400 hover:text-primary-hover transition-colors"
+                            title="Delivered Order"
+                        >
+                            <BsBoxSeamFill size={20} />
+                        </button>
+                    ) : (
+                        <button
+                            disabled
+                            className="text-gray-400/50 cursor-not-allowed hover:bg-transparent transition-colors"
+                            title="Order Delivered Already"
+                        >
+                            <BsBoxSeamFill size={20} />
+                        </button>
+                    )}
+                </div>
+            ),
+        },
+    ]
+
     return (
         <div className="h-full w-full bg-gray-50 flex">
             <SellerSideBar open={open} />
@@ -93,7 +176,10 @@ const AllOrders = () => {
                         <button onClick={handleShippedOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "shipped" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Shipped</button>
                         <button onClick={handleCompletedOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "completed" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Completed</button>
                     </div>
-                    <OrderTable order={order} updateStatus={updateStatus} />
+
+                    <div className="mt-10 ">
+                        <Table columns={OrderColumn} data={order} />
+                    </div>
                 </div>
             </section>
         </div>
@@ -138,107 +224,8 @@ const StatsCard = ({
     )
 }
 
-const statusConfig: Record<string, { label: string; className: string }> = {
-    Delivered: { label: 'Delivered', className: 'bg-green-100 text-green-700 border border-green-200' },
-    Pending: { label: 'Pending', className: 'bg-yellow-100 text-yellow-700 border border-yellow-200' },
-    Shipped: { label: 'Shipped', className: 'bg-blue-100 text-blue-700 border border-blue-200' },
-    Cancelled: { label: 'Cancelled', className: 'bg-red-100 text-red-700 border border-red-200' },
-    Processing: { label: 'Processing', className: 'bg-purple-100 text-purple-700 border border-purple-200' },
-}
-
-const OrderTable = ({ order, updateStatus }: { order: any[]; updateStatus: (status: string, id: string) => void }) => {
-    const [targetId, setTargetId] = useState<string | null>(null)
-    const [popup, setPopup] = useState<boolean>(false)
-
-    const handlePopup = (id: string) => {
-        setPopup(!popup)
-        setTargetId(id)
-    }
-
-    return (
-        <div className="w-full h-full bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100">
-            <table className="w-full border-separate border-spacing-y-1.5">
-                <thead>
-                    <tr>
-                        <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Order Id</th>
-                        <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Date</th>
-                        <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Customer Name</th>
-                        <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Price</th>
-                        <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Status</th>
-                        <th className='text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3'>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody className="text-sm font-normal text-gray-700">
-                    {order.map((order: any, index: number) => {
-                        const status = statusConfig[order.orderStatus] ?? { label: order.orderStatus, className: 'bg-gray-100 text-gray-600' }
-                        return (
-                            <tr
-                                key={index}
-                                className="bg-gray-50 hover:bg-primary-light/10 transition-colors group rounded-lg"
-                            >
-                                <td className="p-3 rounded-l-lg">
-                                    <span className="font-semibold text-primary">{order._id}</span>
-                                </td>
-                                <td className="p-3 text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
-                                <td className="p-3 font-medium text-gray-800">{order.buyer.name}</td>
-                                <td className="p-3 font-semibold text-gray-900">Npr.{order.totalPrice}</td>
-                                <td className="p-3 rounded-r-lg">
-                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${status.className}`}>
-                                        {status.label}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-500 flex relative ">
-
-                                    <button className="p-4 hover:bg-gray-100 rounded-xl" onClick={() => handlePopup(order._id)}>
-                                        <BsThreeDotsVertical size={20} />
-                                    </button>
-
-                                    {order._id === targetId && popup && (
-                                        <>
-                                            <div
-                                                className="fixed inset-0 z-40"
-                                                onClick={() => {
-                                                    setPopup(false);
-                                                    setTargetId(null);
-                                                }}
-                                            />
 
 
-                                            <div
-                                                className="absolute right-0 top-12 z-50"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                <Popup
-                                                    varaint='order'
-                                                    id={order._id}
-                                                    onDelete={() => {
-                                                        setPopup(false);
-                                                        setTargetId(null);
-                                                        updateStatus("Cancelled", order._id)
-                                                    }}
-                                                    onDeliver={() => {
-                                                        setPopup(false);
-                                                        setTargetId(null);
-                                                        updateStatus("Delivered", order._id)
-                                                    }}
-                                                    onShip={() => {
-                                                        setPopup(false);
-                                                        setTargetId(null);
-                                                        updateStatus("Shipped", order._id)
-                                                    }}
-                                                />
-                                            </div>
-                                        </>
-                                    )}
-                                </td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
-        </div>
-    )
-}
+
 
 export default AllOrders

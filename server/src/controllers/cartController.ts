@@ -17,6 +17,12 @@ const getAllCartItem = async (req: Request, res: Response) => {
             })
         }
 
+        if (cart?.couponApplied) {
+            await cart.populate({
+                path: "coupon",
+                select: "code discountRate"
+            })
+        }
 
         return res.status(200).json({
             success: true,

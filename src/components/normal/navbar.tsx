@@ -60,7 +60,13 @@ const NavBar = () => {
             </div>
             <div className="flex  items-center gap-6">
                 {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => (
-                    <Link to={`/${item == "Home" ? "" : item.trim().toLowerCase()}`} key={item} className="text-sm font-medium text-secondary cursor-pointer hover:text-primary hover:underline transition-colors duration-300">
+                    <Link to={
+                        item === "Home"
+                            ? "/"
+                            : item === "New Arrivals"
+                                ? "/newarrivals"
+                                : `/${item.trim().toLowerCase()}`
+                    } key={item} className="text-sm font-medium text-secondary cursor-pointer hover:text-primary hover:underline transition-colors duration-300">
                         {item}
                     </Link>
                 ))}

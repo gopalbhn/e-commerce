@@ -30,6 +30,8 @@ import OrderDetail from './pages/normal/OrdersDetail'
 import PaymentSuccess from './pages/normal/PaymentSuccess'
 import AdminProduct from './pages/admin/AdminProduct'
 import PaymentFailed from './pages/normal/PaymentFailed'
+import Deals from './pages/normal/Deals'
+import NewArrival from './pages/normal/newArrival'
 
 function App() {
 
@@ -149,6 +151,8 @@ function Init() {
         <Route path='/purchase-history' element={<PurchaseHistory />} />
         <Route path='/payment-success' element={<PaymentSuccess />} />
         <Route path='/payment-failed' element={<PaymentFailed />} />
+        <Route path='/deals' element={<Deals />} />
+        <Route path='/newarrivals' element={<NewArrival />} />
         {
           role === "Seller" && (
             <>

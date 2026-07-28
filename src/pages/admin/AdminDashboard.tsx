@@ -2,10 +2,9 @@
 import AdminSideBar from '@/components/admin/AdminSideBar'
 import AdminTopBar from '@/components/admin/AdminTopBar'
 import MetricChart from '@/components/admin/MetricCard'
-import { mostSellingData } from "../../lib/data.js"
 import { useEffect, useState } from 'react'
 import UserPieChart from '@/components/admin/UserPieChart.js'
-import Table from '@/components/admin/table.js'
+import Table from '@/components/normal/table'
 import { toast } from 'sonner'
 import type { DashboardStats, SellerRequest } from '@/types/adminTypes.js'
 
@@ -138,6 +137,39 @@ const AdminDashboard = () => {
 
   ]
 
+  const recentProductColumn = [
+    {
+      header: "Id",
+      accessor: "_id",
+    },
+    {
+      header: "Category",
+      accessor: "category.name",
+    },
+    {
+      header: "Price",
+      accessor: "price",
+    },
+    {
+      header: "Stock",
+      accessor: "stock",
+    },
+    {
+      header: "image",
+      render: (item: any) => (
+        <div className="w-14 h-14 rounded-md overflow-hidden">
+          <img src={item.thumbnails} alt="" className="w-full h-full object-cover" />
+        </div>
+      )
+    },
+    {
+      header: "Category",
+      render: (item) => item?.category?.name
+    }, {
+      header: "Seller",
+      render: (item) => item?.owner?.shopName
+    }
+  ]
 
   return (
     <div className='h-full w-full relative'>
@@ -236,14 +268,18 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className='w-full mt-10'>
+        {/* <div className='w-full mt-10'>
           <h1 className='text-body font-semibold mb-4'>Most Sold Products</h1>
           <Table varaint='most-selling' data={mostSellingData} />
-        </div>
+        </div> */}
         <div className='w-full mt-10'>
+          <h1 className='text-body font-semibold mb-4'>Most Sold Products</h1>
+          <Table data={recentProducts} columns={recentProductColumn} />
+        </div>
+        {/* <div className='w-full mt-10'>
           <h1 className='text-body font-semibold mb-4'>Recent Products</h1>
           <Table varaint='product' data={recentProducts} />
-        </div>
+        </div> */}
       </section>
     </div>
   )

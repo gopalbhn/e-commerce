@@ -26,6 +26,10 @@ const couponSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Seller",
         required: true
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
     }
 })
 

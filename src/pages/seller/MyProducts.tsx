@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import SellerSideBar from "../../components/Sellers/SellerSideBar";
 import { MdMenu } from "react-icons/md";
 import { BiPlus, BiSearch } from "react-icons/bi";
-
-
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "@/components/normal/Delete";
+import Table from "@/components/normal/table";
+import { toast } from "sonner";
 
 interface productstatsProps {
   totalProduct: number
@@ -80,14 +80,71 @@ const MyProducts = () => {
       const data = await res.json();
 
       if (data.success) {
+        toast.success("Product Deleted Successfully")
         setTimeout(() => {
-          window.location.reload();
+          setProduct(product => product.filter((pro: any) => pro._id !== productId))
+          setShowDeleteConfirm(false)
         }, 500)
       }
     } catch (error) {
       console.log(error)
     }
   }
+
+  const productColumns = [
+    {
+      header: "product name",
+      render: (item: any) => (
+        <div className="flex items-center gap-2">
+
+          <div className="w-16 h-16 rounded-lg overflow-hidden">
+
+            <img src={item.thumbnails} alt={item.name} className="w-full h-full object-cover" />
+
+          </div>
+          <p className="text-sm font-semibold text-gray-800">
+            {item.name}
+          </p>
+        </div>
+      )
+    },
+    {
+      header: "Category",
+      render: (item: any) => (
+        <span className="text-sm text-gray-500 px-3 py-1 bg-gray-100 rounded-full">
+          {item.category.name}
+        </span>
+      )
+    },
+    {
+      header: "Price",
+      render: (item: any) =>
+        <p>NPR: {item.price}</p>
+    },
+    {
+      header: "stock",
+      render: (item: any) => (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold border border-gray-100 bg-gray-50`}
+        >
+          {item.stock} in stock
+        </span>
+      ),
+    },
+    {
+      header: "Actions",
+      accessor: "actions",
+      render: (item: any) => <div className="flex items-center gap-2">
+        <button className="hover:text-primary-hover p-1.5 rounded-lg text-gray-400 " onClick={() => {
+          navigate(`/seller/edit-product/${item._id}`)
+        }}><FaEdit size={14} /></button>
+        <button className="hover:text-red-500 p-1.5 rounded-lg text-gray-400" onClick={() => {
+          setDeleteItemId(item._id)
+          setShowDeleteConfirm(true)
+        }}><FaTrash size={14} /></button>
+      </div>
+    }
+  ]
 
   useEffect(() => {
     fetchMyProducts();
@@ -141,8 +198,9 @@ const MyProducts = () => {
           <StatsCard title="Low Stock" statsNum={productStats?.lowStockedProduct} color="badge" />
         </div>
 
+
         <div className="w-full h-full">
-          <ProductTable products={product} setShowDeleteConfirm={setShowDeleteConfirm} setDeleteItemId={setDeleteItemId} />
+          <Table columns={productColumns} data={product} />
         </div>
       </section>
     </div>
@@ -178,84 +236,7 @@ const StatsCard = ({
   );
 };
 
-const stockConfig = (stock: number) => {
-  if (stock > 50)
-    return { label: `${stock} in stock`, className: "bg-green-100 text-green-700 border border-green-200" };
-  if (stock > 10)
-    return { label: `${stock} in stock`, className: "bg-yellow-100 text-yellow-700 border border-yellow-200" };
-  return { label: `${stock} low stock`, className: "bg-red-100 text-red-700 border border-red-200" };
-};
 
-const ProductTable = ({ products, setShowDeleteConfirm, setDeleteItemId }: { products: any[] | [], setShowDeleteConfirm: (value: boolean) => void, setDeleteItemId: (productId: string) => void }) => {
-  const navigate = useNavigate();
-  return (
-    <div className="w-full h-full bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100">
-      <table className="w-full border-separate border-spacing-y-1.5">
-        <thead>
-          <tr>
-            <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Product Name</th>
-            <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Category</th>
-            <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Price</th>
-            <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Stock</th>
-            <th className="text-left text-[11px] uppercase tracking-wider font-semibold text-gray-400 pb-2 px-3">Action</th>
-          </tr>
-        </thead>
 
-        <tbody className="text-sm font-normal text-gray-700">
-          {products.slice(0, 3).map((product, index) => {
-            const stock = stockConfig(100);
-            return (
-              <tr
-                key={index}
-                className="bg-gray-50 hover:bg-primary-light/10 transition-colors group"
-              >
-                <td className="p-3 rounded-l-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-[46px] h-[46px] rounded-xl overflow-hidden ring-1 ring-gray-200 shrink-0">
-                      <img
-                        src={product.thumbnails}
-                        alt="product"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <p className="text-sm font-semibold text-gray-800">
-                      {product.name}
-                    </p>
-                  </div>
-                </td>
-                <td className="p-3">
-                  <span className="px-2.5 py-1 bg-secondary-light text-secondary text-xs font-medium rounded-full">
-                    {product.category.name}
-                  </span>
-                </td>
-                <td className="p-3 font-semibold text-gray-900"> Npr.{product.price}</td>
-                <td className="p-3">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${stock.className}`}>
-                    {product.stock} in stock
-                  </span>
-                </td>
-                <td className="p-3 rounded-r-lg">
-                  <div className="flex items-center gap-2">
-                    <button className="p-1.5 rounded-lg text-gray-400 hover:bg-primary-light/20 hover:text-primary transition-colors"
-                      onClick={() => navigate(`/seller/edit-product/${product._id}`)}
-                    >
-                      <FaEdit size={14} />
-                    </button>
-                    <button className="p-1.5 rounded-lg text-gray-400 hover:bg-red-100 hover:text-red-500 transition-colors" onClick={() => {
-                      setShowDeleteConfirm(true)
-                      setDeleteItemId(product._id)
-                    }}>
-                      <FaTrash size={14} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-};
 
 export default MyProducts;

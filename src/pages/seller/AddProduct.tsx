@@ -128,7 +128,6 @@ const AddProduct = () => {
 
     }, [])
     async function handleAddProduct() {
-
         if (title === "" || category === "" || subcategory === "" || basePrice === 0 || discountRate === 0 || sku === "" || stock === 0 || images.length === 0 || thumbnails === null || specs.length === 0) {
             toast.error("Please fill all the fields");
             return;

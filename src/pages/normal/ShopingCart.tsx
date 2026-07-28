@@ -14,6 +14,13 @@ const ShopingCart = () => {
     const [quantity, setQuantity] = useState<number>(0);
     const [products, setProducts] = useState<any[]>([]);
     const [isWishListed, setIsWishlisted] = useState(false)
+    const [isCouponApplied, setIsCouponApplied] = useState(false)
+    const [coupon, setCoupon] = useState<{
+        _id?: string,
+        code?: string,
+        discountRate?: number
+    } | null>(null)
+    const [code, setCode] = useState("")
     useEffect(() => {
         fetchCartItems();
     }, []);
@@ -24,7 +31,7 @@ const ShopingCart = () => {
         });
 
         const data = await res.json();
-
+        console.log('iscoupon', data)
         if (data.success) {
 
             // const allProducts = data.data.flatMap((cart: any) =>
@@ -36,7 +43,16 @@ const ShopingCart = () => {
             const allProducts = data.data.products.map((item: any) => ({
                 ...item.productId,
                 quantity: item.quantity
+
             }));
+            if (data.data.couponApplied) {
+                setIsCouponApplied(true)
+                setCoupon({
+                    _id: data.data.coupon._id,
+                    code: data.data.coupon.code,
+                    discountRate: data.data.coupon.discountRate
+                })
+            }
             console.log("all products", allProducts)
             setProducts(allProducts);
 
@@ -57,18 +73,68 @@ const ShopingCart = () => {
         }
     }
 
+    async function applyDiscount() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/apply/${code}`, {
+                credentials: "include"
+            })
+            const data = await res.json()
+            if (data.success) {
+                toast.success("Coupon Applied Successfully")
+                setTimeout(() => {
+                    window.location.reload()
+                }, 500)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
+    // function calculateTotal() {
+
+    //     const subTotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
+    //     console.log("Total", subTotal)
+    //     const tax = subTotal * 0.13
+    //     const shipping = 10
+    //     let total = subTotal + tax + shipping
+    //     if (isCouponApplied) {
+    //         const discount = coupon?.discountRate || 0
+    //         console.log("discount", discount)
+    //         total -= (total * discount) / 100
+
+    //     }
+    //     return { total, tax, shipping, subTotal, discount }
+    // }
     function calculateTotal() {
 
-        const total = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
-        console.log("Total", total)
-        const tax = total * 0.13
-        const shipping = 10
-        const subTotal = total + tax + shipping
-        return { total, tax, shipping, subTotal }
-    }
-    const { total, tax, shipping, subTotal } = calculateTotal()
+        const subTotal = products.reduce(
+            (acc: number, item: any) =>
+                acc + Number(item.price) * Number(item.quantity),
+            0
+        );
 
+        const tax = subTotal * 0.13;
+        const shipping = 10;
+
+        let total = subTotal + tax + shipping;
+
+        let discount = 0;
+
+        if (isCouponApplied && coupon?.discountRate !== undefined) {
+            discount = (total * Number(coupon.discountRate)) / 100;
+            total -= discount;
+        }
+
+        return {
+            total,
+            tax,
+            shipping,
+            subTotal,
+            discount
+        };
+    }
+    const { total, tax, shipping, subTotal, discount } = calculateTotal()
+    console.log("total from out", total)
     async function addToWishList(id: string) {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/add/${id}`, {
             method: "POST",
@@ -168,7 +234,7 @@ const ShopingCart = () => {
                     </div>
                     <div className="w-1/3  p-6 rounded-xl shadow-md">
 
-                        <OrderSummaryTable total={total} tax={tax} shipping={shipping} subTotal={subTotal} />
+                        <OrderSummaryTable total={total} tax={tax} shipping={shipping} subTotal={subTotal} code={code} setCode={setCode} applyCode={applyDiscount} isCouponApplied={isCouponApplied} coupon={coupon} discount={discount} />
                     </div>
                 </div>
             </section >
@@ -183,12 +249,24 @@ function OrderSummaryTable({
     total,
     tax,
     shipping,
-    subTotal
+    subTotal,
+    code,
+    setCode,
+    applyCode,
+    isCouponApplied,
+    coupon,
+    discount
 }: {
     total: number,
     tax: number,
     shipping: number,
-    subTotal: number
+    subTotal: number,
+    setCode: (value: string) => void,
+    applyCode: () => void,
+    code: string,
+    isCouponApplied: boolean,
+    discount: number,
+    coupon: { code: string, discountRate: number }
 }) {
     console.log(total, tax, shipping, subTotal)
     const navigate = useNavigate();
@@ -198,33 +276,62 @@ function OrderSummaryTable({
             <div className="flex flex-col gap-y-3 py-3 border-b border-gray-400">
                 <div className="flex items-center justify-between">
                     <p>Subtotal</p>
-                    <p>{total}</p>
+                    <p>Nrs.{subTotal}</p>
                 </div>
                 <div className="flex items-center justify-between">
 
                     <h2>Shipping</h2>
-                    <h2>{shipping}</h2>
+                    <h2>Nrs.{shipping}</h2>
                 </div>
                 <div className="flex items-center justify-between">
 
                     <h2>Tax</h2>
-                    <h2>{tax}</h2>
+                    <h2>Nrs.{tax}</h2>
                 </div>
             </div>
             <div className="w-full border-b border-gray-400">
                 <p>Discount Code</p>
                 <div className="w-full flex items-center justify-between my-3">
                     <input placeholder="Enter Code"
+                        onChange={(e) => {
+                            const value = e.target.value.trim().toUpperCase()
+                            setCode(value)
+                        }}
+                        value={code}
                         className="py-1.5  px-8 rounded-xl border border-gray-300 bg-white"
                     >
                     </input>
-                    <button className="py-1.5 px-3 rounded-xl bg-secondary-light text-white">Apply</button>
+                    {
+                        code.length > 4 ? (
+                            <button className="py-1.5 px-3 rounded-xl bg-primary text-white" onClick={applyCode}>Apply</button>
+                        ) : (
+                            <button disabled className="py-1.5 px-3 rounded-xl bg-secondary-light text-white">Apply</button>
+                        )
+                    }
+                </div>
+                <div>
+                    {
+                        isCouponApplied && (
+                            <div className="w-full flex items-center justify-between my-3">
+                                <p>Coupon Applied</p>
+                                <div className="bg-secondary-light text-primary px-3 rounded-lg">
+                                    {coupon?.code}
+                                </div>
+                                <p className="text-primary"> Discount: {coupon?.discountRate}%</p>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
             <div className="w-full ">
+                <div className="flex items-center justify-between">
+
+                    <h2>Discount</h2>
+                    <h2>Nrs.{discount.toFixed(2)}</h2>
+                </div>
                 <div className="flex items-center justify-between my-3">
                     <p>Total</p>
-                    <p>{subTotal}</p>
+                    <p>Nrs.{total.toFixed(2)}</p>
                 </div>
             </div>
             <Button variant="default" className="w-full py-2 mt-5  text-white rounded-lg" onClick={() => navigate("/checkout")}> Proceed to Checkout</Button>

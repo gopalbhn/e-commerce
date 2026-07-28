@@ -12,11 +12,13 @@ import {
 import { Bar } from "react-chartjs-2";
 
 import { FiEdit } from "react-icons/fi";
-import { products } from "@/lib/data";
+
 import { useNavigate } from "react-router-dom";
 import UserStore from "@/store/userStore";
 import { Button } from "@/components/ui/button";
 import OrderDetailComponent from "@/components/normal/orderDetail";
+import Table from "@/components/normal/table";
+import { Eye } from "lucide-react";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
@@ -87,11 +89,37 @@ const SellerDashboard = () => {
     const [orderDetail, setOrderDetail] = useState<any | []>([])
     const [viewOrder, setViewOrder] = useState(false)
     const user = UserStore(state => state?.user);
-    console.log("user seller", user)
     const isStoreApproved = user?.storeApproved
-    console.log('from store aproved', isStoreApproved)
     const navigate = useNavigate();
 
+    const pendingOrderColumn = [
+        {
+            header: "Order Id",
+            accessor: "_id",
+        },
+        {
+            header: "Customer",
+            render: (order) => order.buyer.name,
+        },
+        {
+            header: "Date",
+            render: (order) => new Date(order.createdAt).toLocaleDateString(),
+        },
+        {
+            header: "Total",
+            render: (order) => `Npr.${order.totalPrice}`,
+        },
+        {
+            header: "Status",
+            render: (order) => order.orderStatus,
+        },
+        {
+            header: "Action",
+            render: (order) => (
+                <button className="hover:text-primary-hover" onClick={() => { setViewOrder(true), fetchOrderDetail(order._id) }}><Eye size={20} /></button>
+            ),
+        },
+    ]
     async function fetchOrderDetail(id: string) {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/${id}`, {
@@ -107,7 +135,6 @@ const SellerDashboard = () => {
             console.log(error)
         }
     }
-
     async function fetchLowStockProduct() {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product/low-stock`, {
@@ -159,8 +186,6 @@ const SellerDashboard = () => {
             fetchPendingOrder(),
             fetchSellerProfile()
     }, [])
-    console.log(lowStockProduct)
-    console.log(pendingOrder)
     if (isStoreApproved === false) {
         return (
             <div className="min-h-screen bg-gray-100 flex flex-col gap-y-4 items-center justify-center">
@@ -226,7 +251,11 @@ const SellerDashboard = () => {
                         )}
                     </div>
                 </div>
-                <PendingOrdersTable pendingOrder={pendingOrder} setViewOrder={setViewOrder} fetchOrderDetail={fetchOrderDetail} />
+                {/* <PendingOrdersTable pendingOrder={pendingOrder} setViewOrder={setViewOrder} fetchOrderDetail={fetchOrderDetail} /> */}
+                <div className="p-4">
+
+                    <Table data={pendingOrder} columns={pendingOrderColumn} />
+                </div>
             </section>
         </div>
     );
