@@ -2,11 +2,13 @@ import AdminSideBar from "@/components/admin/AdminSideBar"
 import AdminTopBar from "@/components/admin/AdminTopBar"
 import Table from "@/components/admin/table"
 import { useEffect, useState } from "react"
+import { FaRegEye, FaTrash } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 
 const AdminProduct = () => {
   const [open, setOpen] = useState<boolean>(true)
   const [products, setProducts] = useState([])
-
+  const navigate = useNavigate()
   const fetchAllProduct = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product`)
@@ -24,6 +26,40 @@ const AdminProduct = () => {
   useEffect(() => {
     fetchAllProduct();
   }, []);
+
+  const productColumn = [{
+    header: "Id",
+    accessor: "_id"
+  }, {
+    header: "Name",
+    accessor: "name"
+  }, {
+    header: "Price",
+    accessor: "price"
+  }, {
+    header: "Stock",
+    accessor: "stock"
+  }, {
+    header: "Image",
+    accessor: "thumbnail"
+  }, {
+    header: "Category",
+    accessor: "category"
+  }, {
+    header: "Actions",
+    render: (data: any) => (
+      <div className="flex items-center gap-x-6">
+
+        <button onClick={() => navigate(`/admin/products/edit/${data._id}`)} className="p-4 hover:bg-gray-100 rounded-xl">
+          <FaRegEye size={20} />
+        </button>
+
+        <button onClick={() => handleProductDelete(data._id)} className="p-4 hover:bg-gray-100 rounded-xl">
+          <FaTrash size={20} />
+        </button>
+      </div>
+    )
+  }]
   return (
     <div className='h-full w-full'>
       <AdminSideBar open={open} />
@@ -53,3 +89,7 @@ const AdminProduct = () => {
 }
 
 export default AdminProduct;
+
+function handleProductDelete(_id: any): void {
+  throw new Error("Function not implemented.")
+}

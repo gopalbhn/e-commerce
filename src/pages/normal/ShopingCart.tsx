@@ -9,17 +9,18 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { FiHeart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+interface Icoupon {
+    _id?: string,
+    code?: string,
+    discountRate?: number
+}
 const ShopingCart = () => {
 
     const [quantity, setQuantity] = useState<number>(0);
     const [products, setProducts] = useState<any[]>([]);
     const [isWishListed, setIsWishlisted] = useState(false)
     const [isCouponApplied, setIsCouponApplied] = useState(false)
-    const [coupon, setCoupon] = useState<{
-        _id?: string,
-        code?: string,
-        discountRate?: number
-    } | null>(null)
+    const [coupon, setCoupon] = useState<Icoupon[]>([]);
     const [code, setCode] = useState("")
     useEffect(() => {
         fetchCartItems();
@@ -47,11 +48,12 @@ const ShopingCart = () => {
             }));
             if (data.data.couponApplied) {
                 setIsCouponApplied(true)
-                setCoupon({
-                    _id: data.data.coupon._id,
-                    code: data.data.coupon.code,
-                    discountRate: data.data.coupon.discountRate
-                })
+                // setCoupon({
+                //     _id: data.data.coupon._id,
+                //     code: data.data.coupon.code,
+                //     discountRate: data.data.coupon.discountRate
+                // })
+                setCoupon(data.data.coupon);
             }
             console.log("all products", allProducts)
             setProducts(allProducts);
@@ -84,6 +86,8 @@ const ShopingCart = () => {
                 setTimeout(() => {
                     window.location.reload()
                 }, 500)
+            } else {
+                toast.error(data.message)
             }
         } catch (error) {
             console.log(error)
@@ -120,20 +124,23 @@ const ShopingCart = () => {
 
         let discount = 0;
 
-        if (isCouponApplied && coupon?.discountRate !== undefined) {
-            discount = (total * Number(coupon.discountRate)) / 100;
-            total -= discount;
+        if (isCouponApplied) {
+            total = total - coupon.reduce((acc: number, coupon) => acc + (coupon.discountRate * total) / 100, 0)
+            discount = coupon.reduce((acc: number, coupon) => acc + (coupon.discountRate * total) / 100, 0)
         }
+
+        const totalDiscountRate = coupon.reduce((acc: number, coupon) => acc + coupon.discountRate, 0)
 
         return {
             total,
             tax,
             shipping,
             subTotal,
-            discount
+            discount,
+            totalDiscountRate
         };
     }
-    const { total, tax, shipping, subTotal, discount } = calculateTotal()
+    const { total, tax, shipping, subTotal, discount, totalDiscountRate } = calculateTotal()
     console.log("total from out", total)
     async function addToWishList(id: string) {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/add/${id}`, {
@@ -234,7 +241,7 @@ const ShopingCart = () => {
                     </div>
                     <div className="w-1/3  p-6 rounded-xl shadow-md">
 
-                        <OrderSummaryTable total={total} tax={tax} shipping={shipping} subTotal={subTotal} code={code} setCode={setCode} applyCode={applyDiscount} isCouponApplied={isCouponApplied} coupon={coupon} discount={discount} />
+                        <OrderSummaryTable total={total} tax={tax} shipping={shipping} subTotal={subTotal} code={code} setCode={setCode} applyCode={applyDiscount} isCouponApplied={isCouponApplied} coupon={coupon} discount={discount} totalDiscountRate={totalDiscountRate} />
                     </div>
                 </div>
             </section >
@@ -255,7 +262,8 @@ function OrderSummaryTable({
     applyCode,
     isCouponApplied,
     coupon,
-    discount
+    discount,
+    totalDiscountRate
 }: {
     total: number,
     tax: number,
@@ -266,6 +274,7 @@ function OrderSummaryTable({
     code: string,
     isCouponApplied: boolean,
     discount: number,
+    totalDiscountRate: number,
     coupon: { code: string, discountRate: number }
 }) {
     console.log(total, tax, shipping, subTotal)
@@ -313,11 +322,14 @@ function OrderSummaryTable({
                     {
                         isCouponApplied && (
                             <div className="w-full flex items-center justify-between my-3">
-                                <p>Coupon Applied</p>
-                                <div className="bg-secondary-light text-primary px-3 rounded-lg">
-                                    {coupon?.code}
-                                </div>
-                                <p className="text-primary"> Discount: {coupon?.discountRate}%</p>
+                                {coupon.map((coupon, index) => (
+                                    <div key={index} className="w-full flex items-center justify-between ">
+                                        <div className="bg-secondary-light text-primary px-3 rounded-lg">
+                                            {coupon?.code}
+                                        </div>
+                                    </div>
+                                ))}
+                                <p className="text-primary"> Discount: {totalDiscountRate}%</p>
                             </div>
                         )
                     }

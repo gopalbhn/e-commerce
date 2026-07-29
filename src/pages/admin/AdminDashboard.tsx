@@ -137,6 +137,40 @@ const AdminDashboard = () => {
 
   ]
 
+  const SoldProductColumn = [
+    {
+      header: "Id",
+      accessor: "_id",
+    },
+    {
+      header: "Category",
+      accessor: "category.name",
+    },
+    {
+      header: "Price",
+      accessor: "price",
+    },
+    {
+      header: "Stock",
+      accessor: "stock",
+    },
+    {
+      header: "image",
+      render: (item: any) => (
+        <div className="w-14 h-14 rounded-md overflow-hidden">
+          <img src={item.thumbnails} alt="" className="w-full h-full object-cover" />
+        </div>
+      )
+    },
+    {
+      header: "Category",
+      render: (item) => item?.category?.name
+    }, {
+      header: "Seller",
+      render: (item) => item?.owner?.shopName
+    }
+  ]
+
   const recentProductColumn = [
     {
       header: "Id",
@@ -268,18 +302,14 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* <div className='w-full mt-10'>
-          <h1 className='text-body font-semibold mb-4'>Most Sold Products</h1>
-          <Table varaint='most-selling' data={mostSellingData} />
-        </div> */}
         <div className='w-full mt-10'>
           <h1 className='text-body font-semibold mb-4'>Most Sold Products</h1>
+          <Table data={recentProducts} columns={SoldProductColumn} />
+        </div>
+        <div className='w-full mt-10'>
+          <h1 className='text-body font-semibold mb-4'>Recent Products</h1>
           <Table data={recentProducts} columns={recentProductColumn} />
         </div>
-        {/* <div className='w-full mt-10'>
-          <h1 className='text-body font-semibold mb-4'>Recent Products</h1>
-          <Table varaint='product' data={recentProducts} />
-        </div> */}
       </section>
     </div>
   )

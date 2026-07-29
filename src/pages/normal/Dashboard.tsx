@@ -217,7 +217,8 @@ const Dashboard = () => {
             console.log(error)
         }
     }
-
+    const discountedProduct = products.filter(pro => pro.discount > 0)
+    console.log("discountedProduct", discountedProduct)
     return (
         <div className="h-full w-full space-y-10">
             <HeroCarousel />

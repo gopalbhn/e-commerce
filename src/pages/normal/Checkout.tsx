@@ -403,18 +403,50 @@ const AddressDetail = ({ address, nextStep }: any) => {
 
 const OrderSummary = ({ products }: any) => {
 
-
+  console.log("Products", products)
 
   function calculateTotal() {
 
     const Subtotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
-    console.log("Subtotal", Subtotal)
+
     const tax = Math.floor(Subtotal * 0.13)
     const shipping = 10
     const total = Subtotal + tax + shipping
     return { total, tax, shipping, Subtotal }
   }
   const { total, tax, shipping, Subtotal } = calculateTotal()
+  // function calculateTotal() {
+
+  //   const subTotal = products.reduce(
+  //     (acc: number, item: any) =>
+  //       acc + Number(item.price) * Number(item.quantity),
+  //     0
+  //   );
+
+  //   const tax = subTotal * 0.13;
+  //   const shipping = 10;
+
+  //   let total = subTotal + tax + shipping;
+
+  //   let discount = 0;
+
+  //   if (products.isCouponApplied) {
+  //     total = total - coupon.reduce((acc: number, coupon) => acc + (coupon.discountRate * total) / 100, 0)
+  //     discount = coupon.reduce((acc: number, coupon) => acc + (coupon.discountRate * total) / 100, 0)
+  //   }
+
+  //   const totalDiscountRate = coupon.reduce((acc: number, coupon) => acc + coupon.discountRate, 0)
+
+  //   return {
+  //     total,
+  //     tax,
+  //     shipping,
+  //     subTotal,
+  //     discount,
+  //     totalDiscountRate
+  //   };
+  // }
+  // const { total, tax, shipping, subTotal, discount, totalDiscountRate } = calculateTotal()
   return (
     <div className="w-1/3 rounded-2xl bg-white shadow-md p-6">
       <h1 className="text-title font-bold mb-6">Order Summary</h1>

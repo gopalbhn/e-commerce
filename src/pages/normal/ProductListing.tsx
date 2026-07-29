@@ -1,7 +1,7 @@
 import { FaStar } from "react-icons/fa"
 
 import ProductCart from "../../components/normal/productCart"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { MdFilterAlt } from "react-icons/md"
 
@@ -23,11 +23,34 @@ const ProductListing = () => {
     const [products, setProducts] = useState([]);
     const [category, setCategory] = useState(null);
     const [subCategory, setSubCategory] = useState(null)
+    const [searchParams] = useSearchParams();
+    const cartItem = searchParams.get("catItem");
+    console.log("cartItem", cartItem)
     useEffect(() => {
-        fetchAllProduct()
+        if (cartItem) {
+            fetchProductByCategory()
+        }
+        else {
+            fetchAllProduct()
+        }
+
         fetchAllCategory();
     }, [])
 
+    const fetchProductByCategory = async () => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product/filter?cartItem=${cartItem}`)
+            const data = await res.json()
+            console.log("data by category", data)
+            if (data.success) {
+                setProducts(data.data)
+            }
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
     const fetchSubCategories = async (categoryId: string) => {
         try {
             const response = await fetch(
@@ -61,24 +84,26 @@ const ProductListing = () => {
 
         if (currentFilters.category) {
             console.log(currentFilters)
-            query.append("category", currentFilters.category);
+            query.set("category", currentFilters.category);
+
+
         }
 
         if (currentFilters.subCategory) {
-            query.append("subcategory", currentFilters.subCategory);
+            query.set("subcategory", currentFilters.subCategory);
         }
 
         if (currentFilters.brand) {
-            query.append("brand", currentFilters.brand);
+            query.set("brand", currentFilters.brand);
         }
 
         if (currentFilters.minPrice) {
 
-            query.append("minPrice", currentFilters.minPrice);
+            query.set("minPrice", currentFilters.minPrice);
         }
 
         if (currentFilters.maxPrice) {
-            query.append("maxPrice", currentFilters.maxPrice);
+            query.set("maxPrice", currentFilters.maxPrice);
         }
 
         if (currentFilters.rating) {
@@ -181,12 +206,11 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                             className={currentSelectedCategory == item.id ? "text-primary text-start" : "text-start"}
                             onClick={() => {
                                 setCurrentSelectedCategory(item.id)
+
+
                                 const newFilters = {
-                                    ...filters,
-                                    category: item.id,
-
-                                };
-
+                                    category: item.id
+                                }
                                 setFilters(newFilters);
 
                                 fetchSubCategories(item.id);
@@ -216,7 +240,7 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                                     className="text-left mt-2 ml-3"
                                     onClick={() => {
                                         const newFilters = {
-                                            ...filters,
+                                            category: filters.category,
                                             subCategory: item._id,
 
                                         };
@@ -243,7 +267,8 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                                 checked={filters.brand === brand._id}
                                 onChange={() => {
                                     const newFilters = {
-                                        ...filters,
+                                        category: filters.category,
+                                        subCategory: filters.subCategory,
                                         brand: brand._id,
                                     };
 

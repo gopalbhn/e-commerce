@@ -20,7 +20,10 @@ const addCategory = async (req: Request, res: Response) => {
 }
 
 const getAllCategories = async (req: Request, res: Response) => {
-    const categories = await Category.find().populate('parentCategory name');
+    // const categories = await Category.find().populate('parentCategory name');
+    const categories = await Category.find({
+        parentCategory: null
+    }).select("name")
     res.status(200).json({ success: true, data: categories })
 }
 

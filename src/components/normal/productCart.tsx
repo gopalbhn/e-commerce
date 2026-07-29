@@ -3,9 +3,33 @@ import { FaShoppingCart } from 'react-icons/fa'
 import type { ProductCartType } from '../../types/types'
 
 import { RxCross1 } from 'react-icons/rx'
+import { toast } from 'sonner'
 
-const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isDiscounted, onDelete }: ProductCartType) => {
+const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList, onDelete }: ProductCartType) => {
   console.log(wishList)
+
+
+  async function AddToCart(id: string) {
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/cart/add-to-cart`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: id,
+        quantity: 1
+      })
+    })
+    const data = await res.json()
+    if (data.success) {
+
+      toast.success("Product added to cart")
+
+    }
+
+  }
   return (
     <div className="group relative bg-white hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300" onClick={onclick}>
       {wishList && (
@@ -15,6 +39,8 @@ const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isD
       )
       }
 
+
+
       <div className="relative aspect-square overflow-hidden bg-surface-container-high">
         <img
           className="w-full h-full object-cover transition-soft group-hover:scale-110 transition-soft duration-300"
@@ -22,9 +48,9 @@ const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isD
           alt={name}
         />
 
-        {isDiscounted && (
+        {Number(discount) && (
           <div className="absolute top-4 left-4 bg-badge text-white px-3 py-1 rounded-full">
-            -{discount}
+            -{discount} %
           </div>
         )}
 
@@ -48,7 +74,13 @@ const ProductCart = ({ image, name, price, old, discount, onclick, wishList, isD
             </span>
           </div>
 
-          <button className='p-2 opacity-0 group-hover:opacity-100 rounded-full bg-primary-light text-white items-center justify-center hover:scale-110 transition-soft duration-300'>
+          <button className=' absolute top-4 right-4 p-2 rounded-full  text-primary border border-primary hover:bg-primary/30 items-center justify-center hover:scale-110 transition-soft duration-300' onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            AddToCart(id)
+
+
+          }}>
             <FaShoppingCart />
           </button>
 

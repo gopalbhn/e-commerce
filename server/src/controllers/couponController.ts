@@ -92,10 +92,27 @@ const useCoupon = async (req: Request, res: Response) => {
         if (!cart) {
             return res.status(404).json({ success: false, message: "Cart not found" });
         }
+        // if (cart.couponApplied) {
+        //     return res.status(400).json({ success: false, message: "Coupon is already applied" })
+        // }
+
         if (cart.couponApplied) {
-            return res.status(400).json({ success: false, message: "Coupon is already applied" })
+            const cartCoupon = await Cart.findOne({ userId: userId }).populate({
+                path: "coupon",
+                select: "code"
+            })
+            console.log("cartCoupon", cartCoupon)
+            if ((cartCoupon as any)?.coupon.some((c: any) => c.code === code)) {
+                return res.status(400).json({ success: false, message: "Coupon is already applied" })
+            } else {
+                cart.coupon.push(coupon._id);
+                await cart.save();
+                coupon.usedCount++
+                await coupon.save()
+                return res.status(200).json({ success: true, message: "Coupon applied successfully" })
+            }
         }
-        cart.coupon = coupon._id;
+        cart.coupon.push(coupon._id);
         cart.couponApplied = true;
         await cart.save();
 

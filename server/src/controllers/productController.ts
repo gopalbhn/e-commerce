@@ -3,6 +3,7 @@ import { ProductCreateSchema, ProductUpdateSchema } from "../schemas/productSche
 import Product from "../models/productModel.js";
 import { Types } from "mongoose";
 import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
+import Category from "../models/categoryModel.js";
 
 const addProduct = async (req: Request, res: Response) => {
     try {
@@ -258,16 +259,33 @@ const getProductById = async (req: Request, res: Response) => {
 
 const getFilteredProduct = async (req: Request, res: Response) => {
     try {
-        const { category, subcategory, brand, minPrice, maxPrice, rating, sort } = req.query;
+        const { category, subcategory, brand, minPrice, maxPrice, rating, cartItem } = req.query;
         console.log("req.query", req.query)
         const filteredData: any = {}
 
         if (subcategory) {
             filteredData.category = subcategory;
         } else if (category) {
-            filteredData.category = category;
-        }
+            const subcategories = await Category.find({
+                parentCategory: new Object(category)
+            }).select("_id")
+            console.log("subcategories", subcategories)
 
+            if (subcategories.length > 0) {
+                filteredData.category = {
+                    $in: subcategories.map((cat) => cat._id)
+                }
+            } else {
+                filteredData.category = category;
+
+
+            }
+        }
+        if (cartItem) {
+            const cat = await Category.findOne({ name: String(cartItem) })
+            console.log("cat", cat)
+            filteredData.category = cat?._id;
+        }
 
         if (brand) {
             filteredData.brand = brand;
