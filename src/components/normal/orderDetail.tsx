@@ -122,7 +122,7 @@ const OrderDetailComponent = ({ onclose, orders }: orderDetailProps) => {
 
                             <p>State: {orders?.shippingAddress?.state} </p>
                             <p>City: {orders?.shippingAddress?.city}</p>
-                            <p>District: {orders.shippingAddress?.district}</p>
+                            <p>District: {orders?.shippingAddress?.district}</p>
                             <p>Street: {orders?.shippingAddress?.street}</p>
 
                         </div>

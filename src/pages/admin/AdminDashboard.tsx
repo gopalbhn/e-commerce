@@ -126,12 +126,12 @@ const AdminDashboard = () => {
 
     {
       name: "Consumers",
-      value: stats?.customer,
+      value: stats?.customer ?? 0,
       color: "#A16207", // amber
     },
     {
       name: "Sellers",
-      value: stats?.seller,
+      value: stats?.seller ?? 0,
       color: "#793A2E5C", // teal
     },
 
@@ -144,7 +144,7 @@ const AdminDashboard = () => {
     },
     {
       header: "Category",
-      accessor: "category.name",
+      render: (item: any) => item?.category?.name
     },
     {
       header: "Price",
@@ -161,13 +161,9 @@ const AdminDashboard = () => {
           <img src={item.thumbnails} alt="" className="w-full h-full object-cover" />
         </div>
       )
-    },
-    {
-      header: "Category",
-      render: (item) => item?.category?.name
     }, {
       header: "Seller",
-      render: (item) => item?.owner?.shopName
+      render: (item: any) => item?.owner?.shopName
     }
   ]
 
@@ -178,16 +174,13 @@ const AdminDashboard = () => {
     },
     {
       header: "Category",
-      accessor: "category.name",
+      render: (item: any) => item?.category?.name
     },
     {
       header: "Price",
       accessor: "price",
     },
-    {
-      header: "Stock",
-      accessor: "stock",
-    },
+
     {
       header: "image",
       render: (item: any) => (
@@ -197,11 +190,8 @@ const AdminDashboard = () => {
       )
     },
     {
-      header: "Category",
-      render: (item) => item?.category?.name
-    }, {
       header: "Seller",
-      render: (item) => item?.owner?.shopName
+      render: (item: any) => item?.owner?.shopName
     }
   ]
 

@@ -112,6 +112,7 @@ const addToCart = async (req: Request, res: Response) => {
 const removeFromCart = async (req: Request, res: Response) => {
     try {
         const productId = req.params.id;
+        console.log("productId", req.params.id)
         if (!productId) {
             return res.status(400).json({
                 success: false,
@@ -128,6 +129,7 @@ const removeFromCart = async (req: Request, res: Response) => {
         console.log("Cart", cart)
         console.log('cartItemid', productId)
         const existingProduct = cart.products.find((item) => item.productId.toString() === productId)
+        console.log('existing product', existingProduct)
         if (!existingProduct) {
             return res.status(404).json({
                 success: false,
@@ -135,18 +137,12 @@ const removeFromCart = async (req: Request, res: Response) => {
             })
         }
 
-        console.log("existingproduct", existingProduct)
-        const result = await cart.updateOne(
-            { userId: req.user.id },
-            {
-                $pull: { products: { productId: productId } }
+        await cart.updateOne({
+            $pull: {
+                products: { productId }
             }
-        )
-        console.log("result", result)
-        // const filtered = cart.products.filter((item) => item.productId.toString() !== cartItemId);
-        // cart.products = filtered;
-        // cart.products = cart.products.filter((item) => item.productId.toString() !== cartItemId);
-        // await cart.save();
+        })
+
         return res.status(200).json({
             success: true,
             message: "Product removed from cart successfully"

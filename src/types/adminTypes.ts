@@ -7,22 +7,22 @@ export interface userPieChartDataType {
 
 export interface DashboardStats {
     userWeeklyCounts: {
-        week1: number;
-        week2: number;
-        week3: number;
-        week4: number;
+        "Week 1": number;
+        "Week 2": number;
+        "Week 3": number;
+        "Week 4": number;
     };
     productsWeeklyCount: {
-        week1: number;
-        week2: number;
-        week3: number;
-        week4: number;
+        "Week 1": number;
+        "Week 2": number;
+        "Week 3": number;
+        "Week 4": number;
     };
     orderWeeklyCounts: {
-        week1: number;
-        week2: number;
-        week3: number;
-        week4: number;
+        "Week 1": number;
+        "Week 2": number;
+        "Week 3": number;
+        "Week 4": number;
     };
     seller: number;
     customer: number;

@@ -7,28 +7,61 @@ import Category from "../models/categoryModel.js";
 
 const addProduct = async (req: Request, res: Response) => {
     try {
+        const MAX_SIZE = 2 * 1024 * 1024;
         console.log("req.body", req.body)
         console.log("req.files", req.files)
-        const { name, description, price, stock, category, subcategory, discountRate } = req.body
-        // const data = ProductCreateSchema.safeParse(req.body)
-        // if (!data.success) {
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: data.error.flatten().fieldErrors,
-        //     })
-        // }
-
-        const files = req.files as { thumbnails?: Express.Multer.File[], images?: Express.Multer.File[] }
-        const thumbnailFile = files?.thumbnails?.[0].buffer
-
-        const imagesFiles = files.images as Express.Multer.File[]
-
-        if (!thumbnailFile) {
+        const data = ProductCreateSchema.safeParse(req.body)
+        if (!data.success) {
             return res.status(400).json({
                 success: false,
-                message: "Unable to get thumbnails"
+                message: data.error.flatten().fieldErrors,
             })
         }
+        const { name, description, price, stock, category, subcategory, discountRate, specification } = data.data
+
+
+        const files = req.files as { thumbnails?: Express.Multer.File[], images?: Express.Multer.File[] }
+        const thumbnailFileObj = files?.thumbnails?.[0]
+
+        if (!thumbnailFileObj) {
+            return res.status(400).json({
+                success: false,
+                message: "Thumbnail is required"
+            })
+        }
+
+        if (thumbnailFileObj.size > MAX_SIZE) {
+            return res.status(400).json({
+                success: false,
+                message: "Thumbnail size should be less than 2MB"
+            })
+        }
+
+
+        if (thumbnailFileObj.mimetype.split("/")[0] !== "image") {
+            return res.status(400).json({
+                success: false,
+                message: "Thumbnail should be an image"
+            })
+        }
+
+        const imagesFiles = files.images as Express.Multer.File[]
+        for (const file of imagesFiles) {
+            if (file.size > MAX_SIZE) {
+                return res.status(400).json({
+                    success: false,
+                    message: ` ${file.originalname} image size should be less than 2MB`
+                })
+            }
+
+            if (file.mimetype.split("/")[0] !== "image") {
+                return res.status(400).json({
+                    success: false,
+                    message: "Image should be an image"
+                })
+            }
+        }
+        const thumbnailFile = thumbnailFileObj?.buffer;
         const thumbnail: any = await uploadToCloudinary(thumbnailFile)
 
         if (!thumbnail) {
@@ -48,7 +81,12 @@ const addProduct = async (req: Request, res: Response) => {
         }
         const thumbnailLink = thumbnail.url;
         const imageLink: any[] = image.map(item => item.url)
-        const discountedPrice = price - (price * discountRate) / 100
+        let discountedPrice: number;
+        if (discountRate) {
+            discountedPrice = price - (price * discountRate) / 100
+        } else {
+            discountedPrice = price
+        }
         const product = new Product({
             name,
             description,
@@ -62,7 +100,7 @@ const addProduct = async (req: Request, res: Response) => {
             category,
             seller: req.user.id
         })
-
+        console.log("product", product)
 
         await product.save()
         return res.status(201).json({

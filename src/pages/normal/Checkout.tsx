@@ -110,7 +110,7 @@ const Checkout = () => {
     }
   }
 
-  function redirectURI(url, obj) {
+  function redirectURI(url: string, obj: any) {
     const form = document.createElement("form")
 
     form.method = "POST",
@@ -129,10 +129,6 @@ const Checkout = () => {
     document.body.removeChild(form);
 
   }
-
-  // async function handlePay() {
-
-  // }
   console.log("address", address)
   return (
     <div className="w-full h-full">
@@ -163,7 +159,7 @@ const Checkout = () => {
         <div className="w-full mt-10 flex gap-10  ">
 
           <div className="w-2/3 h-full shadow-sm rounded-xl  p-4">
-            {step == 1 && !address && <ShippingAddressForm nextStep={() => setStep(step + 1)} />}
+            {step == 1 && !address && <ShippingAddressForm />}
             {step == 1 && address && <AddressDetail address={address} nextStep={() => setStep(step + 1)} />}
             {step == 2 && <PaymentSetup nextStep={() => setStep(step + 1)} onpay={handlePayment} />}
             {step == 3 && <Review />}
@@ -179,7 +175,7 @@ const Checkout = () => {
 export default Checkout;
 
 
-const ShippingAddressForm = ({ nextStep }: any) => {
+const ShippingAddressForm = () => {
   const [state, setState] = useState("")
   const [district, setDistrict] = useState("")
   const [city, setCity] = useState("")
@@ -273,7 +269,7 @@ const ShippingAddressForm = ({ nextStep }: any) => {
   )
 }
 
-const PaymentSetup = ({ nextStep, onpay }: any) => {
+const PaymentSetup = ({ onpay }: any) => {
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
 
   return (
@@ -368,9 +364,6 @@ const PaymentSetup = ({ nextStep, onpay }: any) => {
   )
 }
 
-
-``
-
 const AddressDetail = ({ address, nextStep }: any) => {
   return (
     <div className="w-full h-full shadow-sm rounded-xl  p-4">
@@ -450,7 +443,7 @@ const OrderSummary = ({ products }: any) => {
   return (
     <div className="w-1/3 rounded-2xl bg-white shadow-md p-6">
       <h1 className="text-title font-bold mb-6">Order Summary</h1>
-      {products.map((item) => (
+      {products.map((item: any) => (
         <div className="flex gap-4 mb-6">
           <div className="w-15 h-15 rounded-xl overflow-hidden shrink-0">
             <img

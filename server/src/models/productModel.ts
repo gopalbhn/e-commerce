@@ -51,6 +51,11 @@ const productSchema = new Schema<IProduct>({
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    specification: {
+        type: Map,
+        of: String,
+        required: true
     }
 }, { timestamps: true });
 

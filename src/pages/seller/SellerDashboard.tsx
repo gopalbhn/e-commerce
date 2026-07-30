@@ -85,7 +85,7 @@ const SellerDashboard = () => {
     const [open, setOpen] = useState(true);
     const [lowStockProduct, setLowStockProduct] = useState<any | []>([])
     const [pendingOrder, setPendingOrder] = useState<any | []>([])
-    const [sellerProfile, setSellerProfile] = useState<any | []>([])
+    const [, setSellerProfile] = useState<any | []>([])
     const [orderDetail, setOrderDetail] = useState<any | []>([])
     const [viewOrder, setViewOrder] = useState(false)
     const user = UserStore(state => state?.user);
@@ -99,23 +99,23 @@ const SellerDashboard = () => {
         },
         {
             header: "Customer",
-            render: (order) => order.buyer.name,
+            render: (order: any) => order.buyer.name,
         },
         {
             header: "Date",
-            render: (order) => new Date(order.createdAt).toLocaleDateString(),
+            render: (order: any) => new Date(order.createdAt).toLocaleDateString(),
         },
         {
             header: "Total",
-            render: (order) => `Npr.${order.totalPrice}`,
+            render: (order: any) => `Npr.${order.totalPrice}`,
         },
         {
             header: "Status",
-            render: (order) => order.orderStatus,
+            render: (order: any) => order.orderStatus,
         },
         {
             header: "Action",
-            render: (order) => (
+            render: (order: any) => (
                 <button className="hover:text-primary-hover" onClick={() => { setViewOrder(true), fetchOrderDetail(order._id) }}><Eye size={20} /></button>
             ),
         },
@@ -227,7 +227,7 @@ const SellerDashboard = () => {
                     </div>
                 </div>
                 <div className="w-full p-4">
-                    <h1 className="text-primary text-title font-semibold">Low Stocks</h1>
+                    <h1 className=" text-title font-semibold">Low Stocks</h1>
                     <div className="w-full flex flex-col gap-2">
                         {lowStockProduct.length == 0 ? (
                             <div className="text-md mx-auto mt-3">You Dont have Any Product Now</div>
@@ -251,9 +251,9 @@ const SellerDashboard = () => {
                         )}
                     </div>
                 </div>
-                {/* <PendingOrdersTable pendingOrder={pendingOrder} setViewOrder={setViewOrder} fetchOrderDetail={fetchOrderDetail} /> */}
-                <div className="p-4">
 
+                <div className="p-4">
+                    <h1 className="font-semibold text-title my-2">Pending Orders</h1>
                     <Table data={pendingOrder} columns={pendingOrderColumn} />
                 </div>
             </section>
@@ -322,100 +322,5 @@ const StatsCard = ({
     );
 };
 
-const PendingOrdersTable = ({ pendingOrder, setViewOrder, fetchOrderDetail }: any) => {
-    console.log("table pending order", pendingOrder)
 
-    async function handleViewOrder(id: string) {
-        setViewOrder(true)
-        fetchOrderDetail(id)
-    }
-
-    return (
-        <div className="p-6">
-
-            <div className="bg-white rounded-2xl shadow-sm p-6">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold text-gray-800">
-                        Pending Fulfillment
-                    </h2>
-
-                    <button className="text-primary font-medium hover:underline">
-                        View All Orders
-                    </button>
-                </div>
-                {pendingOrder.length <= 0 ? (
-                    <div className="text-center">No Pending Prdocut</div>
-                ) : (
-
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="text-left text-xs uppercase tracking-wider text-gray-400 border-b">
-                                    <th className="pb-4">Order ID</th>
-                                    <th className="pb-4">Customer</th>
-                                    <th className="pb-4">Date</th>
-                                    <th className="pb-4">Total</th>
-                                    <th className="pb-4">Status</th>
-                                    <th className="pb-4 text-right">Actions</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {pendingOrder.map((order) => (
-                                    <tr
-                                        key={order._id}
-                                        className="  hover:bg-gray-50 transition"
-                                    >
-                                        <td className="py-5 font-semibold text-sm text-gray-800">
-                                            {order._id}
-                                        </td>
-
-                                        <td className="py-5">
-                                            <div className="flex items-center gap-3">
-
-
-                                                <span className="text-gray-700">{order.buyer.name}</span>
-                                            </div>
-                                        </td>
-
-                                        <td className="py-5 text-gray-600">{new Date(order.createdAt).toLocaleDateString()}</td>
-
-                                        <td className="py-5 font-semibold text-sm">Npr.{order.totalPrice}</td>
-
-                                        <td className="py-5">
-                                            <span
-                                                className={`px-3 py-1 rounded-full text-xs font-medium
-                  ${order.orderStatus === "pending"
-                                                        ? "bg-orange-100 text-orange-700"
-                                                        : order.orderStatus === "awaiting_payment"
-                                                            ? "bg-gray-200 text-gray-700"
-                                                            : "bg-green-100 text-green-700"
-                                                    }`}
-                                            >
-                                                {order.orderStatus}
-                                            </span>
-                                        </td>
-
-                                        <td className="py-5 text-right">
-                                            {order.action === "Ship Now" ? (
-                                                <button className="bg-[#8B4B39] hover:bg-[#733a2b] text-white px-5 py-2 rounded-lg text-sm font-medium">
-                                                    Ship Now
-                                                </button>
-                                            ) : (
-                                                <button className="text-[#8B4B39] hover:underline font-medium" onClick={() => handleViewOrder(order._id)}>
-                                                    Details
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
-        </div>
-    )
-}
 export default SellerDashboard;

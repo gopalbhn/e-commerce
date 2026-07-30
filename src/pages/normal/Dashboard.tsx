@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import CategoryCart from "../../components/normal/categoryCart"
 import Footer from "../../components/normal/Footer"
 import ProductCart from "../../components/normal/productCart"
@@ -85,7 +85,7 @@ const HeroCarousel = () => {
     )
 
     const next = useCallback(() => goTo(current + 1), [current, goTo])
-    const prev = useCallback(() => goTo(current - 1), [current, goTo])
+
 
     // auto-play
     useEffect(() => {

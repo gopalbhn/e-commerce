@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import SuccessModal from '@/components/normal/successModal';
+import BreadcrumbDemo from '@/components/ui/breadCrumbComponent';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
@@ -134,7 +135,9 @@ const ProductDetail = () => {
       {successModalOpen && (
         <SuccessModal text="Product added to cart" onclick={() => setSuccessModalOpen(false)} />
       )}
-      <h1 className='text-primary text-md px-14 font-semibold '>Home / Electornics / HeadPhone</h1>
+      <div className="pl-16 pt-2">
+        <BreadcrumbDemo />
+      </div>
       <section className='w-full h-[90vh] rounded-lg flex items-center justify-center gap-1 px-10'>
         <div className='w-1/2 h-full p-4 group'>
           <div className='relative h-[60vh] w-full flex justify-center items-center overflow-hidden '>
@@ -161,12 +164,14 @@ const ProductDetail = () => {
 
           <div className='flex items-center gap-4 '>
             <div className='flex items-center gap-2'>
-              <FiStar className='text-yellow-500 text-xl' fill='currentColor' />
-              <FiStar className='text-yellow-500 text-xl' fill='currentColor' />
-              <FiStar className='text-yellow-500 text-xl' fill='currentColor' />
-              <FiStar className='text-yellow-500 text-xl' fill='currentColor' />
-              <FiStar className='text-yellow-500 text-xl' />
-              <span className="ml-2 text-sm text-gray-500">4.8/5 (248 Reviews)</span>
+              {Array.from({ length: 5 }).map((_, i) => {
+                const isFilled = i < product?.rating;
+                return (
+                  <FiStar className="text-yellow-500 text-xl"
+                    fill={isFilled ? 'currentColor' : 'none'} />
+                )
+              })}
+              <span className="ml-2 text-sm text-gray-500">{product?.rating}/5 (248 Reviews)</span>
             </div>
           </div>
           <div className='flex items-center gap-4 '>

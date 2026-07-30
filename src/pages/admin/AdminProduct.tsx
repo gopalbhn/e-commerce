@@ -1,6 +1,8 @@
 import AdminSideBar from "@/components/admin/AdminSideBar"
 import AdminTopBar from "@/components/admin/AdminTopBar"
-import Table from "@/components/admin/table"
+import Table from "@/components/normal/table"
+// import Table from "@/components/admin/table"
+
 import { useEffect, useState } from "react"
 import { FaRegEye, FaTrash } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
@@ -31,9 +33,13 @@ const AdminProduct = () => {
     header: "Id",
     accessor: "_id"
   }, {
-    header: "Name",
+    header: "Product Name",
     accessor: "name"
   }, {
+    header: "Category",
+    render: (item: any) => item?.category?.name
+  },
+  {
     header: "Price",
     accessor: "price"
   }, {
@@ -41,21 +47,22 @@ const AdminProduct = () => {
     accessor: "stock"
   }, {
     header: "Image",
-    accessor: "thumbnail"
-  }, {
-    header: "Category",
-    accessor: "category"
+    render: (item: any) => (
+      <div className="w-14 h-14 rounded-md overflow-hidden">
+        <img src={item.thumbnails} alt="" className="w-full h-full object-cover" />
+      </div>
+    )
   }, {
     header: "Actions",
     render: (data: any) => (
-      <div className="flex items-center gap-x-6">
+      <div className="flex items-center gap-x-2">
 
-        <button onClick={() => navigate(`/admin/products/edit/${data._id}`)} className="p-4 hover:bg-gray-100 rounded-xl">
-          <FaRegEye size={20} />
+        <button onClick={() => navigate(`/product-detail/${data._id}`)} className="p-4 hover:text-primary rounded-xl">
+          <FaRegEye size={15} />
         </button>
 
-        <button onClick={() => handleProductDelete(data._id)} className="p-4 hover:bg-gray-100 rounded-xl">
-          <FaTrash size={20} />
+        <button onClick={() => handleProductDelete(data._id)} className="p-4 hover:text-red-500 rounded-xl">
+          <FaTrash size={15} />
         </button>
       </div>
     )
@@ -81,7 +88,8 @@ const AdminProduct = () => {
             />
 
           </div>
-          <Table varaint="product" data={products} />
+          {/* <Table varaint="product" data={products} /> */}
+          <Table data={products} columns={productColumn} />
         </div>
       </section>
     </div>

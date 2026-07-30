@@ -11,6 +11,7 @@ export interface IProduct {
     oldPrice: number,
     discount: number,
     category: object,
+    specification: object,
     isDeleted: boolean,
     seller: object
     brand: object

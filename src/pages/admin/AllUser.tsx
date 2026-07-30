@@ -1,8 +1,11 @@
 import AdminSideBar from "@/components/admin/AdminSideBar"
 import AdminTopBar from "@/components/admin/AdminTopBar"
-import Table from "@/components/admin/table"
-import { userData } from "@/lib/data.js"
+// import Table from "@/components/admin/table"
+import Table from "@/components/normal/table"
+
 import { useEffect, useState } from "react"
+import { FaTrash } from "react-icons/fa"
+import { toast } from "sonner"
 
 const AllUsers = () => {
     const [open, setOpen] = useState<boolean>(true)
@@ -28,7 +31,53 @@ const AllUsers = () => {
         fetchAllUser();
     }, []);
 
+    const userColumn = [
+        {
+            header: "User ID",
+            accessor: "_id"
+        },
+        {
+            header: "Name",
+            accessor: "name"
+        },
+        {
+            header: "Email",
+            accessor: "email"
+        },
+        {
+            header: "Role",
+            accessor: "role"
+        },
+        {
+            header: "Actions",
+            render: (data: any) => (
+                <div className="flex items-center gap-x-2">
+                    <button onClick={() => handleUserDelete(data._id)} className="p-4 hover:text-red-500 rounded-xl">
+                        <FaTrash size={15} />
+                    </button>
 
+                </div>
+            )
+        }
+    ]
+    const handleUserDelete = async (userId: string) => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/admin/delete-user/${userId}`, {
+                method: "DELETE",
+                credentials: "include"
+            })
+            const data = await res.json()
+
+            if (data.success) {
+                toast.success("User deleted successfully")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div className='h-full w-full'>
             <AdminSideBar open={open} />
@@ -49,7 +98,7 @@ const AllUsers = () => {
                         />
 
                     </div>
-                    <Table varaint="user" data={users} />
+                    <Table data={users} columns={userColumn} />
                 </div>
             </section>
         </div>
