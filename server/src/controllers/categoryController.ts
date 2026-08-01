@@ -35,7 +35,6 @@ const getSubCategories = async (req: Request, res: Response) => {
         const subCategories = await Category.find({
             parentCategory: categoryId
         });
-
         return res.status(200).json({
             success: true,
             data: subCategories

@@ -8,6 +8,7 @@ import Loader from "@/components/normal/Loader";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { FaPen } from "react-icons/fa";
 const Checkout = () => {
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false)
@@ -369,7 +370,12 @@ const AddressDetail = ({ address, nextStep }: any) => {
     <div className="w-full h-full shadow-sm rounded-xl  p-4">
       <div className="w-full flex justify-between items-center mb-5">
         <h1 className="text-title font-semibold">Shipping Address</h1>
-
+        <div className="">
+          <Button variant="outline" className={"flex gap-2 items-center  px-1 text-sm"}>
+            <FaPen />
+            <span>Edit Address</span>
+          </Button>
+        </div>
       </div>
       <div className="w-full h-full flex items-center gap-4">
 

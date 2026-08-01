@@ -309,7 +309,7 @@ const EditProduct = () => {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Base Price</label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">Npr.</span>
+
 
                                     <input
                                         type="number"
@@ -317,7 +317,7 @@ const EditProduct = () => {
                                         onChange={(e) => setBasePrice(
                                             e.target.value === "" ? null : Number(e.target.value)
                                         )}
-                                        placeholder="0.00"
+                                        placeholder="Npr.0.00"
                                         className="w-full border border-gray-200 rounded-lg pl-7 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                                     />
                                 </div>

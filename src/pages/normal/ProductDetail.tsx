@@ -3,13 +3,12 @@ import { useEffect, useState } from 'react'
 import { BiCart, BiCheckCircle } from 'react-icons/bi'
 import { FiHeart, FiStar } from 'react-icons/fi'
 import { HiMiniMagnifyingGlassPlus } from 'react-icons/hi2'
-
 import Footer from '../../components/normal/Footer';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import SuccessModal from '@/components/normal/successModal';
 import BreadcrumbDemo from '@/components/ui/breadCrumbComponent';
+import UserStore from '@/store/userStore';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
@@ -21,10 +20,11 @@ const ProductDetail = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const { id } = useParams();
   const [successModalOpen, setSuccessModalOpen] = useState(false)
-
+  const user = UserStore(state => state.user?.id);
+  console.log("userRole", user)
   const [previewimage, setPreviewimage] = useState<string>(product?.thumbnails)
   console.log(product)
-
+  const navigate = useNavigate()
 
 
   async function checkWishlisted() {
@@ -101,7 +101,16 @@ const ProductDetail = () => {
     checkWishlisted();
 
   }, [])
+
   async function AddToCart() {
+    if (!user) {
+      toast.error("Please login to add product to cart")
+      setTimeout(() => {
+
+        navigate("/login")
+      }, 1500)
+      return;
+    }
     setButtonDisabled(true)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/cart/add-to-cart`, {
       method: "POST",
@@ -127,9 +136,6 @@ const ProductDetail = () => {
 
   }
 
-
-
-  console.log(product)
   return (
     <div className='h-full w-full relative'>
       {successModalOpen && (
@@ -147,8 +153,8 @@ const ProductDetail = () => {
             </button>
           </div>
           <div className="w-full h-30 grid grid-cols-5 gap-2 mt-6">
-            {product?.images?.map((img: string) => (
-              <div className="h-25 w-25 overflow-hidden rounded-lg hover:border border-primary " onClick={() => setPreviewimage(img)}>
+            {product?.images?.map((img: string, index: number) => (
+              <div key={index} className="h-25 w-25 overflow-hidden rounded-lg hover:border border-primary " onClick={() => setPreviewimage(img)}>
                 <img
                   src={img}
                   alt="Headphone 1"
@@ -167,7 +173,7 @@ const ProductDetail = () => {
               {Array.from({ length: 5 }).map((_, i) => {
                 const isFilled = i < product?.rating;
                 return (
-                  <FiStar className="text-yellow-500 text-xl"
+                  <FiStar key={i} className="text-yellow-500 text-xl"
                     fill={isFilled ? 'currentColor' : 'none'} />
                 )
               })}
@@ -257,55 +263,16 @@ const ProductDetail = () => {
           {activeButton === "Product Specs" && (
             <div className="animate-in fade-in duration-300 mt-4" id="tab-specs">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Driver Size</span>
-                  <span className="">40 mm Dynamic Drivers</span>
-                </div>
+                {
+                  product?.specification && Object.entries(product?.specification).map(([key, value]: [string, any]) => (
+                    <div className="flex justify-between border-b border-outline-variant py-2">
+                      <span className="text-on-surface-variant">{key}</span>
+                      <span className="">{value}</span>
+                    </div>
+                  ))
+                }
 
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Connectivity</span>
-                  <span className="">Bluetooth 5.3</span>
-                </div>
 
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Battery Life</span>
-                  <span className="">Up to 40 Hours</span>
-                </div>
-
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Charging Port</span>
-                  <span className="">USB Type-C</span>
-                </div>
-
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Noise Cancellation</span>
-                  <span className="">Active Noise Cancellation (ANC)</span>
-                </div>
-
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Microphone</span>
-                  <span className="">Built-in HD Microphone</span>
-                </div>
-
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Frequency Response</span>
-                  <span className="">20 Hz – 20 kHz</span>
-                </div>
-
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Weight</span>
-                  <span className="">250 g</span>
-                </div>
-
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Compatibility</span>
-                  <span className="">Android, iOS, Windows, macOS</span>
-                </div>
-
-                <div className="flex justify-between border-b border-outline-variant py-2">
-                  <span className="text-on-surface-variant">Color</span>
-                  <span className="">Matte Black</span>
-                </div>
               </div>
             </div>
           )}
@@ -313,42 +280,12 @@ const ProductDetail = () => {
 
             <div className="py-stack-lg animate-in fade-in duration-300 mt-4">
               <div className="max-w-3xl">
-                <h3 className="text-headline-sm mb-4">Immerse Yourself in Premium Sound</h3>
+
 
                 <p className="text-body-md text-on-surface-variant leading-relaxed mb-6">
-                  Experience every beat with powerful audio, deep bass, and crystal-clear
-                  vocals. Designed for music lovers and professionals alike, these wireless
-                  headphones combine advanced Active Noise Cancellation (ANC), long-lasting
-                  battery life, and all-day comfort to deliver an exceptional listening
-                  experience wherever you go.
+                  {product?.description}
                 </p>
 
-                <ul className="space-y-3">
-                  <li className="flex gap-3">
-                    <span className="material-symbols-outlined text-primary">check</span>
-                    <span>40 mm dynamic drivers provide rich, balanced, and immersive sound.</span>
-                  </li>
-
-                  <li className="flex gap-3">
-                    <span className="material-symbols-outlined text-primary">check</span>
-                    <span>Advanced Active Noise Cancellation blocks unwanted background noise.</span>
-                  </li>
-
-                  <li className="flex gap-3">
-                    <span className="material-symbols-outlined text-primary">check</span>
-                    <span>Up to 40 hours of battery life with fast USB-C charging support.</span>
-                  </li>
-
-                  <li className="flex gap-3">
-                    <span className="material-symbols-outlined text-primary">check</span>
-                    <span>Soft memory foam ear cushions and an adjustable headband for maximum comfort.</span>
-                  </li>
-
-                  <li className="flex gap-3">
-                    <span className="material-symbols-outlined text-primary">check</span>
-                    <span>Built-in HD microphone ensures clear voice calls and online meetings.</span>
-                  </li>
-                </ul>
               </div>
             </div>
 

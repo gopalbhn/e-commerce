@@ -4,6 +4,7 @@ import type { ProductCartType } from '../../types/types'
 
 import { RxCross1 } from 'react-icons/rx'
 import { toast } from 'sonner'
+import { FiHeart } from 'react-icons/fi'
 
 const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList, onDelete }: ProductCartType) => {
   console.log(wishList)
@@ -30,11 +31,50 @@ const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList,
     }
 
   }
+  async function addToWishList(id) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/add/${id}`, {
+      method: "POST",
+      credentials: "include"
+    })
+    if (res.ok) {
+
+      setTimeout(() => {
+        toast.success("Added Successfully")
+      }, 500)
+    } else {
+
+      if (res.status == 429) {
+        setTimeout(() => {
+          toast.error("Too many requests, please wait for some time")
+        }, 500)
+        return;
+      }
+
+      const data = await res.json()
+      setTimeout(() => {
+        toast.error(data.message)
+      }, 500)
+    }
+  } function AddWishlist(id: string) {
+    console.log(id)
+
+  }
   return (
-    <div className="group relative bg-white hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300" onClick={onclick}>
-      {wishList && (
+    <div className="group relative bg-white hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300 border border-gray-400" onClick={onclick}>
+      {wishList ? (
         <button className='absolute top-4 right-4 bg-black/30 text-white h-8 w-8 rounded-full z-40 flex items-center justify-center' onClick={onDelete}>
           <RxCross1 />
+        </button>
+      ) : (
+        <button className='absolute top-4 right-4 bg-black/30 text-white h-8 w-8 rounded-full z-40 flex items-center justify-center' onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          addToWishList(id)
+
+
+
+        }}>
+          <FiHeart />
         </button>
       )
       }
@@ -67,14 +107,14 @@ const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList,
 
           <div className="flex items-center gap-2">
             <span className="text-headline-sm font-bold text-primary">
-              Rs.{price}
+              Npr.{price}
             </span>
             <span className="text-body-sm text-outline line-through">
-              Rs.{old}
+              Npr.{old}
             </span>
           </div>
 
-          <button className=' absolute top-4 right-4 p-2 rounded-full  text-primary border border-primary hover:bg-primary/30 items-center justify-center hover:scale-110 transition-soft duration-300' onClick={(e) => {
+          <button className=' absolute bottom-4 right-4 p-2 rounded-full  text-primary border border-primary hover:bg-primary/30 items-center justify-center hover:scale-110 transition-soft duration-300' onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
             AddToCart(id)

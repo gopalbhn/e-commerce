@@ -16,7 +16,7 @@ const addShipingAddress = async (req: Request, res: Response) => {
         const { state, district, city, street } = data.data;
         const userId = req.user.id;
 
-        const ExistingAddress = await Address.findOne({ userId: req.user.id })
+        const ExistingAddress = await Address.findOne({ user: req.user.id })
 
         if (ExistingAddress) {
             return res.status(400).json({
@@ -26,7 +26,7 @@ const addShipingAddress = async (req: Request, res: Response) => {
         }
 
         const address = new Address({
-            userId,
+            user: userId,
             state,
             district,
             city,

@@ -10,6 +10,9 @@ const addProduct = async (req: Request, res: Response) => {
         const MAX_SIZE = 2 * 1024 * 1024;
         console.log("req.body", req.body)
         console.log("req.files", req.files)
+        if (req.body.specification) {
+            req.body.specification = JSON.parse(req.body.specification)
+        }
         const data = ProductCreateSchema.safeParse(req.body)
         if (!data.success) {
             return res.status(400).json({
@@ -19,7 +22,10 @@ const addProduct = async (req: Request, res: Response) => {
         }
         const { name, description, price, stock, category, subcategory, discountRate, specification } = data.data
 
-
+        const specs = specification.reduce((acc: any, item: any) => {
+            acc[item.key] = item.value;
+            return acc;
+        }, {});
         const files = req.files as { thumbnails?: Express.Multer.File[], images?: Express.Multer.File[] }
         const thumbnailFileObj = files?.thumbnails?.[0]
 
@@ -98,7 +104,8 @@ const addProduct = async (req: Request, res: Response) => {
             images: imageLink,
             subcategory,
             category,
-            seller: req.user.id
+            seller: req.user.id,
+            specification: specs
         })
         console.log("product", product)
 

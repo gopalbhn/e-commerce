@@ -3,10 +3,10 @@ import z from "zod"
 export const ProductCreateSchema = z.object({
     name: z.string().min(1, "Product name is required"),
     description: z.string().min(1, "Product description is required"),
-    price: z.number(),
-    stock: z.number(),
+    price: z.coerce.number(),
+    stock: z.coerce.number(),
     category: z.string().min(1, "Product category is required"),
-    discountRate: z.number().optional(),
+    discountRate: z.coerce.number().optional(),
     sku: z.string(),
     brand: z.string().min(1, "Product brand is required"),
     subcategory: z.string().min(1, "Product subcategory is required"),

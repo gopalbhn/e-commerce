@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { Button } from "../ui/button"
 import { toast } from "sonner"
 import Logo from "@/assets/ecom_logo.webp"
+import { ActionSearchBar } from "../ui/searchSuggestion"
 
 const NavBar = () => {
     const [color, setColor] = useState<string>("")
@@ -72,10 +73,11 @@ const NavBar = () => {
                 ))}
             </div>
             <div className=" flex-1 flex  rounded-xl relative">
-                <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400 group-focus-within:text-blue-500 transition-colors duration-300" />
+                {/* <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400 group-focus-within:text-blue-500 transition-colors duration-300" />
                 <input type="text" placeholder="Search for product"
                     className="w-full max-w-xl  pl-12 pr-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-primary-light"
-                />
+                /> */}
+                <ActionSearchBar />
             </div>
             <div className="flex items-center gap-4 ">
                 <button className="p-2 rounded-full transition hover:bg-gray-100 group " onClick={() => navigate("/wishlist")}>

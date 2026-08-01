@@ -51,6 +51,10 @@ const AddProduct = () => {
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         setDragging(false);
+        if (e.dataTransfer.files[0].size > 1 * 1024 * 1024) {
+            toast.error("File size must be less than 2MB")
+            return;
+        }
         setThumbnails(e.dataTransfer.files[0]);
     };
 
@@ -86,7 +90,10 @@ const AddProduct = () => {
             const data = await response.json();
             console.log("subcategory", data)
             if (data.success) {
-                setSubcategory(data.data);
+                const dataobj = data.data;
+                const allSubCategory = Array.from(dataobj.map((item: any) => ({ name: item.name, id: item._id })))
+                console.log("All subcategory", allSubCategory)
+                setSubcategory(allSubCategory);
             }
         } catch (err) {
             console.log(err);
@@ -118,7 +125,9 @@ const AddProduct = () => {
 
             if (data.success) {
                 setBrands(data.data);
+                console.log(brands)
             }
+
         } catch (error) {
             console.log(error);
         }
@@ -147,7 +156,7 @@ const AddProduct = () => {
             formData.append("images", images[i]);
         }
         formData.append("thumbnails", thumbnails!);
-        formData.append("specs", JSON.stringify(specs));
+        formData.append("specification", JSON.stringify(specs));
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product`, {
             method: "POST",
@@ -243,28 +252,30 @@ const AddProduct = () => {
                                             );
 
                                             if (selected) {
+                                                console.log("selected category", selected)
                                                 handleCategoryChange(selected);
                                             }
                                         }}
                                         className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition bg-white"
                                     >
                                         {category?.map((c: any) => (
-                                            <option key={c} value={c.id}>{c?.name}</option>
+                                            <option key={c.id} value={c.id}>{c?.name}</option>
                                         ))}
                                     </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory</label>
                                     <select
-                                        value={subcategory}
+                                        value={subcategory?.id}
                                         onChange={(e) => {
+                                            console.log("event value", e.target.value)
                                             setSelectedSubCategory(e.target.value)
-                                            setSubcategory(e.target.value)
+
                                         }}
                                         className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition bg-white"
                                     >
                                         {subcategory?.map((s: any) => (
-                                            <option key={s} value={s.id}>{s.name}</option>
+                                            <option key={s.id} value={s.id}>{s.name}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -311,7 +322,15 @@ const AddProduct = () => {
                                 <input
                                     type="text"
                                     value={sku}
-                                    onChange={(e) => setSku(e.target.value)}
+                                    onChange={(e) => {
+                                        const sku = e.target.value.trim().toUpperCase()
+                                        if (sku.length >= 9) {
+                                            setSku(sku)
+                                            toast.error("SKU must not be more than 9 characters long")
+                                            return
+                                        }
+                                        setSku(sku)
+                                    }}
                                     placeholder="LMN-CER-VSE-01"
                                     className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                                 />
@@ -359,7 +378,13 @@ const AddProduct = () => {
                                 accept="image/*"
                                 multiple={false}
                                 className="hidden"
-                                onChange={(e) => setThumbnails(e.target.files[0])}
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files[0].size > 2 * 1024 * 1024) {
+                                        toast.error("File size must be less than 1MB")
+                                        return;
+                                    }
+                                    setThumbnails(e.target.files[0])
+                                }}
                             />
                         </div>
 
@@ -420,7 +445,16 @@ const AddProduct = () => {
                                 multiple={true}
 
                                 className="hidden"
-                                onChange={(e) => handleImageFiles(e.target.files)}
+                                onChange={(e) => {
+                                    const file = Array.from(e.target.files || [])
+                                    const invalid = file.some(f => f.size > 2 * 1024 * 1024)
+
+                                    if (invalid) {
+                                        toast.error("File size must be less than 2MB")
+                                        return;
+                                    }
+                                    handleImageFiles(e.target.files)
+                                }}
                             />
                         </div>
 
