@@ -24,10 +24,10 @@ const AddProduct = () => {
     const [selectedSubCategory, setSelectedSubCategory] = useState<any>(null)
     const [selectedBrand,] = useState<any>(null)
 
-    const [basePrice, setBasePrice] = useState<number | null>(null);
-    const [discountRate, setDiscountRate] = useState<number | null>(null);
+    const [basePrice, setBasePrice] = useState<any>(null);
+    const [discountRate, setDiscountRate] = useState<any>(null);
     const [sku, setSku] = useState("");
-    const [stock, setStock] = useState<number | null>(null);
+    const [stock, setStock] = useState<any>(null);
 
     // Media
     const [images, setImages] = useState<File[]>([]);
@@ -381,10 +381,10 @@ const AddProduct = () => {
                                 className="hidden"
                                 onChange={(e) => {
                                     if (e.target.files && e.target.files[0].size > 2 * 1024 * 1024) {
-                                        toast.error("File size must be less than 1MB")
+                                        toast.error("File size must be less than 2MB")
                                         return;
                                     }
-                                    setThumbnails(e.target.files[0])
+                                    setThumbnails(e.target.files?.[0])
                                 }}
                             />
                         </div>

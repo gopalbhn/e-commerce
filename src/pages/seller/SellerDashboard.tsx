@@ -182,7 +182,7 @@ const SellerDashboard = () => {
                         {lowStockProduct.length == 0 ? (
                             <div className="text-md mx-auto mt-3">You Dont have Any Product Now</div>
                         ) : (
-                            lowStockProduct.map(product => (
+                            lowStockProduct.map((product: any) => (
 
                                 <div className="h-full w-full flex items-center gap-2 p-2 shadow-sm">
 

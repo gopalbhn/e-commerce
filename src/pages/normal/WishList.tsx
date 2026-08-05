@@ -84,7 +84,7 @@ const WishList = () => {
                 </div>
                 <div className="h-full grid grid-cols-4 items-center gap-5 mt-5">
                     {
-                        products.map((product, index) => {
+                        products.map((product: any, index: any) => {
                             return <ProductCart key={index} id={product._id} image={product.thumbnails} name={product.name} price={product.price} old={product.oldPrice} discount={product.discount} isDiscounted={product.isDiscounted} wishList={true} onDelete={() => handleDelete(product._id)} />
                         })
                     }

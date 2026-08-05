@@ -189,7 +189,7 @@ const Checkout = () => {
     let total = Subtotal + tax + shipping
 
     let discount = 0
-    let totalDiscountRate: number
+    let totalDiscountRate: number = 0
     console.log("coupon checkout", coupon)
     if (coupon?.length > 0) {
 

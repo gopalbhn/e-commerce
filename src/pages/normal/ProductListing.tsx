@@ -203,7 +203,7 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
             <div >
                 <h3 className="text-body text-title font-semibold mb-4">Categories</h3>
                 <ul className="flex flex-col justify-start gap-2">
-                    {category?.map(item => (
+                    {category?.map((item: any) => (
                         <li key={item.id} className="list-none">
                             <button
                                 key={item.id}
