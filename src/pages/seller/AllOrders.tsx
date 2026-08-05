@@ -13,8 +13,11 @@ import { useNavigate } from 'react-router-dom'
 const AllOrders = () => {
     const [open, setOpen] = useState<boolean>(true)
     const [order, setOrder] = useState<[] | any[] | null>([])
+    const [filteredOrder, setFilteredOrder] = useState<[] | any[] | null>([])
     const [view, setView] = useState<string>("all")
     const navigate = useNavigate();
+    const totalPendingOrder = order.filter((item: any) => item.orderStatus === "Pending").length;
+    const totalCompletedOrder = order.filter((item: any) => item.orderStatus === "Delivered").length;
     async function fetchAllOrder() {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/seller`, {
@@ -24,7 +27,9 @@ const AllOrders = () => {
             const data = await res.json();
 
             if (data.success) {
+                console.log('all order', data.data)
                 setOrder(data.data)
+                setFilteredOrder(data.data)
             }
         } catch (err) {
             console.log(err)
@@ -36,15 +41,15 @@ const AllOrders = () => {
     }, [])
     function handleShippedOrder() {
         setView("shipped");
-        setOrder(order.filter((item: any) => item.orderStatus === "Shipped"))
+        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Shipped"))
     }
     function handlePendingOrder() {
         setView("pending")
-        setOrder(order.filter((item: any) => item.orderStatus === "Pending"))
+        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Pending"))
     }
     function handleCompletedOrder() {
         setView("completed")
-        setOrder(order.filter((item: any) => item.orderStatus === "Delivered"))
+        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Delivered"))
     }
 
     async function updateStatus(status, id) {
@@ -101,7 +106,7 @@ const AllOrders = () => {
                     >
                         <Eye size={20} />
                     </button>
-                    {order.orderStatus !== "Shipped" ? (
+                    {order.orderStatus !== "Shipped" && order.orderStatus !== "Delivered" ? (
                         <button
                             onClick={() => {
                                 updateStatus("Shipped", order._id)
@@ -162,8 +167,8 @@ const AllOrders = () => {
                 </div>
 
                 <div className="max-w-7xl flex gap-4 items-center ">
-                    <StatsCard title="Pending Shipments" statsNum={12} icon={<FaCar size={20} />} accent="primary" />
-                    <StatsCard title="Completed Orders" statsNum={12} icon={<FaCalendarAlt size={20} />} accent="accent" />
+                    <StatsCard title="Pending Shipments" statsNum={totalPendingOrder} icon={<FaCar size={20} />} accent="primary" />
+                    <StatsCard title="Completed Orders" statsNum={totalCompletedOrder} icon={<FaCalendarAlt size={20} />} accent="primary" />
                 </div>
 
                 <div className="w-full h-full mt-5">
@@ -178,7 +183,7 @@ const AllOrders = () => {
                     </div>
 
                     <div className="mt-10 ">
-                        <Table columns={OrderColumn} data={order} />
+                        <Table columns={OrderColumn} data={filteredOrder} />
                     </div>
                 </div>
             </section>
@@ -197,23 +202,11 @@ const StatsCard = ({
     icon: React.ReactNode
     accent: 'primary' | 'accent'
 }) => {
-    const accentStyles = {
-        primary: {
-            bg: 'bg-primary-light/20',
-            text: 'text-primary',
-            border: 'border-l-primary',
-        },
-        accent: {
-            bg: 'bg-accent-light/20',
-            text: 'text-accent',
-            border: 'border-l-accent',
-        },
-    }
-    const s = accentStyles[accent]
+
 
     return (
-        <div className={`bg-white p-4 rounded-xl shadow-sm border border-gray-100 border-l-4 ${s.border} flex items-center gap-4 hover:shadow-md transition-shadow`}>
-            <div className={`w-12 h-12 ${s.bg} rounded-full flex items-center justify-center ${s.text}`}>
+        <div className={`bg-white p-4 rounded-xl shadow-sm border border-gray-100  flex items-center gap-4 hover:shadow-md transition-shadow`}>
+            <div className={`w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary`}>
                 {icon}
             </div>
             <div>

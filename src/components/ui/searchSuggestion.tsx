@@ -109,7 +109,7 @@ function ActionSearchBar({ onSelectProduct }: ActionSearchBarProps) {
     };
     const navigate = useNavigate();
     return (
-        <div className="w-full max-w-xl">
+        <div className={` transition-all duration-300 ease-in-out w-70  ${isFocused && " w-full"}  `}>
             <div className="relative">
                 <div className="relative">
                     <Input
@@ -120,7 +120,7 @@ function ActionSearchBar({ onSelectProduct }: ActionSearchBarProps) {
                         onBlur={() =>
                             setTimeout(() => setIsFocused(false), 200)
                         }
-                        className="h-10 rounded-lg pl-4 pr-10"
+                        className="h-10 rounded-lg pl-4 pr-10 "
                     />
 
                     <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

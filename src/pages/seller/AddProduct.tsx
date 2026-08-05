@@ -78,6 +78,7 @@ const AddProduct = () => {
 
     const handleCategoryChange = (val: any) => {
         setSelectedCategory(val.id)
+        setSelectedSubCategory("")
         fetchSubCategories(val.id);
         fetchBrands(val.id)
     };
@@ -134,7 +135,7 @@ const AddProduct = () => {
     };
     useEffect(() => {
         fetchAllCategory();
-
+        fetchSubCategories(selectedCategory)
     }, [])
     async function handleAddProduct() {
         if (title === "" || category === "" || subcategory === "" || basePrice === 0 || discountRate === 0 || sku === "" || stock === 0 || images.length === 0 || thumbnails === null || specs.length === 0) {
@@ -266,7 +267,7 @@ const AddProduct = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory</label>
                                     <select
-                                        value={subcategory?.id}
+                                        value={selectedSubCategory}
                                         onChange={(e) => {
                                             console.log("event value", e.target.value)
                                             setSelectedSubCategory(e.target.value)

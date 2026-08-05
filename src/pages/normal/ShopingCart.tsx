@@ -123,13 +123,15 @@ const ShopingCart = () => {
         let total = subTotal + tax + shipping;
 
         let discount = 0;
-
+        let totalDiscountRate = 0
         if (isCouponApplied) {
-            total = total - coupon.reduce((acc: number, coupon) => acc + (coupon.discountRate * total) / 100, 0)
-            discount = coupon.reduce((acc: number, coupon) => acc + (coupon.discountRate * total) / 100, 0)
+            totalDiscountRate = coupon.reduce((acc: number, coupon) => acc + coupon.discountRate, 0)
+            discount = total * (totalDiscountRate / 100);
+          
+            total = total - discount;
+            
         }
 
-        const totalDiscountRate = coupon.reduce((acc: number, coupon) => acc + coupon.discountRate, 0)
 
         return {
             total,

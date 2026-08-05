@@ -32,6 +32,7 @@ import AdminProduct from './pages/admin/AdminProduct'
 import PaymentFailed from './pages/normal/PaymentFailed'
 import Deals from './pages/normal/Deals'
 import NewArrival from './pages/normal/newArrival'
+import FlashSale from './pages/admin/FlashSale'
 
 function App() {
 
@@ -171,6 +172,7 @@ function Init() {
               <Route path='admin/product' element={<AdminProduct />} />
               <Route path="/admin/orders" element={<AllAdminOrders />} />
               <Route path='admin/users' element={<AllUsers />} />
+              <Route path='/admin/flashsale' element={<FlashSale />} />
             </>
           )
 

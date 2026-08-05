@@ -100,16 +100,16 @@ const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList,
       <div className="p-4 space-y-2">
 
 
-        <h3 className="font-body-md font-bold text-on-surface">
+        <h3 className="font-semibold text-title">
           {name}
         </h3>
         <div className='flex items-center justify-between'>
 
           <div className="flex items-center gap-2">
-            <span className="text-headline-sm font-bold text-primary">
+            <span className="text-body font-bold text-primary uppercase">
               Npr.{price}
             </span>
-            <span className="text-body-sm text-outline line-through">
+            <span className="text-body text-outline line-through">
               Npr.{old}
             </span>
           </div>

@@ -4,6 +4,7 @@ import ProductCart from "../../components/normal/productCart"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { MdFilterAlt } from "react-icons/md"
+import { BiChevronDown, BiChevronRight } from "react-icons/bi"
 
 
 
@@ -159,7 +160,7 @@ const ProductListing = () => {
             <CategoryList category={category} filters={filters} setFilters={setFilters} fetchProducts={fetchProducts} fetchSubCategories={fetchSubCategories} subCategory={subCategory} fetchBrands={fetchBrands} brands={brands} />
             <section className="h-full w-4/5 ml-10 mb-10">
                 <div className="w-full rounded-xl p-5 flex items-center justify-between ">
-                    <h1 className="text-title font-semibold">Collection</h1>
+                    <h1 className="text-header font-semibold">Collection</h1>
 
                 </div>
                 <div className="h-[70%]  overflow-y-auto w-full grid grid-cols-3 gap-4">
@@ -195,67 +196,64 @@ const ProductListing = () => {
 const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCategories, subCategory, fetchBrands, brands }: any) => {
 
     const [currentSelectedCategory, setCurrentSelectedCategory] = useState('')
+    const [currentSelectedSubCategory, setCurrentSubCategory] = useState("")
     return (
         <div className="h-full w-1/5 rounded-xl p-4 border border-gray-300  mb-5 text-sm " key={category}>
             <div >
-                <h3 className="text-body font-semibold mb-4">Categories</h3>
-                <ul className="flex flex-col justify-start">
+                <h3 className="text-body text-title font-semibold mb-4">Categories</h3>
+                <ul className="flex flex-col justify-start gap-2">
                     {category?.map(item => (
-                        <button
-                            key={item.id}
-                            className={currentSelectedCategory == item.id ? "text-primary text-start" : "text-start"}
-                            onClick={() => {
-                                setCurrentSelectedCategory(item.id)
+                        <li key={item.id} className="list-none">
+                            <button
+                                key={item.id}
+                                className={currentSelectedCategory == item.id ? "text-primary text-start text-body hover:" : "text-start text-body hover:text-primary hover:scale-103"}
+                                onClick={() => {
+                                    setCurrentSelectedCategory(item.id)
 
 
-                                const newFilters = {
-                                    category: item.id
-                                }
-                                setFilters(newFilters);
+                                    const newFilters = {
+                                        category: item.id
+                                    }
+                                    setFilters(newFilters);
 
-                                fetchSubCategories(item.id);
-                                fetchBrands(item.id)
-                                fetchProducts(newFilters);
-                            }}
-                        >
-                            {item.name}
-                        </button>
+                                    fetchSubCategories(item.id);
+                                    fetchBrands(item.id)
+                                    fetchProducts(newFilters);
+                                }}
+                            >
+                                {item.name}
+                                {currentSelectedCategory == item.id ? (<BiChevronDown className="inline-block text-body" />) : (<BiChevronRight className="inline-block text-body" />)}
+                            </button>
+                            {currentSelectedCategory === item.id && subCategory?.length > 0 && (
+                                <ul className="flex flex-col gap-2">
+                                    {console.log("Current slelecte", currentSelectedSubCategory)}
+                                    {subCategory.map((subItem: any) => (
+                                        <button
+                                            key={subItem._id}
+                                            className={`text-left  text-body ${currentSelectedSubCategory === subItem._id ? "text-primary" : ""}`}
+                                            onClick={() => {
+                                                const newFilters = {
+                                                    category: filters.category,
+                                                    subCategory: subItem._id,
 
+                                                };
+                                                setCurrentSubCategory(subItem._id)
+                                                setFilters(newFilters);
+                                                fetchBrands(item._id)
+                                                fetchProducts(newFilters);
+                                            }}
+                                        >
+                                            {console.log("subitem", subItem._id)}
+                                            {subItem.name}
+                                        </button>
+                                    ))}
+                                </ul>
+                            )}
+                        </li>
                     ))}
 
                 </ul>
 
-            </div>
-            <div>
-                {subCategory && subCategory?.length > 0 && (
-                    <>
-                        <h3 className="text-body font-semibold mt-5 mb-2">
-                            Sub Categories
-                        </h3>
-
-                        <ul className="flex flex-col">
-                            {subCategory.map((item: any) => (
-                                <button
-                                    key={item._id}
-                                    className="text-left mt-2 ml-3"
-                                    onClick={() => {
-                                        const newFilters = {
-                                            category: filters.category,
-                                            subCategory: item._id,
-
-                                        };
-
-                                        setFilters(newFilters);
-                                        fetchBrands(item._id)
-                                        fetchProducts(newFilters);
-                                    }}
-                                >
-                                    {item.name}
-                                </button>
-                            ))}
-                        </ul>
-                    </>
-                )}
             </div>
             {brands.map((brand: any) => (
                 <div className="mt-2" key={brand}>

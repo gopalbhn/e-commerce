@@ -14,6 +14,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [address, setAddress] = useState<ShippingAddressState | null>(null)
   const [products, setProducts] = useState<any[]>([]);
+  const [editAddress, setEditAddress] = useState<boolean>(false)
+  const [coupon, setCoupon] = useState<any>(null)
   async function fetchShippingAddress() {
     setLoading(true)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/address`, {
@@ -40,13 +42,16 @@ const Checkout = () => {
     const data = await res.json();
 
     if (data.success) {
-
+      console.log("cart data", data.data)
 
       const allProducts = data.data.products.map((item: any) => ({
         ...item.productId,
         quantity: item.quantity
       }));
       console.log("all products", allProducts)
+      if (data.data.couponApplied) {
+        setCoupon(data.data.coupon)
+      }
       setProducts(allProducts);
 
     }
@@ -64,11 +69,9 @@ const Checkout = () => {
     )
   }
 
-  async function handlePayment() {
-    const subtotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
-    const tax = Math.floor(subtotal * 0.13)
-    const shipping = 10
-    const total = subtotal + tax + shipping
+  async function handleEsewaPayment() {
+    const { total } = calculateTotal();
+    console.log("total")
     try {
       let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order`, {
         method: "POST",
@@ -85,7 +88,7 @@ const Checkout = () => {
       console.log(data)
       if (data.success) {
 
-        res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/payment/initiate`, {
+        res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/payment/initiate-esewa`, {
           method: "POST",
           credentials: "include",
           headers: {
@@ -93,7 +96,7 @@ const Checkout = () => {
           },
           body: JSON.stringify({
             orderId: data.data._id,
-            amount: total,
+            amount: total.toFixed(2),
             gateway: "ESEWA"
           })
         })
@@ -110,8 +113,8 @@ const Checkout = () => {
       console.log(error)
     }
   }
-
   function redirectURI(url: string, obj: any) {
+    console.log("obj payment", obj)
     const form = document.createElement("form")
 
     form.method = "POST",
@@ -130,7 +133,73 @@ const Checkout = () => {
     document.body.removeChild(form);
 
   }
-  console.log("address", address)
+
+  async function handleKhaltiPayment() {
+    const { total } = calculateTotal();
+
+    try {
+      let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          paymentMethod: "khalti"
+        }),
+      })
+      const data = await res.json()
+      console.log(data)
+      if (data.success) {
+        res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/payment/initiate-khalti`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderId: data.data._id,
+            amount: total.toFixed(2),
+            gateway: "KHALTI"
+          })
+        })
+        const paymentRes = await res.json()
+        console.log("paymentRes", paymentRes)
+        if (paymentRes.success) {
+          toast.success("fetched")
+          window.location.href = paymentRes.paymentUrl
+        }
+        toast.success("Item Purchased successfully")
+      }
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
+
+  function toogleEditAddress() {
+    setEditAddress(!editAddress)
+  }
+
+  function calculateTotal() {
+
+    const Subtotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
+
+    const tax = Subtotal * 0.13
+    const shipping = 10
+    let total = Subtotal + tax + shipping
+
+    let discount = 0
+    let totalDiscountRate: number
+    console.log("coupon checkout", coupon)
+    if (coupon?.length > 0) {
+
+      total = total - coupon.reduce((acc: number, coupon: any) => acc + (coupon.discountRate * total) / 100, 0)
+      discount = coupon.reduce((acc: number, coupon: any) => acc + (coupon.discountRate * total) / 100, 0)
+      totalDiscountRate = coupon.reduce((acc: number, coupon: any) => acc + coupon.discountRate, 0)
+    }
+    return { total, tax, shipping, Subtotal, discount, totalDiscountRate }
+  }
+
   return (
     <div className="w-full h-full">
       <section className="w-full h-full mt-10 mb-15 px-10">
@@ -161,11 +230,12 @@ const Checkout = () => {
 
           <div className="w-2/3 h-full shadow-sm rounded-xl  p-4">
             {step == 1 && !address && <ShippingAddressForm />}
-            {step == 1 && address && <AddressDetail address={address} nextStep={() => setStep(step + 1)} />}
-            {step == 2 && <PaymentSetup nextStep={() => setStep(step + 1)} onpay={handlePayment} />}
+            {step == 1 && address && !editAddress && <AddressDetail address={address} nextStep={() => setStep(step + 1)} toogleEditAddress={toogleEditAddress} />}
+            {step == 1 && address && editAddress && <ShippingAddressForm address={address} />}
+            {step == 2 && <PaymentSetup nextStep={() => setStep(step + 1)} handleEsewaPayment={handleEsewaPayment} handleKhaltiPayment={handleKhaltiPayment} />}
             {step == 3 && <Review />}
           </div>
-          {step !== 3 && <OrderSummary products={products} />}
+          {step !== 3 && <OrderSummary products={products} coupon={coupon} calculateTotal={calculateTotal} />}
         </div>
       </section >
       <Footer />
@@ -176,7 +246,7 @@ const Checkout = () => {
 export default Checkout;
 
 
-const ShippingAddressForm = () => {
+const ShippingAddressForm = ({ address }: any) => {
   const [state, setState] = useState("")
   const [district, setDistrict] = useState("")
   const [city, setCity] = useState("")
@@ -209,6 +279,41 @@ const ShippingAddressForm = () => {
     setLoading(false)
   }
 
+  async function updateShippingAddress() {
+    setLoading(true)
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/address/update`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        state,
+        district,
+        city,
+        street
+      })
+    })
+    const data = await res.json();
+    if (data.success) {
+      toast.success(data.message)
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
+    } else {
+      toast.error(data.message)
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    if (address) {
+      setState(address.state)
+      setDistrict(address.district)
+      setCity(address.city)
+      setStreet(address.street)
+    }
+  }, [address])
 
   return (
     <div className="h-full w-full">
@@ -261,7 +366,11 @@ const ShippingAddressForm = () => {
       </form>
       <div className="w-full flex justify-end items-center gap-4 mt-5">
         <button className="bg-primary w-40 py-3 text-white rounded-xl" onClick={() => {
-          addShipingAddress();
+          if (address) {
+            updateShippingAddress()
+          } else {
+            addShipingAddress()
+          }
         }}>
           {loading ? "Saving..." : "Save Address"}
         </button>
@@ -270,7 +379,7 @@ const ShippingAddressForm = () => {
   )
 }
 
-const PaymentSetup = ({ onpay }: any) => {
+const PaymentSetup = ({ handleEsewaPayment, handleKhaltiPayment }: any) => {
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
 
   return (
@@ -350,14 +459,14 @@ const PaymentSetup = ({ onpay }: any) => {
           <div className="flex flex-col gap-3">
             <h1>Esewa Payment</h1>
             <p>You Will be Redirected to Esewa Payment Page </p>
-            <button className="bg-primary w-40 py-3 text-white rounded-xl" onClick={onpay}>Pay Now</button>
+            <button className="bg-primary w-40 py-3 text-white rounded-xl" onClick={handleEsewaPayment}>Pay Now</button>
           </div>
         )}
         {paymentMethod == "khalti" && (
           <div className="flex flex-col gap-3">
             <h1>Khalti Payment</h1>
             <p>You Will be Redirected to Khalti payment Page </p>
-            <button className="bg-primary w-40 py-3 text-white rounded-xl">Pay Now</button>
+            <button className="bg-primary w-40 py-3 text-white rounded-xl" onClick={handleKhaltiPayment}>Pay Now</button>
           </div>
         )}
       </div>
@@ -365,13 +474,13 @@ const PaymentSetup = ({ onpay }: any) => {
   )
 }
 
-const AddressDetail = ({ address, nextStep }: any) => {
+const AddressDetail = ({ address, nextStep, toogleEditAddress }: any) => {
   return (
     <div className="w-full h-full shadow-sm rounded-xl  p-4">
       <div className="w-full flex justify-between items-center mb-5">
         <h1 className="text-title font-semibold">Shipping Address</h1>
         <div className="">
-          <Button variant="outline" className={"flex gap-2 items-center  px-1 text-sm"}>
+          <Button variant="outline" className={"flex gap-2 items-center  px-1 text-sm"} onClick={toogleEditAddress}>
             <FaPen />
             <span>Edit Address</span>
           </Button>
@@ -400,52 +509,14 @@ const AddressDetail = ({ address, nextStep }: any) => {
   )
 }
 
-const OrderSummary = ({ products }: any) => {
+const OrderSummary = ({ products, coupon, calculateTotal }: any) => {
 
-  console.log("Products", products)
+  console.log(" from checkout", products)
+  console.log("coupon checkout", coupon)
 
-  function calculateTotal() {
+  const { total, tax, shipping, Subtotal, discount, totalDiscountRate } = calculateTotal()
 
-    const Subtotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
 
-    const tax = Math.floor(Subtotal * 0.13)
-    const shipping = 10
-    const total = Subtotal + tax + shipping
-    return { total, tax, shipping, Subtotal }
-  }
-  const { total, tax, shipping, Subtotal } = calculateTotal()
-  // function calculateTotal() {
-
-  //   const subTotal = products.reduce(
-  //     (acc: number, item: any) =>
-  //       acc + Number(item.price) * Number(item.quantity),
-  //     0
-  //   );
-
-  //   const tax = subTotal * 0.13;
-  //   const shipping = 10;
-
-  //   let total = subTotal + tax + shipping;
-
-  //   let discount = 0;
-
-  //   if (products.isCouponApplied) {
-  //     total = total - coupon.reduce((acc: number, coupon) => acc + (coupon.discountRate * total) / 100, 0)
-  //     discount = coupon.reduce((acc: number, coupon) => acc + (coupon.discountRate * total) / 100, 0)
-  //   }
-
-  //   const totalDiscountRate = coupon.reduce((acc: number, coupon) => acc + coupon.discountRate, 0)
-
-  //   return {
-  //     total,
-  //     tax,
-  //     shipping,
-  //     subTotal,
-  //     discount,
-  //     totalDiscountRate
-  //   };
-  // }
-  // const { total, tax, shipping, subTotal, discount, totalDiscountRate } = calculateTotal()
   return (
     <div className="w-1/3 rounded-2xl bg-white shadow-md p-6">
       <h1 className="text-title font-bold mb-6">Order Summary</h1>
@@ -496,8 +567,17 @@ const OrderSummary = ({ products }: any) => {
       <hr className="my-6" />
 
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-bold">Total</h2>
-        <h2 className="text-lg font-bold text-orange-700">Npr.{total}</h2>
+        <div className="w-full ">
+          <div className="flex items-center justify-between">
+
+            <h2>Discount</h2>
+            <h2>Nrs.{discount.toFixed(2)}</h2>
+          </div>
+          <div className="flex items-center justify-between my-3">
+            <p>Total</p>
+            <p>Nrs.{total.toFixed(2)}</p>
+          </div>
+        </div>
       </div>
     </div>
   )

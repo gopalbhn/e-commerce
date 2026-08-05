@@ -27,6 +27,7 @@ const EditProduct = () => {
     const [discountRate, setDiscountRate] = useState<number | null>(null);
     const [sku, setSku] = useState("");
     const [stock, setStock] = useState<number | null>(null);
+    const [specification, setSpecification] = useState<{ key: string, value: string }>(null);
     const { id } = useParams();
     // Media
     const [images, setImages] = useState<(File | string)[]>([]);
@@ -137,7 +138,7 @@ const EditProduct = () => {
                 setStock(dataObj.stock)
                 setImages(dataObj.images)
                 setThumbnails(dataObj.thumbnails)
-
+                setSpecification(dataObj.specification)
             }
         } catch (error) {
             console.log(error)
@@ -185,7 +186,7 @@ const EditProduct = () => {
             toast.success("Product Updated Successfully")
         }
     }
-
+    console.log("specification", specification)
     return (
         <div className="min-h-screen bg-gray-50 flex">
             <SellerSideBar open={open} />
@@ -477,18 +478,18 @@ const EditProduct = () => {
                         </div>
 
                         <div className="flex flex-col gap-3">
-                            {specs.map((spec, i) => (
+                            {Object.keys(specification).map((spec, i) => (
                                 <div key={i} className="flex items-center gap-3">
                                     <input
                                         type="text"
-                                        value={spec.key}
+                                        value={spec}
                                         onChange={(e) => updateSpec(i, "key", e.target.value)}
                                         placeholder="Key"
                                         className="w-1/3 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                                     />
                                     <input
                                         type="text"
-                                        value={spec.value}
+                                        value={specification[spec]}
                                         onChange={(e) => updateSpec(i, "value", e.target.value)}
                                         placeholder="Value"
                                         className="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"

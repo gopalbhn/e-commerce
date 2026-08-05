@@ -1,3 +1,4 @@
+import Footer from "@/components/normal/Footer";
 import ProductCart from "@/components/normal/productCart";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -38,39 +39,49 @@ const NewArrival = () => {
         fetchProduct()
     }, [])
     return (
+        <div className="h-full w-full">
 
-        <div className="min-h-[calc(100vh-8rem)] px-10 space-y-10">
-            <div className="w-full flex items-center justify-start gap-2 mt-5">
-                {
-                    btnArray.map((item, index) => (
-                        <button key={index} className={filter === item ? "px-4 py-2 bg-primary text-white rounded-lg" : "px-4 py-2 border border-primary text-primary  rounded-lg"} onClick={() => {
+            <div className="min-h-[calc(100vh-8rem)] px-10 space-y-10 mb-10">
+                <div className="w-full flex items-center justify-start gap-2 mt-5">
+                    {
+                        btnArray.map((item, index) => (
+                            <button key={index}
+                                // className={filter === item ? "px-4 py-2 bg-primary text-white rounded-lg" : "px-4 py-2 border border-primary text-primary  rounded-lg"}
+                                className={`px-4 py-2 rounded-lg transition-all duration-800 ease-out-in ${filter === item
+                                    ? "bg-primary text-white"
+                                    : "border border-primary text-primary"
+                                    }`}
 
-                            applyFilter(item)
-                        }
-                        }>
-                            {item}
-                        </button>
-                    ))
-                }
+
+                                onClick={() => {
+                                    applyFilter(item)
+                                }
+                                }>
+                                {item}
+                            </button>
+                        ))
+                    }
+                </div>
+                <section className="h-full w-full grid grid-cols-4 gap-4 mt-5 items-center">
+                    {
+                        filteredProduct.slice(0, 8).map((item: any, index: any) => (
+                            <ProductCart
+                                id={item._id}
+                                image={item.thumbnails}
+                                name={item.name}
+                                price={item.price}
+                                old={item.oldPrice}
+                                key={index}
+                                discount={item.discount}
+                                isDiscounted={item.isDiscounted}
+                                wishList={item.wishList}
+                                onclick={() => navigate(`/product-detail/${item._id}`)}
+                            />
+                        ))
+                    }
+                </section>
             </div>
-            <section className="h-full w-full grid grid-cols-4 gap-4 mt-5 items-center">
-                {
-                    filteredProduct.slice(0, 8).map((item: any, index: any) => (
-                        <ProductCart
-                            id={item._id}
-                            image={item.thumbnails}
-                            name={item.name}
-                            price={item.price}
-                            old={item.oldPrice}
-                            key={index}
-                            discount={item.discount}
-                            isDiscounted={item.isDiscounted}
-                            wishList={item.wishList}
-                            onclick={() => navigate(`/product-detail/${item._id}`)}
-                        />
-                    ))
-                }
-            </section>
+            <Footer />
         </div>
 
     )

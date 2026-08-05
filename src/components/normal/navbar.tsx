@@ -53,6 +53,7 @@ const NavBar = () => {
         }
 
     }
+    const currentPath = window.location.pathname;
 
     return (
         <div className={`h-15 w-full flex items-center gap-8 px-10 inset-0 sticky ${color} top-0 left-0 z-100`}>
@@ -60,19 +61,21 @@ const NavBar = () => {
                 <img src={Logo} alt="logo" className="w-full h-full object-cover " />
             </div>
             <div className="flex  items-center gap-6">
-                {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => (
-                    <Link to={
-                        item === "Home"
-                            ? "/"
-                            : item === "New Arrivals"
-                                ? "/newarrivals"
-                                : `/${item.trim().toLowerCase()}`
-                    } key={item} className="text-sm font-medium text-secondary cursor-pointer hover:text-primary hover:underline transition-colors duration-300">
-                        {item}
-                    </Link>
-                ))}
+                {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => {
+                    const active = item == "Home" ? "/" : item === "New Arrivals" ? "/newarrivals" : `/${item.trim().toLowerCase()}`
+                    console.log("current path", currentPath, "item", item)
+                    console.log("Active state", active)
+                    console.log("location", location.pathname)
+                    return (
+                        <Link to={
+                            active
+                        } key={item} className={`text-sm font-medium  cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : "text-secondary"}`}>
+                            {item}
+                        </Link>
+                    )
+                })}
             </div>
-            <div className=" flex-1 flex  rounded-xl relative">
+            <div className=" flex-1 flex justify-end  rounded-xl relative">
                 {/* <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400 group-focus-within:text-blue-500 transition-colors duration-300" />
                 <input type="text" placeholder="Search for product"
                     className="w-full max-w-xl  pl-12 pr-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-primary-light"
@@ -98,6 +101,7 @@ const NavBar = () => {
                             {open && (
                                 <div className="absolute top-12 -right-5 bg-white shadow-lg rounded-lg w-28 flex flex-col items-center justify-center overflow-hidden">
                                     <button className="text-secondary hover:text-primary w-full  p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/myorder")}>My Orders</button>
+                                    <button className="text-secondary hover:text-primary w-full p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/purchase-history")}>History</button>
                                     <button className="text-secondary hover:text-primary w-full p-2 cursor-pointer hover:bg-primary/30" onClick={handleLogOut}>Logout</button>
                                 </div>
                             )}

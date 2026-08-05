@@ -1,91 +1,52 @@
 import { useEffect, useState } from "react";
 import SellerSideBar from "../../components/Sellers/SellerSideBar";
 import { MdMenu } from "react-icons/md";
-
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Tooltip,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
-
 import { FiEdit } from "react-icons/fi";
-
 import { useNavigate } from "react-router-dom";
 import UserStore from "@/store/userStore";
 import { Button } from "@/components/ui/button";
 import OrderDetailComponent from "@/components/normal/orderDetail";
 import Table from "@/components/normal/table";
 import { Eye } from "lucide-react";
+import MetricChart from "@/components/admin/MetricCard";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
+const cards = [{
+    title: "Total Revenue",
+    value: {
+        "Week 1": 100,
+        "Week 2": 200,
+        "Week 3": 300,
+        "Week 4": 400,
+    },
+    color: "#FF8C00",
+},
+{
+    title: "Total Orders",
+    value: {
+        "Week 1": 10,
+        "Week 2": 20,
+        "Week 3": 40,
+        "Week 4": 25,
+    }
 
-const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            display: false,
-        },
-        tooltip: {
-            enabled: false,
-        },
-    },
-    scales: {
-        x: {
-            display: false,
-            grid: {
-                display: false,
-            },
-            border: {
-                display: false,
-            },
-        },
-        y: {
-            display: false,
-            beginAtZero: true,
-            grid: {
-                display: false,
-            },
-            border: {
-                display: false,
-            },
-        },
-    },
-};
+},
+{
+    title: "Total Products",
+    value: {
+        "Week 1": 5,
+        "Week 2": 8,
+        "Week 3": 2,
+        "Week 4": 3,
+    }
 
-const cards = [
-    {
-        title: "Total Orders",
-        value: "1,248",
-        subtitle: "Active Orders",
-        growth: "+8.2%",
-        data: [12, 8, 18, 28, 36],
-    },
-    {
-        title: "Revenue",
-        value: "$24.8K",
-        subtitle: "This Month",
-        growth: "+12%",
-        data: [8, 14, 22, 20, 30],
-    },
-    {
-        title: "Products",
-        value: "320",
-        subtitle: "Listed",
-        growth: "+5.5%",
-        data: [5, 10, 15, 22, 26],
-    },
+}
+]
 
-];
 
 const SellerDashboard = () => {
     const [open, setOpen] = useState(true);
     const [lowStockProduct, setLowStockProduct] = useState<any | []>([])
     const [pendingOrder, setPendingOrder] = useState<any | []>([])
-    const [, setSellerProfile] = useState<any | []>([])
     const [orderDetail, setOrderDetail] = useState<any | []>([])
     const [viewOrder, setViewOrder] = useState(false)
     const user = UserStore(state => state?.user);
@@ -166,25 +127,12 @@ const SellerDashboard = () => {
             console.log(error)
         }
     }
-    async function fetchSellerProfile() {
-        try {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/user/me`, {
-                method: "GET",
-                credentials: "include"
-            })
-            const data = await res.json()
-            console.log(data)
-            if (data.success) {
-                setSellerProfile(data.data)
-            }
-        } catch (error) {
 
-        }
-    }
+
+
     useEffect(() => {
         fetchLowStockProduct(),
-            fetchPendingOrder(),
-            fetchSellerProfile()
+            fetchPendingOrder()
     }, [])
     if (isStoreApproved === false) {
         return (
@@ -215,13 +163,15 @@ const SellerDashboard = () => {
                 <div className="p-8">
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-6">
                         {cards.map((card, index) => (
-                            <StatsCard
-                                key={index}
+                            <MetricChart
                                 title={card.title}
-                                value={card.value}
-                                subtitle={card.subtitle}
-                                growth={card.growth}
-                                chartData={card.data}
+
+                                data={[
+                                    { week: "Week 1", value: card?.value?.["Week 1"] },
+                                    { week: "Week 2", value: card?.value?.["Week 2"] },
+                                    { week: "Week 3", value: card?.value?.["Week 3"] },
+                                    { week: "Week 4", value: card?.value?.["Week 4"] },
+                                ]}
                             />
                         ))}
                     </div>
@@ -261,66 +211,7 @@ const SellerDashboard = () => {
     );
 };
 
-const StatsCard = ({
-    title,
-    value,
-    subtitle,
-    growth,
-    chartData,
-}: { title: string, value: string, subtitle: string, growth: string, chartData: number[] }) => {
-    const data = {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-        datasets: [
-            {
-                data: chartData,
-                backgroundColor: [
-                    "#FBE8E4",
-                    "#F9D8D2",
-                    "#F8C2B7",
-                    "#F5D7CF",
-                    "#FF9F8D",
-                ],
-                borderRadius: 8,
-                borderSkipped: false,
-                maxBarThickness: 20,
-            },
-        ],
-    };
 
-    return (
-        <div className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition">
-            <div className="flex flex-col ">
-                <div className="flex justify-between">
-                    <p className="text-xs uppercase tracking-widest text-gray-500 font-semibold">
-                        {title}
-                    </p>
-                    <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${growth.startsWith("-")
-                            ? "bg-red-100 text-red-600"
-                            : "bg-green-100 text-green-700"
-                            }`}
-                    >
-                        {growth}
-                    </span>
-                </div>
-                <div>
-                    <h2 className="text-title font-bold text-[#8B4B39] mt-2">
-                        {value}
-                    </h2>
-
-                    <p className="text-gray-500 text-sm mt-1 w-full">{subtitle}</p>
-                </div>
-            </div>
-
-
-
-            <div className="h-14 mt-4">
-                <Bar data={data} options={chartOptions} />
-            </div>
-
-        </div>
-    );
-};
 
 
 export default SellerDashboard;

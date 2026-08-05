@@ -72,7 +72,7 @@ const getMyAddress = async (req: Request, res: Response) => {
 
 const updateMyAddress = async (req: Request, res: Response) => {
     try {
-        const address = await Address.findOne({ userId: req.user.id });
+        const address = await Address.findOne({ user: req.user.id });
         if (!address) {
             return res.status(404).json({
                 success: false,

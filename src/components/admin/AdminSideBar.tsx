@@ -3,17 +3,22 @@ import { FaUsers } from "react-icons/fa"
 import { GoPackage } from "react-icons/go"
 import { IoBagOutline } from "react-icons/io5"
 import { LuLogOut } from "react-icons/lu"
+import { AiOutlineThunderbolt } from "react-icons/ai";
 import { MdOutlineDashboard } from "react-icons/md"
 import { Link, useLocation } from "react-router-dom"
 import { toast } from "sonner"
 import Logo from '@/assets/ecom_logo.webp'
+import UserStore from "@/store/userStore";
 const AdminSideBar = ({ open }: { open: boolean }) => {
+    const user = UserStore(state => state?.user)
+    const name = user?.storeName;
     const location = useLocation();
     const MenuItems = [
         { id: 1, title: "Dashboard", link: '/', icon: MdOutlineDashboard },
         { id: 2, title: "Products", link: '/admin/product', icon: GoPackage },
         { id: 3, title: "Orders", link: "/admin/orders", icon: IoBagOutline },
         { id: 4, title: "Users", link: "/admin/users", icon: FaUsers },
+        { id: 5, title: "Flash Sale", link: "/admin/flashsale", icon: AiOutlineThunderbolt },
 
     ]
 
@@ -47,7 +52,7 @@ const AdminSideBar = ({ open }: { open: boolean }) => {
                 </div>
                 <div>
 
-                    <p className="text-sm font-bold">Alex Sandro</p>
+                    <p className="text-sm font-bold">{name}</p>
                     <p className="font-bold text-sm">Admin</p>
                 </div>
             </div>

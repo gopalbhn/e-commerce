@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import SuccessModal from '@/components/normal/successModal';
 import BreadcrumbDemo from '@/components/ui/breadCrumbComponent';
 import UserStore from '@/store/userStore';
+import { FaStar } from 'react-icons/fa';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
@@ -18,6 +19,7 @@ const ProductDetail = () => {
   const [isWishListed, setIsWishlisted] = useState(false)
   const [product, setProduct] = useState(null)
   const [buttonDisabled, setButtonDisabled] = useState(false)
+  const [reviews, setReviews] = useState([])
   const { id } = useParams();
   const [successModalOpen, setSuccessModalOpen] = useState(false)
   const user = UserStore(state => state.user?.id);
@@ -96,10 +98,21 @@ const ProductDetail = () => {
     }
   }
 
+  async function fetchReview() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/review/reviews/${id}`)
+    if (!res.ok) {
+      toast.error("Failed to fetch reviews")
+    }
+    const data = await res.json()
+    if (data.success) {
+      setReviews(data.reviews)
+    }
+  }
+
   useEffect(() => {
     fetchProductDetail()
     checkWishlisted();
-
+    fetchReview();
   }, [])
 
   async function AddToCart() {
@@ -164,9 +177,9 @@ const ProductDetail = () => {
             ))}
           </div>
         </div>
-        <div className='w-1/2 h-full p-4 flex flex-col justify-center gap-y-4'>
+        <div className='w-1/2 h-full p-4 flex flex-col justify-center gap-y-3'>
 
-          <h1 className='text-title font-bold'>{product?.name}</h1>
+          <h1 className='text-header font-bold'>{product?.name}</h1>
 
           <div className='flex items-center gap-4 '>
             <div className='flex items-center gap-2'>
@@ -183,7 +196,7 @@ const ProductDetail = () => {
           <div className='flex items-center gap-4 '>
 
 
-            <h2 className='text-title font-bold text-primary'>Npr.{product?.price}</h2>
+            <h2 className='text-title font-bold '>Npr.{product?.price}</h2>
             <h2 className='text-body text-gray-500 line-through'>Npr.{product?.oldPrice}</h2>
             <h2 className='text-title font-bold text-primary-light'>{product?.discount}%</h2>
           </div>
@@ -195,14 +208,16 @@ const ProductDetail = () => {
             <p className='text-small font-semibold text-gray-500'>Order within 2h 15m for Same-Day Shipping.</p>
           </div>
           <div className='flex items-center gap-2'>
-            <p>Save For later </p>
+
             {isWishListed ? (
-              <button className='w-5 h-5' onClick={removeFromWishList}>
-                <FiHeart fill='red' className='w-full h-full text-red-500' />
+              <button className=' h-10 flex items-center px-5 gap-2 rounded-xl hover:scale-101 bg-red-500 transition-all duration-300 ease-in-out' onClick={removeFromWishList}>
+                <FiHeart fill='white' className=' h-full text-white' />
+                <span className='text-white text-body'>Save for Later</span>
               </button>
             ) : (
-              <button className='w-5 h-5' onClick={addToWishList}>
-                <FiHeart className='h-full w-full' />
+              <button className=' h-10 flex  items-center px-5 gap-2 rounded-xl border border-gray-500 hover:scale-105 transition-all duration-300 ease-in-out' onClick={addToWishList}>
+                <FiHeart className='h-full ' />
+                <span className='text-body'>Save for Later</span>
               </button>
             )}
           </div>
@@ -254,9 +269,9 @@ const ProductDetail = () => {
         </div>
       </section >
       <section className='h-full w-full my-10 px-10'>
-        <div className='h-full w-full flex gap-4'>
+        <div className='h-full w-full flex gap-5'>
           {buttonList.map((item, index) => (
-            <button key={index} className={` pb-2 px-3 hover:text-primary ${item == activeButton ? "border-b-2 border-primary text-primary" : "text-gray-500"}`} onClick={() => setActiveButton(item)}>{item}</button>
+            <button key={index} className={` pb-2  hover:text-primary ${item == activeButton ? "border-b-2 border-primary text-primary" : "text-gray-500"}`} onClick={() => setActiveButton(item)}>{item}</button>
           ))}
         </div>
         <div className='h-full w-full '>
@@ -276,142 +291,85 @@ const ProductDetail = () => {
               </div>
             </div>
           )}
-          {activeButton === "Description" && (
-
-            <div className="py-stack-lg animate-in fade-in duration-300 mt-4">
-              <div className="max-w-3xl">
-
-
-                <p className="text-body-md text-on-surface-variant leading-relaxed mb-6">
-                  {product?.description}
-                </p>
-
-              </div>
-            </div>
-
-          )}
-          {activeButton === "Reviews" && (
-            <div className="lg:col-span-8 flex flex-col gap-8">
-              {/* Customer Photos */}
-              <div className="flex flex-col gap-4">
-                <h4 className="font-headline-sm">Customer Photos</h4>
-
-                <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-                  <img
-                    className="w-24 h-24 rounded-lg object-cover shrink-0 border border-outline-variant"
-                    src="/assets/review1.jpg"
-                    alt="Customer wearing the wireless headphones while working at a desk."
-                  />
-
-                  <img
-                    className="w-24 h-24 rounded-lg object-cover shrink-0 border border-outline-variant"
-                    src="/assets/review2.jpg"
-                    alt="Close-up of the premium ear cushions and headband."
-                  />
-
-                  <img
-                    className="w-24 h-24 rounded-lg object-cover shrink-0 border border-outline-variant"
-                    src="/assets/review3.jpg"
-                    alt="Customer using the headphones during a workout."
-                  />
-
-                  <img
-                    className="w-24 h-24 rounded-lg object-cover shrink-0 border border-outline-variant"
-                    src="/assets/review4.jpg"
-                    alt="Headphones packed inside the premium carrying case."
-                  />
-                </div>
-              </div>
-
-              {/* Reviews */}
-              <div className="space-y-8">
-                <div className="border-b border-outline-variant pb-8">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="font-bold">Sarah Jenkins</div>
-
-                      <div className="text-[#FFB400] flex">
-                        {[...Array(5)].map((_, i) => (
-                          <span
-                            key={i}
-                            className="material-symbols-outlined text-body"
-                            style={{ fontVariationSettings: "'FILL' 1" }}
-                          >
-                            star
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="text-on-surface-variant mt-3">
-                    The sound quality is amazing with deep bass and crisp vocals. The ANC
-                    works surprisingly well during my daily commute, and the battery easily
-                    lasts for several days.
-                  </p>
-                </div>
-
-                <div className="border-b border-outline-variant pb-8">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="font-bold">Michael Carter</div>
-
-                      <div className="text-[#FFB400] flex">
-                        {[...Array(5)].map((_, i) => (
-                          <span
-                            key={i}
-                            className="material-symbols-outlined text-body"
-                            style={{ fontVariationSettings: "'FILL' 1" }}
-                          >
-                            star
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="text-on-surface-variant mt-3">
-                    Extremely comfortable even after wearing them for 6-7 hours while
-                    working. The memory foam ear cushions are soft, and Bluetooth connects
-                    instantly to my phone and laptop.
-                  </p>
-                </div>
-
-                <div className="border-b border-outline-variant pb-8">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="font-bold">Emily Rodriguez</div>
-
-                      <div className="text-[#FFB400] flex">
-                        {[...Array(4)].map((_, i) => (
-                          <span
-                            key={i}
-                            className="material-symbols-outlined text-body"
-                            style={{ fontVariationSettings: "'FILL' 1" }}
-                          >
-                            star
-                          </span>
-                        ))}
-                        <span
-                          className="material-symbols-outlined text-body"
-                          style={{ fontVariationSettings: "'FILL' 0" }}
-                        >
-                          star
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="text-on-surface-variant mt-3">
-                    Great value for the price. Fast charging is incredibly convenient, and
-                    the microphone quality is excellent for meetings. I only wish the
-                    carrying case was slightly smaller.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
+        {activeButton === "Description" && (
+          <div className="py-stack-lg animate-in fade-in duration-300 mt-4">
+            <div className="w-full">
+              <div className="text-body-md text-on-surface-variant leading-relaxed">
+                {product?.description?.split("\n").map((line, index) => {
+                  const text = line.trim();
+
+                  // Treat short lines without punctuation as headings
+                  const isHeading =
+                    text &&
+                    text.length < 50 &&
+                    !text.endsWith(".") &&
+                    !text.includes(",");
+
+                  return isHeading ? (
+                    <h3
+                      key={index}
+                      className="font-bold text-lg text-on-surface mt-6 mb-2"
+                    >
+                      {text}
+                    </h3>
+                  ) : (
+                    <p key={index} className="mb-3">
+                      {text}
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeButton === "Reviews" && (
+          <div className="lg:col-span-8 flex flex-col gap-8">
+            {reviews.length == 0 && (
+              <div>
+                No Reviews found
+              </div>
+            )}
+
+            {reviews.length > 0 && (
+              <>
+
+                {reviews.map((review: any) => (
+                  <div className="space-y-8 mt-5 ">
+                    <div className="border-b border-gray-300 pb-1">
+                      <div className='flex justify-between'>
+                        <div className="flex gap-2 mb-2">
+                          <div className='h-10 w-10 rounded-full bg-primary txt-2xl text-white flex items-center justify-center'>
+                            {review.user.name.split("")[0]}
+                          </div>
+                          <div>
+                            <div className="font-bold text-body">{review.user.name}</div>
+
+                            <div className="text-[#FFB400] flex text-body">
+                              {[...Array(review.rating)].map((_, i) => (
+                                <FaStar key={i} className="text-yellow-500 text-body" />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className='text-body'>
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <p className="text-on-surface-variant  pl-2">
+                        {review.comment}
+                      </p>
+                    </div>
+
+
+                  </div>
+                ))}
+
+              </>
+            )}
+          </div>
+        )}
       </section>
       <Footer />
     </div >

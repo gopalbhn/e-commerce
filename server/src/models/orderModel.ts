@@ -31,6 +31,14 @@ const orderSchema = new Schema({
         type: String,
         required: true
     },
+    couponApplied: {
+        type: Boolean,
+        default: false
+    },
+    discountAmount: {
+        type: Number,
+        default: 0
+    },
     shippingAddress: {
         type: Schema.Types.ObjectId,
         ref: "Address",

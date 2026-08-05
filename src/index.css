@@ -23,13 +23,13 @@
 
     --color-badge: #E85D75;
 
-    --color-background: "#ffff"
+    --color-background: "#ffff";
 
-        --text-hero: 48px;
-    --text-header: 32px;
-    --text-title: 22px;
-    --text-body: 16px;
-    --text-small: 14px;
+    --text-hero: 36px;
+    --text-header: 24px;
+    --text-title: 18px;
+    --text-body: 14px;
+    --text-small: 12px;
 
     --font-sans: "Inter", sans-serif;
 

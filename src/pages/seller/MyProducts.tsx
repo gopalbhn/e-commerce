@@ -146,6 +146,7 @@ const MyProducts = () => {
     }
   ]
 
+
   useEffect(() => {
     fetchMyProducts();
     fetchProductStats();
@@ -193,9 +194,9 @@ const MyProducts = () => {
         </div>
 
         <div className="w-full flex items-center gap-4 py-4">
-          <StatsCard title="Total Products" statsNum={productStats?.totalProduct} color="primary" />
-          <StatsCard title="Available" statsNum={productStats?.availableProduct} color="accent" />
-          <StatsCard title="Low Stock" statsNum={productStats?.lowStockedProduct} color="badge" />
+          <StatsCard title="Total Products" statsNum={productStats?.totalProduct} />
+          <StatsCard title="Available" statsNum={productStats?.availableProduct} />
+          <StatsCard title="Low Stock" statsNum={productStats?.lowStockedProduct} />
         </div>
 
 
@@ -210,26 +211,22 @@ const MyProducts = () => {
 const StatsCard = ({
   title,
   statsNum,
-  color,
+
 }: {
   title: string;
   statsNum: number;
-  color: "primary" | "accent" | "badge";
+
 }) => {
-  const colorStyles = {
-    primary: { bar: "bg-primary", num: "text-primary" },
-    accent: { bar: "bg-accent", num: "text-accent" },
-    badge: { bar: "bg-badge", num: "text-badge" },
-  };
-  const s = colorStyles[color];
+
+
 
   return (
     <div className="w-[170px] bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-      <div className={`w-8 h-1 ${s.bar} rounded-full mb-3`} />
-      <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide">
+
+      <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide text-primary/80">
         {title}
       </p>
-      <h2 className={`text-2xl font-bold mt-1 ${s.num}`}>
+      <h2 className={`text-2xl font-bold mt-1 `}>
         {statsNum}
       </h2>
     </div>
