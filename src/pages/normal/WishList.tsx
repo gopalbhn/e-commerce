@@ -4,11 +4,12 @@ import ProductCart from "@/components/normal/productCart"
 
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import type { ProductInterface } from "@/types/types"
 
 
 
 const WishList = () => {
-    const [products, setProducts] = useState([])
+    const [products, setProducts] = useState<ProductInterface[]>([])
     useEffect(() => {
         async function fetchAllItem() {
             const res = await fetch("http://localhost:3000/api/wishlist/get", {

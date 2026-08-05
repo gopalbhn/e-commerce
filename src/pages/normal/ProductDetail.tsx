@@ -17,7 +17,7 @@ const ProductDetail = () => {
 
   const [totalCartItem, setTotalCartItem] = useState<number>(1)
   const [isWishListed, setIsWishlisted] = useState(false)
-  const [product, setProduct] = useState(null)
+  const [product, setProduct] = useState<any>(null)
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [reviews, setReviews] = useState([])
   const { id } = useParams();
@@ -247,9 +247,9 @@ const ProductDetail = () => {
                 })}>-</button>
                 <span className='text-sm font-semibold'>{totalCartItem}</span>
                 <button className='px-4 py-2.5 hover:bg-gray-200' onClick={() => setTotalCartItem(prev => {
-                  if (prev >= product.stock) {
+                  if (prev >= product?.stock) {
                     toast.error("Out of Stock")
-                    return product.stock;
+                    return product?.stock;
                   } else {
                     prev++;
                     return prev;
@@ -296,7 +296,7 @@ const ProductDetail = () => {
           <div className="py-stack-lg animate-in fade-in duration-300 mt-4">
             <div className="w-full">
               <div className="text-body-md text-on-surface-variant leading-relaxed">
-                {product?.description?.split("\n").map((line, index) => {
+                {product?.description?.split("\n").map((line: string, index: number) => {
                   const text = line.trim();
 
                   // Treat short lines without punctuation as headings

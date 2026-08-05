@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { FiHeart } from 'react-icons/fi'
 
 const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList, onDelete }: ProductCartType) => {
-  console.log(wishList)
+
 
 
   async function AddToCart(id: string) {
@@ -31,7 +31,7 @@ const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList,
     }
 
   }
-  async function addToWishList(id) {
+  async function addToWishList(id: string) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/add/${id}`, {
       method: "POST",
       credentials: "include"
@@ -55,9 +55,6 @@ const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList,
         toast.error(data.message)
       }, 500)
     }
-  } function AddWishlist(id: string) {
-    console.log(id)
-
   }
   return (
     <div className="group relative bg-white hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300 border border-gray-400" onClick={onclick}>

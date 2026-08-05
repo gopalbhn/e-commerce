@@ -209,10 +209,10 @@ const AdminDashboard = () => {
           <MetricChart
             title="Users"
             data={[
-              { week: "Week 1", value: stats?.userWeeklyCounts?.["Week 1"] },
-              { week: "Week 2", value: stats?.userWeeklyCounts?.["Week 2"] },
-              { week: "Week 3", value: stats?.userWeeklyCounts?.["Week 3"] },
-              { week: "Week 4", value: stats?.userWeeklyCounts?.["Week 4"] },
+              { week: "Week 1", value: stats?.userWeeklyCounts?.["Week 1"] ?? 0 },
+              { week: "Week 2", value: stats?.userWeeklyCounts?.["Week 2"] ?? 0 },
+              { week: "Week 3", value: stats?.userWeeklyCounts?.["Week 3"] ?? 0 },
+              { week: "Week 4", value: stats?.userWeeklyCounts?.["Week 4"] ?? 0 },
             ]}
           />
 
@@ -220,10 +220,10 @@ const AdminDashboard = () => {
             title="Products"
 
             data={[
-              { week: "Week 1", value: stats?.productsWeeklyCount?.["Week 1"] },
-              { week: "Week 2", value: stats?.productsWeeklyCount?.["Week 2"] },
-              { week: "Week 3", value: stats?.productsWeeklyCount?.["Week 3"] },
-              { week: "Week 4", value: stats?.productsWeeklyCount?.["Week 4"] },
+              { week: "Week 1", value: stats?.productsWeeklyCount?.["Week 1"] ?? 0 },
+              { week: "Week 2", value: stats?.productsWeeklyCount?.["Week 2"] ?? 0 },
+              { week: "Week 3", value: stats?.productsWeeklyCount?.["Week 3"] ?? 0 },
+              { week: "Week 4", value: stats?.productsWeeklyCount?.["Week 4"] ?? 0 },
             ]}
           />
 
@@ -231,10 +231,10 @@ const AdminDashboard = () => {
             title="Orders"
 
             data={[
-              { week: "Week 1", value: stats?.orderWeeklyCounts?.["Week 1"] },
-              { week: "Week 2", value: stats?.orderWeeklyCounts?.["Week 2"] },
-              { week: "Week 3", value: stats?.orderWeeklyCounts?.["Week 3"] },
-              { week: "Week 4", value: stats?.orderWeeklyCounts?.["Week 4"] },
+              { week: "Week 1", value: stats?.orderWeeklyCounts?.["Week 1"] ?? 0 },
+              { week: "Week 2", value: stats?.orderWeeklyCounts?.["Week 2"] ?? 0 },
+              { week: "Week 3", value: stats?.orderWeeklyCounts?.["Week 3"] ?? 0 },
+              { week: "Week 4", value: stats?.orderWeeklyCounts?.["Week 4"] ?? 0 },
             ]}
           />
 

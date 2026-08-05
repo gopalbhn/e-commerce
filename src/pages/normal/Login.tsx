@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { FiChevronDown, FiEye, FiEyeOff, FiShoppingCart, FiUser } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiShoppingCart, FiUser } from "react-icons/fi";
 import heroImage from "../../assets/hero.png";
-import { useNavigate } from "react-router-dom";
+
 import { toast } from "sonner";
 import Logo from "@/assets/ecom_logo.webp"
 

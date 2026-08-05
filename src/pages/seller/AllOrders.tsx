@@ -12,12 +12,12 @@ import { useNavigate } from 'react-router-dom'
 
 const AllOrders = () => {
     const [open, setOpen] = useState<boolean>(true)
-    const [order, setOrder] = useState<[] | any[] | null>([])
-    const [filteredOrder, setFilteredOrder] = useState<[] | any[] | null>([])
+    const [order, setOrder] = useState<any[] | null>(null)
+    const [filteredOrder, setFilteredOrder] = useState<any[]>([])
     const [view, setView] = useState<string>("all")
     const navigate = useNavigate();
-    const totalPendingOrder = order.filter((item: any) => item.orderStatus === "Pending").length;
-    const totalCompletedOrder = order.filter((item: any) => item.orderStatus === "Delivered").length;
+    const totalPendingOrder = order?.filter((item: any) => item.orderStatus === "Pending").length;
+    const totalCompletedOrder = order?.filter((item: any) => item.orderStatus === "Delivered").length;
     async function fetchAllOrder() {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/seller`, {
@@ -52,7 +52,7 @@ const AllOrders = () => {
         setFilteredOrder(order.filter((item: any) => item.orderStatus === "Delivered"))
     }
 
-    async function updateStatus(status, id) {
+    async function updateStatus(status: string, id: string) {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/update/${id}`, {
             method: 'PUT',
             credentials: 'include',
@@ -167,8 +167,8 @@ const AllOrders = () => {
                 </div>
 
                 <div className="max-w-7xl flex gap-4 items-center ">
-                    <StatsCard title="Pending Shipments" statsNum={totalPendingOrder} icon={<FaCar size={20} />} accent="primary" />
-                    <StatsCard title="Completed Orders" statsNum={totalCompletedOrder} icon={<FaCalendarAlt size={20} />} accent="primary" />
+                    <StatsCard title="Pending Shipments" statsNum={totalPendingOrder} icon={<FaCar size={20} />} />
+                    <StatsCard title="Completed Orders" statsNum={totalCompletedOrder} icon={<FaCalendarAlt size={20} />} />
                 </div>
 
                 <div className="w-full h-full mt-5">
@@ -195,12 +195,11 @@ const StatsCard = ({
     title,
     statsNum,
     icon,
-    accent,
+
 }: {
     title: string
     statsNum: number
     icon: React.ReactNode
-    accent: 'primary' | 'accent'
 }) => {
 
 

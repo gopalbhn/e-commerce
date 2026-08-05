@@ -1,6 +1,6 @@
 import AdminSideBar from "@/components/admin/AdminSideBar"
 import AdminTopBar from "@/components/admin/AdminTopBar"
-import { Button } from "@/components/ui/button"
+
 import { useState } from "react"
 import { FaPen, FaTrash } from "react-icons/fa"
 

@@ -5,6 +5,7 @@ import Footer from "../../components/normal/Footer"
 import ProductCart from "../../components/normal/productCart"
 import { category } from "@/lib/data.js"
 import { toast } from "sonner"
+import type { ProductInterface } from "@/types/types"
 
 
 const heroSlides = [
@@ -175,7 +176,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const endTime = useRef(Date.now() + 5 * 60 * 60 * 1000);
-    const [products, setProducts] = useState([])
+    const [products, setProducts] = useState<ProductInterface[]>([])
     function FlashShaleCountDown() {
         const difference = endTime.current - new Date().getTime()
         const hours = Math.floor(difference / (1000 * 60 * 60));
@@ -217,8 +218,7 @@ const Dashboard = () => {
             console.log(error)
         }
     }
-    const discountedProduct = products.filter(pro => pro.discount > 0)
-    console.log("discountedProduct", discountedProduct)
+
     return (
         <div className="h-full w-full space-y-10">
             <HeroCarousel />

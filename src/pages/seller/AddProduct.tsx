@@ -17,12 +17,12 @@ const AddProduct = () => {
     // Product Info
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [category, setCategory] = useState(null);
-    const [subcategory, setSubcategory] = useState(null);
-    const [brands, setBrands] = useState(null)
-    const [selectedCategory, setSelectedCategory] = useState(null)
-    const [selectedSubCategory, setSelectedSubCategory] = useState(null)
-    const [selectedBrand, setSelectedBrand] = useState(null)
+    const [category, setCategory] = useState<any>(null);
+    const [subcategory, setSubcategory] = useState<any>(null);
+    const [brands, setBrands] = useState<any>(null)
+    const [selectedCategory, setSelectedCategory] = useState<any>(null)
+    const [selectedSubCategory, setSelectedSubCategory] = useState<any>(null)
+    const [selectedBrand,] = useState<any>(null)
 
     const [basePrice, setBasePrice] = useState<number | null>(null);
     const [discountRate, setDiscountRate] = useState<number | null>(null);
@@ -78,7 +78,7 @@ const AddProduct = () => {
 
     const handleCategoryChange = (val: any) => {
         setSelectedCategory(val.id)
-        setSelectedSubCategory("")
+        setSelectedSubCategory(null)
         fetchSubCategories(val.id);
         fetchBrands(val.id)
     };

@@ -94,21 +94,7 @@ const ShopingCart = () => {
         }
     }
 
-    // function calculateTotal() {
 
-    //     const subTotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
-    //     console.log("Total", subTotal)
-    //     const tax = subTotal * 0.13
-    //     const shipping = 10
-    //     let total = subTotal + tax + shipping
-    //     if (isCouponApplied) {
-    //         const discount = coupon?.discountRate || 0
-    //         console.log("discount", discount)
-    //         total -= (total * discount) / 100
-
-    //     }
-    //     return { total, tax, shipping, subTotal, discount }
-    // }
     function calculateTotal() {
 
         const subTotal = products.reduce(
@@ -125,11 +111,11 @@ const ShopingCart = () => {
         let discount = 0;
         let totalDiscountRate = 0
         if (isCouponApplied) {
-            totalDiscountRate = coupon.reduce((acc: number, coupon) => acc + coupon.discountRate, 0)
+            totalDiscountRate = coupon.reduce((acc: number, coupon: any) => acc + coupon.discountRate, 0)
             discount = total * (totalDiscountRate / 100);
-          
+
             total = total - discount;
-            
+
         }
 
 
@@ -277,7 +263,7 @@ function OrderSummaryTable({
     isCouponApplied: boolean,
     discount: number,
     totalDiscountRate: number,
-    coupon: { code: string, discountRate: number }
+    coupon: Icoupon[]
 }) {
     console.log(total, tax, shipping, subTotal)
     const navigate = useNavigate();
@@ -324,7 +310,7 @@ function OrderSummaryTable({
                     {
                         isCouponApplied && (
                             <div className="w-full flex items-center justify-between my-3">
-                                {coupon.map((coupon, index) => (
+                                {coupon.map((coupon: any, index: number) => (
                                     <div key={index} className="w-full flex items-center justify-between ">
                                         <div className="bg-secondary-light text-primary px-3 rounded-lg">
                                             {coupon?.code}

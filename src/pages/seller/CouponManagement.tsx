@@ -35,7 +35,7 @@ const CouponManagement = () => {
     const [form, setForm] = useState<FormState>(emptyForm());
     const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [deleteId, setDeleteId] = useState<string>("");
 
     const updateForm = <K extends keyof FormState>(key: K, value: FormState[K]) => {
         setForm((prev) => ({ ...prev, [key]: value }));
@@ -206,6 +206,10 @@ const CouponManagement = () => {
     }
 
     async function handleDeleteCoupon(id: string) {
+        if (id.trim() == "") {
+            toast.error("Please enter coupon id")
+            return
+        }
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/${id}`, {
             credentials: "include",
             method: "DELETE",
@@ -286,7 +290,7 @@ function CreateCouponModal({
     errors,
     handleSave,
 
-}) {
+}: any) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
             <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md flex flex-col gap-5">
@@ -395,7 +399,3 @@ function CreateCouponModal({
 
 
 export default CouponManagement;
-
-function handleDelete(id: any) {
-    throw new Error("Function not implemented.");
-}

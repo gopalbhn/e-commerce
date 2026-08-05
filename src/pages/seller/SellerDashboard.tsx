@@ -162,7 +162,7 @@ const SellerDashboard = () => {
                 {/* Cards */}
                 <div className="p-8">
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-6">
-                        {cards.map((card, index) => (
+                        {cards.map((card: any) => (
                             <MetricChart
                                 title={card.title}
 

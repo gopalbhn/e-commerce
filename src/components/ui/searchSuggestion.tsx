@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 function useDebounce<T>(value: T, delay = 300): T {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -28,11 +27,9 @@ export interface Product {
     price?: number;
 }
 
-interface ActionSearchBarProps {
-    onSelectProduct?: (product: Product) => void;
-}
 
-function ActionSearchBar({ onSelectProduct }: ActionSearchBarProps) {
+
+function ActionSearchBar() {
     const [query, setQuery] = useState("");
     const [allProducts, setAllProducts] = useState<Product[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
@@ -41,7 +38,6 @@ function ActionSearchBar({ onSelectProduct }: ActionSearchBarProps) {
 
     const debouncedQuery = useDebounce(query, 300);
 
-    // Fetch all products once
     useEffect(() => {
         const loadProducts = async () => {
             setLoading(true);
@@ -71,7 +67,7 @@ function ActionSearchBar({ onSelectProduct }: ActionSearchBarProps) {
         loadProducts();
     }, []);
 
-    // Filter products locally
+
     useEffect(() => {
         if (!debouncedQuery.trim()) {
             setProducts([]);
@@ -107,7 +103,6 @@ function ActionSearchBar({ onSelectProduct }: ActionSearchBarProps) {
             },
         },
     };
-    const navigate = useNavigate();
     return (
         <div className={` transition-all duration-300 ease-in-out w-70  ${isFocused && " w-full"}  `}>
             <div className="relative">
@@ -146,7 +141,7 @@ function ActionSearchBar({ onSelectProduct }: ActionSearchBarProps) {
                                             key={product._id}
                                             type="button"
                                             onClick={() => {
-                                                // navigate(`/product-detail/${product._id}`);
+
                                                 window.location.href = `/product-detail/${product._id}`;
 
                                             }}

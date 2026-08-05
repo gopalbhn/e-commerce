@@ -1,6 +1,5 @@
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware"
 interface CartState {
     products: { productId: string, quantity: number }[];
     addToCart: (productId: string, quantity: number) => void;
@@ -85,15 +84,11 @@ const useCartStore = create<CartState>()((set) => ({
             products: [...state.products, { productId, quantity }]
         }
     }),
-    removeFromCart: (productId: string) => set((state) => {
-        const existingProduct = state.products.find(item => item.productId === productId)
-        if (existingProduct) {
-            return {
-                products: state.products.filter(item => item.productId !== productId)
-            }
-        }
-
-    }),
+    removeFromCart: (productId: string) => set((state) => ({
+        products: state.products.filter(
+            item => item.productId !== productId
+        )
+    })),
     clearCart: () => set({ products: [] }),
     increaseQuantity: (productId: string) => set((state) => ({
         products: state.products.map(item => item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item)

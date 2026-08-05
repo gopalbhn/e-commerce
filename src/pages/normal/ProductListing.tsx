@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { MdFilterAlt } from "react-icons/md"
 import { BiChevronDown, BiChevronRight } from "react-icons/bi"
+import type { ProductInterface } from "@/types/types"
 
 
 
@@ -21,9 +22,9 @@ const ProductListing = () => {
     })
 
     const [brands, setBrands] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [category, setCategory] = useState(null);
-    const [subCategory, setSubCategory] = useState(null)
+    const [products, setProducts] = useState<ProductInterface[]>([]);
+    const [category, setCategory] = useState<any>(null);
+    const [subCategory, setSubCategory] = useState<any>(null)
     const [searchParams] = useSearchParams();
     const cartItem = searchParams.get("catItem");
     console.log("cartItem", cartItem)

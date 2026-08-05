@@ -17,21 +17,24 @@ const EditProduct = () => {
     // Product Info
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [category, setCategory] = useState(null);
-    const [subcategory, setSubcategory] = useState(null);
-    const [brands, setBrands] = useState(null)
-    const [selectedCategory, setSelectedCategory] = useState(null)
-    const [selectedSubCategory, setSelectedSubCategory] = useState(null)
-    const [selectedBrand, setSelectedBrand] = useState(null)
+    const [category, setCategory] = useState<any>(null);
+    const [subcategory, setSubcategory] = useState<any>(null);
+    const [, setBrands] = useState<any>(null)
+    const [selectedCategory, setSelectedCategory] = useState<any>(null)
+    const [selectedSubCategory, setSelectedSubCategory] = useState<any>(null)
+    const [selectedBrand,] = useState<any>(null)
     const [basePrice, setBasePrice] = useState<number | null>(null);
     const [discountRate, setDiscountRate] = useState<number | null>(null);
     const [sku, setSku] = useState("");
     const [stock, setStock] = useState<number | null>(null);
-    const [specification, setSpecification] = useState<{ key: string, value: string }>(null);
+    const [specification, setSpecification] = useState<{ key: string, value: string }>({
+        key: "",
+        value: ""
+    });
     const { id } = useParams();
     // Media
     const [images, setImages] = useState<(File | string)[]>([]);
-    const [thumbnails, setThumbnails] = useState<File | string | null>(null)
+    const [thumbnails, setThumbnails] = useState<File | string | any>(null)
     const [dragging, setDragging] = useState(false);
     const thumbnailsRef = useRef<HTMLInputElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -259,7 +262,7 @@ const EditProduct = () => {
                                     <select
                                         value={selectedCategory}
                                         onChange={(e) => {
-                                            const selected = category.find(
+                                            const selected = category?.find(
                                                 (c: any) => c.id.toString() === e.target.value
                                             );
 
@@ -279,7 +282,7 @@ const EditProduct = () => {
                                     <select
                                         value={selectedSubCategory}
                                         onChange={(e) => {
-                                            const selected = subcategory.find(
+                                            const selected = subcategory?.find(
                                                 (s: any) => s._id.toString() === e.target.value
                                             );
 

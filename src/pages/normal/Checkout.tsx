@@ -514,7 +514,7 @@ const OrderSummary = ({ products, coupon, calculateTotal }: any) => {
   console.log(" from checkout", products)
   console.log("coupon checkout", coupon)
 
-  const { total, tax, shipping, Subtotal, discount, totalDiscountRate } = calculateTotal()
+  const { total, tax, shipping, Subtotal, discount } = calculateTotal()
 
 
   return (

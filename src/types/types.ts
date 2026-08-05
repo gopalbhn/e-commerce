@@ -60,3 +60,15 @@ export interface ShippingAddressState {
     city: string
     street: string
 }
+export interface ProductInterface {
+    _id?: string
+    thumbnails: string,
+    name: string,
+    price: string,
+    oldPrice: string,
+    discount?: string,
+    wishList?: Boolean
+    isDiscounted: Boolean
+    onclick?: () => void
+    onDelete?: () => void
+}

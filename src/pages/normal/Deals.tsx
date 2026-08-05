@@ -2,10 +2,11 @@ import Footer from "@/components/normal/Footer"
 import ProductCart from "@/components/normal/productCart"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import type { ProductInterface } from "@/types/types"
 
 const Deals = () => {
     const navigate = useNavigate()
-    const [product, setProduct] = useState([])
+    const [product, setProduct] = useState<ProductInterface[]>([])
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -16,20 +17,20 @@ const Deals = () => {
         }
         fetchProduct()
     }, [])
-    const Electronics = product.filter((item: any) => item.category.name === "Audio")
-    const discountedProduct = product.filter(pro => pro.discount > 0)
+
+    const discountedProduct = product.filter(pro => Number(pro.discount) > 0)
     console.log("discountedProduct", discountedProduct)
     return (
         <div className="h-full w-full">
+            <section className="h-[80vh] w-full ">
+                <div className="h-full w-full">
+                    <Carousel />
+                </div>
+
+            </section>
             <div className="h-full  px-10 space-y-10 mb-10">
 
-                {/* <section className="h-[80vh] w-full bg-red-400">
-                    <div className="h-[80%] w-full bg-green-300">
-                        <Carousel />
-                    </div>
-                    <div className="h-[20%] w-full bg-green-500">
-                    </div>
-                </section> */}
+
 
                 <section className="h-full w-full mt-5 ">
                     <div className="w-full">
@@ -164,7 +165,11 @@ const Carousel = () => {
     const interval = 5000;
     useEffect(() => {
         timeRef.current = setTimeout(() => { setCurrent((prev) => (prev + 1) % total) }, interval)
-        return () => clearTimeout(timeRef.current)
+        return () => {
+            if (timeRef.current) {
+                clearTimeout(timeRef.current)
+            }
+        }
     }, [current])
 
     return (
