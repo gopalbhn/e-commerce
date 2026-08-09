@@ -61,7 +61,7 @@ export interface ShippingAddressState {
     street: string
 }
 export interface ProductInterface {
-    _id?: string
+    _id: string
     thumbnails: string,
     name: string,
     price: string,

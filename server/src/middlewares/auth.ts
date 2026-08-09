@@ -51,6 +51,7 @@ const generateAccessToken = (user: TokenPayload) => {
 
 const requireRole = (...roles: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
+        console.log("Req.user", req.user)
         if (!roles.includes(req.user.role)) {
             return res.status(403).json({
                 success: false,

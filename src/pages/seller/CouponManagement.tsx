@@ -320,7 +320,7 @@ function CreateCouponModal({
                             value={form.code}
                             onChange={(e) => updateForm("code", e.target.value.toUpperCase())}
                             placeholder="e.g. SUMMER25"
-                            className="w-full border rounded-lg px-4 py-2.5 text-sm font-mono font-semibold text-gray-700 placeholder:font-normal placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                            className="w-full border rounded-xl px-4 py-2.5 text-sm font-mono font-semibold text-gray-700 placeholder:font-normal placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                         />
                         {errors.code && <p className="mt-1 text-xs text-red-500">{errors.code}</p>}
                     </div>
@@ -338,7 +338,7 @@ function CreateCouponModal({
                                 value={form.discountRate || ""}
                                 onChange={(e) => updateForm("discountRate", Number(e.target.value))}
                                 placeholder="10"
-                                className="w-full border rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                                className="w-full border rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                             />
                             {errors.discountRate && (
                                 <p className="mt-1 text-xs text-red-500">{errors.discountRate}</p>
@@ -355,7 +355,7 @@ function CreateCouponModal({
                                 value={form.maxUses || ""}
                                 onChange={(e) => updateForm("maxUses", Number(e.target.value))}
                                 placeholder="100"
-                                className="w-full border rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                                className="w-full border rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                             />
                             {errors.maxUses && <p className="mt-1 text-xs text-red-500">{errors.maxUses}</p>}
                         </div>
@@ -368,7 +368,7 @@ function CreateCouponModal({
                             type="date"
                             value={form.expiryDate}
                             onChange={(e) => updateForm("expiryDate", e.target.value)}
-                            className="w-full border rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                            className="w-full border rounded-xl px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                         />
                         {errors.expiryDate && (
                             <p className="mt-1 text-xs text-red-500">{errors.expiryDate}</p>
@@ -380,13 +380,13 @@ function CreateCouponModal({
                 <div className="flex gap-3 pt-2">
                     <button
                         onClick={() => setShowFormModal(false)}
-                        className="flex-1 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                        className="flex-1 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSave}
-                        className="flex-1 py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors"
+                        className="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors"
                     >
                         {editingId ? "Save Changes" : "Create Coupon"}
                     </button>

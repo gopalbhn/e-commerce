@@ -550,17 +550,17 @@ const OrderSummary = ({ products, coupon, calculateTotal }: any) => {
       <div className="space-y-4 text-sm">
         <div className="flex justify-between">
           <span className="text-gray-600">Subtotal</span>
-          <span>Npr.{Subtotal}</span>
+          <span>NPR.{Subtotal}</span>
         </div>
 
         <div className="flex justify-between">
           <span className="text-gray-600">Shipping</span>
-          <span className="text-green-600 font-semibold">Npr.{shipping}</span>
+          <span className="text-green-600 font-semibold">NPR.{shipping}</span>
         </div>
 
         <div className="flex justify-between">
           <span className="text-gray-600">Tax</span>
-          <span>Npr.{tax}</span>
+          <span>NPR.{tax}</span>
         </div>
       </div>
 
@@ -571,11 +571,11 @@ const OrderSummary = ({ products, coupon, calculateTotal }: any) => {
           <div className="flex items-center justify-between">
 
             <h2>Discount</h2>
-            <h2>Nrs.{discount.toFixed(2)}</h2>
+            <h2>NPR.{discount.toFixed(2)}</h2>
           </div>
           <div className="flex items-center justify-between my-3">
             <p>Total</p>
-            <p>Nrs.{total.toFixed(2)}</p>
+            <p>NPR.{total.toFixed(2)}</p>
           </div>
         </div>
       </div>

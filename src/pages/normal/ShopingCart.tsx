@@ -273,17 +273,17 @@ function OrderSummaryTable({
             <div className="flex flex-col gap-y-3 py-3 border-b border-gray-400">
                 <div className="flex items-center justify-between">
                     <p>Subtotal</p>
-                    <p>Nrs.{subTotal}</p>
+                    <p>NPR.{subTotal}</p>
                 </div>
                 <div className="flex items-center justify-between">
 
                     <h2>Shipping</h2>
-                    <h2>Nrs.{shipping}</h2>
+                    <h2>NPR.{shipping}</h2>
                 </div>
                 <div className="flex items-center justify-between">
 
                     <h2>Tax</h2>
-                    <h2>Nrs.{tax}</h2>
+                    <h2>NPR.{tax}</h2>
                 </div>
             </div>
             <div className="w-full border-b border-gray-400">
@@ -327,11 +327,11 @@ function OrderSummaryTable({
                 <div className="flex items-center justify-between">
 
                     <h2>Discount</h2>
-                    <h2>Nrs.{discount.toFixed(2)}</h2>
+                    <h2>NPR.{discount.toFixed(2)}</h2>
                 </div>
                 <div className="flex items-center justify-between my-3">
                     <p>Total</p>
-                    <p>Nrs.{total.toFixed(2)}</p>
+                    <p>NPR.{total.toFixed(2)}</p>
                 </div>
             </div>
             <Button variant="default" className="w-full py-2 mt-5  text-white rounded-lg" onClick={() => navigate("/checkout")}> Proceed to Checkout</Button>

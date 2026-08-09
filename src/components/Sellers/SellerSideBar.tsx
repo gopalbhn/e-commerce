@@ -8,6 +8,7 @@ import { Link, useLocation } from "react-router-dom"
 import { toast } from "sonner"
 import Logo from "@/assets/ecom_logo.webp"
 import UserStore from "@/store/userStore"
+import { AiOutlineThunderbolt } from "react-icons/ai"
 
 const SellerSideBar = ({ open }: { open: boolean }) => {
     const location = useLocation();
@@ -16,6 +17,7 @@ const SellerSideBar = ({ open }: { open: boolean }) => {
         { id: 2, title: "Products", link: '/seller/product', icon: GoPackage },
         { id: 3, title: "Orders", link: "/seller/orders", icon: IoBagOutline },
         { id: 4, title: "Coupons", link: "/seller/coupons", icon: RiCoupon3Line },
+        { id: 5, title: "Flash Sale", link: "/seller/flashsale", icon: AiOutlineThunderbolt },
     ]
     const user = UserStore(state => state.user)
     const role = user?.role;

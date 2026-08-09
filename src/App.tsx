@@ -33,6 +33,7 @@ import PaymentFailed from './pages/normal/PaymentFailed'
 import Deals from './pages/normal/Deals'
 import NewArrival from './pages/normal/newArrival'
 import FlashSale from './pages/admin/FlashSale'
+import SellerFlashSale from './pages/seller/SellerFlashSale'
 
 function App() {
 
@@ -163,6 +164,7 @@ function Init() {
               <Route path='/seller/edit-product/:id' element={<EditProduct />} />
               <Route path="/seller/registration" element={<SellerRegistration />} />
               <Route path="/seller/coupons" element={<CouponManagement />} />
+              <Route path="/seller/flashsale" element={<SellerFlashSale />} />
             </>
           )
         }

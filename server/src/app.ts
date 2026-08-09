@@ -16,6 +16,7 @@ import paymentRouter from "./routes/paymentRouter.js";
 import couponRouter from "./routes/couponRouter.js";
 import adminRouter from "./routes/adminRouter.js"
 import reviewRouter from "./routes/reviewRouter.js";
+import flashSaleRouter from "./routes/flashSaleRouter.js";
 const app = express();
 
 app.use(cookieParser());
@@ -41,6 +42,7 @@ app.use('/api/payment', paymentRouter)
 app.use('/api/coupon', couponRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/review', reviewRouter)
+app.use('/api/flash-sale', flashSaleRouter)
 app.get('/health-check', (req, res) => {
   const healthData = {
     uptime: process.uptime(),

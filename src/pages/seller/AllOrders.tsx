@@ -41,15 +41,15 @@ const AllOrders = () => {
     }, [])
     function handleShippedOrder() {
         setView("shipped");
-        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Shipped"))
+        setFilteredOrder(order?.filter((item: any) => item.orderStatus === "Shipped"))
     }
     function handlePendingOrder() {
         setView("pending")
-        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Pending"))
+        setFilteredOrder(order?.filter((item: any) => item.orderStatus === "Pending"))
     }
     function handleCompletedOrder() {
         setView("completed")
-        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Delivered"))
+        setFilteredOrder(order?.filter((item: any) => item.orderStatus === "Delivered"))
     }
 
     async function updateStatus(status: string, id: string) {
