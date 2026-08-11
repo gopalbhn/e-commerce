@@ -175,10 +175,16 @@ const HeroCarousel = () => {
 const Dashboard = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const endTime = useRef(Date.now() + 5 * 60 * 60 * 1000);
+    const [remainingTime, setRemainingTime] = useState("")
     const [products, setProducts] = useState<ProductInterface[]>([])
+    const [flashSale, setFlashSale] = useState([]);
+    const [runningsale, setRunningSale] = useState(false)
+    const [saleTitle, setSaleTitle] = useState("")
     function FlashShaleCountDown() {
-        const difference = endTime.current - new Date().getTime()
+        if (!remainingTime) return ["00", "00", "00"]
+        const endTime = new Date(remainingTime).getTime()
+        console.log("end time", endTime)
+        const difference = endTime - new Date().getTime()
         const hours = Math.floor(difference / (1000 * 60 * 60));
         const minutes = Math.floor((difference / (1000 * 60)) % 60);
         const seconds = Math.floor((difference / 1000) % 60);
@@ -197,12 +203,13 @@ const Dashboard = () => {
         }, 1000)
         return () => clearInterval(id)
 
-    }, [])
+    }, [remainingTime])
     useEffect(() => {
         if (searchParams.get('login') == "success") {
             toast.success("Login Success")
         }
         fetchAllProduct();
+        fetchFlashSale();
     }, [searchParams])
 
     const fetchAllProduct = async () => {
@@ -219,47 +226,74 @@ const Dashboard = () => {
         }
     }
 
+    const fetchFlashSale = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/flash-sale/products`)
+            const data = await response.json();
+            console.log(data)
+            if (data.success) {
+                console.log("data", data)
+                console.log("products", data.product[0].products)
+                setFlashSale(data.product[0].products)
+                setRemainingTime(data.product[0].endTime)
+                setSaleTitle(data.product[0].saleTitle)
+                setRunningSale(true)
+            } else {
+                setRunningSale(false)
+                setSaleTitle("Flash Sale")
+            }
+        } catch (error) {
+            console.log(error)
+
+        }
+    }
+
+    console.log("flashSale", flashSale)
     return (
         <div className="h-full w-full space-y-10">
             <HeroCarousel />
-            <section className="h-full w-full px-10">
-                <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <div className="flex flex-col">
+            {runningsale && (
 
-                        <h2 className="text-header font-semibold ">Flash Sale</h2>
-                        <p className="text-body text-secondary">Grab your offer fast</p>
-                    </div>
-                    <div className="flex items-center gap-x-4">
-                        <p className="font-bold uppercase text-title">Ends In:</p>
-                        <div className="flex gap-x-2">
-                            {time.map((value, index) => {
-                                return (
-                                    <div key={index} className="flex flex-col items-center">
-                                        <div className="p-2 bg-badge text-white rounded ">{value}</div>
-                                        <p>{index === 0 ? "Hrs" : index === 1 ? "Min" : "Sec"}</p>
-                                    </div>
-                                )
-                            })}
+
+                <section className="h-full w-full px-10">
+                    <div className="max-w-7xl mx-auto flex items-center justify-between">
+                        <div className="flex flex-col">
+
+                            <h2 className="text-header font-semibold text-primary">{saleTitle}</h2>
+                            <p className="text-body text-secondary">Grab your offer fast</p>
+                        </div>
+                        <div className="flex items-center gap-x-4">
+                            <p className="font-bold uppercase text-title">Ends In:</p>
+                            <div className="flex gap-x-2">
+                                {time.map((value, index) => {
+                                    return (
+                                        <div key={index} className="flex flex-col items-center">
+                                            <div className="p-2 bg-badge text-white rounded ">{value}</div>
+                                            <p>{index === 0 ? "Hrs" : index === 1 ? "Min" : "Sec"}</p>
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="h-full w-full grid grid-cols-4 items-center gap-4 mt-5 ">
-                    {products.slice(0, 4).map((product, index) => (
-                        <ProductCart
-                            id={product._id}
-                            image={product.thumbnails}
-                            name={product.name}
-                            price={product.price}
-                            old={product.oldPrice}
-                            key={index}
-                            discount={product.discount}
-                            isDiscounted={product.isDiscounted}
-                            wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail/${product._id}`)}
-                        />
-                    ))}
-                </div>
-            </section>
+                    <div className="h-full w-full grid grid-cols-4 items-center gap-4 mt-5 ">
+                        {flashSale.slice(0, 4).map((product, index) => (
+                            <ProductCart
+                                id={product._id}
+                                image={product.thumbnails}
+                                name={product.name}
+                                price={product.price}
+                                old={product.oldPrice}
+                                key={index}
+                                discount={product.discount}
+                                isDiscounted={product.isDiscounted}
+                                wishList={product.wishList}
+                                onclick={() => navigate(`/product-detail/${product._id}`)}
+                            />
+                        ))}
+                    </div>
+                </section>
+            )}
             <section className="h-full w-full px-10">
                 <h1 className="text-header text-left font-semibold ">Shop by Category</h1>
                 <p className="text-body text-secondary">Best deals and offers for you</p>

@@ -1,6 +1,10 @@
 import { Schema, model } from "mongoose"
 
 const flashSaleProductSchema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
     flashSaleId: {
         type: Schema.Types.ObjectId,
         ref: "FlashSale"
@@ -14,7 +18,7 @@ const flashSaleProductSchema = new Schema({
         enum: ["Accepted", "Rejected", "Pending"],
         default: "Pending"
     },
-    maxQuantity: {
+    stock: {
         type: Number,
         required: true
     }

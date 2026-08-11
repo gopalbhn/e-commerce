@@ -161,13 +161,25 @@ const FlashSale = () => {
 
     async function fetchRequestedProducts() {
         try {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/flash-sale/requested-products`, {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/flash-sale/requested-product`, {
                 method: "GET",
                 credentials: "include",
             })
             const data = await res.json()
             if (data.success) {
-                setRequestedProducts(data.data)
+                const allRequestedProducts = data.data.map((product: any) => {
+                    return {
+                        productName: product.productId?.name,
+                        sellerName: product.productId?.seller?.name,
+                        price: product.productId?.price,
+                        totalStock: product.productId?.stock,
+                        sellerId: product.productId?.seller,
+                        quantity: product.stock,
+                        id: product._id,
+                        requestStatus: product.requestStatus
+                    }
+                })
+                setRequestedProducts(allRequestedProducts)
             }
         } catch (error) {
             console.log(error)
@@ -182,7 +194,7 @@ const FlashSale = () => {
         try {
             setLoading(true)
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/flash-sale/accept/${id}`, {
-                method: "PUT",
+                method: "POST",
                 credentials: "include",
             })
             const data = await res.json()
@@ -191,6 +203,9 @@ const FlashSale = () => {
                 setTimeout(() => {
                     setLoading(false)
                 }, 1000)
+            } else {
+                toast.error(data.message)
+                setLoading(false)
             }
         } catch (error) {
             console.log(error)
@@ -203,7 +218,7 @@ const FlashSale = () => {
         try {
             setLoading(true)
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/flash-sale/reject/${id}`, {
-                method: "PUT",
+                method: "POST",
                 credentials: "include",
             })
             const data = await res.json()
@@ -240,50 +255,41 @@ const FlashSale = () => {
     const productTableColums = [
         {
             header: "Product Name",
-            render: (product: any) => product.name
+            render: (product: any) => product.productName
         },
         {
             header: "Seller ",
-            render: (product: any) => product.seller.name
+            render: (product: any) => product.sellerName
         },
         {
             header: "Price",
-            render: (product: any) => product.price
+            render: (product: any) => `NPR.${product.price}`
         },
         {
-            header: "Quantity",
-            render: (product: any) => product.discountedPrice
+            header: "Total Stock",
+            render: (product: any) => `${product.totalStock} units`
         },
         {
-            header: "Sale Name",
-            render: (product: any) => product.discountPercentage
-        },
-        {
-            header: "Stock",
-            render: (product: any) => product.stock
+            header: "Sale Stock",
+            render: (product: any) => `${product.quantity} units`
         },
         {
             header: "Actions",
             render: (product: any) => (
-                <div className="flex gap-2">
-                    <button
-                        title="Accept"
-                        className="px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/80 transition-all"
-                        onClick={() => handleAccept(product._id)}
-                    >
-                        <FaCheck size={14} />
+                <div className="flex items-center gap-x-2">
+
+                    <button onClick={() => handleAccept(product.id)} title="Accept" className="p-4 hover:text-primary text-gray-400 rounded-xl">
+                        <FaCheck size={15} />
                     </button>
-                    <button
-                        title="Reject"
-                        className="px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-all"
-                        onClick={() => handleReject(product._id)}
-                    >
-                        <FaTrash size={14} />
+
+                    <button onClick={() => handleReject(product.id)} title="Reject" className="p-4 hover:text-red-500 text-gray-400 rounded-xl">
+                        <FaTrash size={15} />
                     </button>
                 </div>
             )
         }
     ]
+    console.log('table data', requestedProducts)
     return (
         <div className='h-full w-full flex'>
             <AdminSideBar open={open} />
@@ -323,17 +329,25 @@ const FlashSale = () => {
                     </div>
                     <div className="grid grid-cols-2 items-center gap-3">
                         {
-                            sales?.map((sale) => (
-                                <SaleComponent key={sale._id} sale={sale} setIsEditing={setIsEditing} setOpenModal={setOpenModal} setEditId={setEditId} setShowDeleteConfirm={setShowDeleteConfirm} />
-                            ))
+                            sales.length === 0 ? (
+                                <p className="text-header text-center col-span-2 font-semibold my-14">No sales found</p>
+                            ) : (
+                                sales?.map((sale) => (
+                                    <SaleComponent key={sale._id} sale={sale} setIsEditing={setIsEditing} setOpenModal={setOpenModal} setEditId={setEditId} setShowDeleteConfirm={setShowDeleteConfirm} />
+                                ))
+                            )
                         }
                     </div>
-                    <div className="flex items-center gap-3 mt-5">
-                        <h1 className="text-header font-bold">Products Requested for Sale</h1>
-                    </div>
-                    <div className="w-full overflow-x-auto">
-                        <Table columns={productTableColums} data={[]} />
-                    </div>
+                    {sales.length !== 0 && (
+                        <>
+                            <div className="flex items-center gap-3 mt-5">
+                                <h1 className="text-header font-bold">Products Requested for Sale</h1>
+                            </div>
+                            <div className="w-full overflow-x-auto">
+                                <Table columns={productTableColums} data={requestedProducts} />
+                            </div>
+                        </>
+                    )}
                 </div>
             </section>
         </div>
@@ -345,6 +359,27 @@ export default FlashSale
 
 
 function SaleComponent({ sale, setIsEditing, setOpenModal, setEditId, setShowDeleteConfirm }: { sale: any, setIsEditing: (value: boolean) => void, setOpenModal: (value: boolean) => void, setEditId: (value: string) => void, setShowDeleteConfirm: (value: boolean) => void }) {
+    const calculateRemaingTime = () => {
+        const endTime = new Date(sale?.endTime).getTime();
+        if (endTime < new Date().getTime()) {
+            return "Sale Ended";
+        }
+        const now = new Date().getTime();
+        const diff = endTime - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    const [time, setTime] = useState(calculateRemaingTime())
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(calculateRemaingTime());
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [time]);
     return (
         <div className="p-5  shadow-sm rounded-xl max-w-lg">
             <div className="flex items-center justify-between">
@@ -387,13 +422,18 @@ function SaleComponent({ sale, setIsEditing, setOpenModal, setEditId, setShowDel
                     <p>{new Date(sale?.endTime).toDateString()}</p>
                 </div>
                 <div className="h-full w-full flex justify-between ">
+                    <p>Remaining Time</p>
+                    <p>{time}</p>
+                </div>
+                <div className="h-full w-full flex justify-between ">
                     <p>Discount Percentage</p>
                     <p>{sale?.discountPercentage}%</p>
 
                 </div>
+
                 <div className="h-full w-full flex justify-between">
-                    <p>Total Sold Items</p>
-                    <p>10</p>
+                    <p>Total Listed Items</p>
+                    <p>{sale?.products?.length || 0}</p>
                 </div>
             </div>
         </div>
