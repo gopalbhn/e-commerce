@@ -6,6 +6,7 @@ import ProductCart from "../../components/normal/productCart"
 import { category } from "@/lib/data.js"
 import { toast } from "sonner"
 import type { ProductInterface } from "@/types/types"
+import ChatBot from "@/components/normal/chatBot"
 
 
 const heroSlides = [
@@ -250,8 +251,9 @@ const Dashboard = () => {
 
     console.log("flashSale", flashSale)
     return (
-        <div className="h-full w-full space-y-10">
+        <div className="h-full w-full space-y-10 relative">
             <HeroCarousel />
+            <ChatBot />
             {runningsale && (
 
 

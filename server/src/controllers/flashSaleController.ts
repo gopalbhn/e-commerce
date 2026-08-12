@@ -64,12 +64,8 @@ const createFlashSale = async (req: Request, res: Response) => {
         const { discountPercentage, saleTitle, startTime, endTime } = data.data;
 
         const ExistingSale = await FlashSale.find({
-            $or: [
-                { saleTitle: saleTitle },
-                { discountPercentage: discountPercentage },
-                { startTime: startTime },
-                { endTime: endTime }
-            ]
+            saleTitle,
+            endTime: { $gt: new Date() }
         });
 
         if (ExistingSale.length > 0) {
@@ -425,6 +421,7 @@ const removeMyItem = async (req: Request, res: Response) => {
 const getFlashSaleProduct = async (req: Request, res: Response) => {
     try {
         const product = await FlashSale.find({
+            isDeleted: false,
             endTime: {
                 $gte: Date.now()
             }

@@ -10,7 +10,7 @@ const Footer = () => {
                     <div className="flex flex-col justify-between">
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900">
-                                Lumina Marketplace
+                                Easy Mart
                             </h2>
 
                             <p className="mt-4 text-sm text-gray-600 leading-6">
