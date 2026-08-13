@@ -38,6 +38,7 @@ function MessageBox() {
         setLoading(true);
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/chat`, {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
