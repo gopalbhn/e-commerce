@@ -75,10 +75,22 @@ export const chatResponse = async (req: Request, res: Response) => {
         const msg = question.trim().toLowerCase();
 
 
-        const matchingRule = rules.find(r =>
-            r.keywords.some(keyword => regex(keyword).test(msg))
-        );
+        // const matchingRule = rules.find(r =>
+        //     r.keywords.some(keyword => {
+        //         const matchingString = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+        //         console.log(matchingString)
+        //         const regex = new RegExp(`\\b${matchingString}\\b`, "i");
+        //         return regex.test(msg)
+        //     })
+        // );
+        const matchingRule = rules.find(rule =>
+            rule.keywords.some(keyword => {
+                const escaped = keyword
+                    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+                return new RegExp(`^${escaped}$`, "i").test(msg);
+            })
+        );
         let session = await getUserSession(req, res);
         if (!session) {
             session = await generateSession();
@@ -86,7 +98,7 @@ export const chatResponse = async (req: Request, res: Response) => {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict",
-                maxAge: 15 * 60 * 1000
+                maxAge: 15 * 24 * 60 * 60 * 1000
             });
         }
 
@@ -97,7 +109,11 @@ export const chatResponse = async (req: Request, res: Response) => {
         await session?.save();
 
         if (matchingRule) {
-
+            session!.messages.push({
+                role: "assistant",
+                content: matchingRule.response
+            })
+            await session?.save();
             res.json({ answer: matchingRule.response });
         } else {
             const answer = await llmResponse(question, session!.messages);
@@ -117,6 +133,7 @@ export const chatResponse = async (req: Request, res: Response) => {
 async function llmResponse(text: string, message: any[]) {
 
     const products = await Product.find({ isDeleted: false }).lean();
+    console.log("message history ", message)
     const context = `
         You are a customer support chatbot for "Easy Mart", a multivendor e-commerce platform.
 
@@ -134,7 +151,7 @@ ${products.map(p => `
 <Product>
 Name: ${p.name}
 Description: ${p.description}
-Price: ${p.price}
+Price: NPR ${p.price}
 ID: ${p._id}
 </Product>
 `).join("\n")}
@@ -215,9 +232,23 @@ const getUserSession = async (req: Request, res: Response) => {
 const generateSession = async () => {
     try {
         const sessionId = crypto.randomUUID()
-        const session = await ChatSession.create({ sessionId, messages: [], expiresAt: new Date(Date.now() + 15 * 60 * 1000) });
+        const session = await ChatSession.create({ sessionId, messages: [], expiresAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) });
         return session;
     } catch (error) {
         console.error("Error in generateSession:", error);
+    }
+}
+
+export const chatHistory = async (req: Request, res: Response) => {
+    try {
+        const { sessionId } = req.cookies;
+        const session = await ChatSession.findOne({ sessionId });
+        if (!session) {
+            return res.status(404).json({ error: "Session not found" });
+        }
+        res.json({ messages: session.messages });
+    } catch (error) {
+        console.error("Error in chatHistory:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }

@@ -1,4 +1,5 @@
 import rateLimit from "express-rate-limit";
+import { Request } from "express"
 
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -18,4 +19,12 @@ const addToCartLimiter = rateLimit({
     message: "Too many Requests, try again later"
 })
 
-export { loginLimiter, appLimiter, addToCartLimiter };
+const messageLimiter = rateLimit({
+    windowMs: 5 * 60 * 1000,
+    max: 5,
+    keyGenerator: (req: Request) => {
+        return req.cookies.sessionId
+    },
+    message: "You can send 5 messages in 5 minutes"
+})
+export { loginLimiter, appLimiter, addToCartLimiter, messageLimiter };

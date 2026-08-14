@@ -56,7 +56,7 @@ const productSchema = new Schema<IProduct>({
         type: Map,
         of: String,
         required: true
-    }
+    },
 }, { timestamps: true });
 
 
