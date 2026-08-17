@@ -572,13 +572,13 @@ const Login = () => {
 
 
   return (
-    <div className="h-screen flex bg-secondary-light/30">
+    <div className="min-h-screen flex bg-secondary-light/30">
       <div className="w-full flex overflow-hidden bg-white">
 
         {/* ── Left: Form Panel ── */}
-        <div className="w-1/2 flex flex-col overflow-y-auto px-10">
+        <div className="w-full md:w-1/2 flex flex-col overflow-scroll  px-10">
           {/* Inner wrapper: centered when content fits, top-aligned when it overflows */}
-          <div className="my-auto px-10 py-5">
+          <div className="my-2 md:my-auto  md:px-10 py-5 ">
 
             {/* Brand */}
             <div className="mb-8">

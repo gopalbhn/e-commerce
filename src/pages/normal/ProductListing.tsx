@@ -157,14 +157,15 @@ const ProductListing = () => {
     };
 
     return (
-        <div className="h-full w-full px-10 flex ">
+        // <div className="h-full w-full px-4 md:px-10 flex ">
+        <div className="h-full w-full px-4 md:px-10 flex flex-col lg:flex-row gap-4">
             <CategoryList category={category} filters={filters} setFilters={setFilters} fetchProducts={fetchProducts} fetchSubCategories={fetchSubCategories} subCategory={subCategory} fetchBrands={fetchBrands} brands={brands} />
-            <section className="h-full w-4/5 ml-10 mb-10">
+            <section className=" w-full lg:w-4/5 mb-10 min-w-0">
                 <div className="w-full rounded-xl p-5 flex items-center justify-between ">
                     <h1 className="text-header font-semibold">Collection</h1>
 
                 </div>
-                <div className="h-[70%]  overflow-y-auto w-full grid grid-cols-3 gap-4">
+                <div className="w-full   overflow-y-auto  grid grid-cols-2 md:grid-cols-3 gap-4">
                     {products.slice(0, currentIndex).map((product, index) => (
                         <ProductCart
                             id={product._id}
@@ -199,7 +200,8 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
     const [currentSelectedCategory, setCurrentSelectedCategory] = useState('')
     const [currentSelectedSubCategory, setCurrentSubCategory] = useState("")
     return (
-        <div className="h-full w-1/5 rounded-xl p-4 border border-gray-300  mb-5 text-sm " key={category}>
+        // <div className="h-full w-1/5 rounded-xl p-4 border border-gray-300  mb-5 text-sm " key={category}>
+        <div className="w-full lg:w-1/5 h-full shrink-0 rounded-xl p-4 border border-gray-300 mb-5 text-sm">
             <div >
                 <h3 className="text-body text-title font-semibold mb-4">Categories</h3>
                 <ul className="flex flex-col justify-start gap-2">

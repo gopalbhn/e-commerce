@@ -28,7 +28,7 @@ const Deals = () => {
                 </div>
 
             </section>
-            <div className="h-full  px-10 space-y-10 mb-10">
+            <div className="h-full px-4  md:px-10 space-y-10 mb-10">
 
 
 
@@ -37,7 +37,7 @@ const Deals = () => {
                         <h1 className="text-header text-left font-semibold capitalize">Deals of the day</h1>
                         <p className="text-body text-secondary">Limited time offers on top products. Don't miss Out</p>
                     </div>
-                    <div className="w-full grid grid-cols-4 gap-4 mt-5 items-center">
+                    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 items-center">
                         {product.slice(0, 4).map((item: any, index: any) => (
                             <ProductCart
                                 id={item._id}
@@ -75,7 +75,7 @@ const Deals = () => {
                         <h1 className="text-header text-left font-semibold capitalize">This Month Best Deal</h1>
                         <p className="text-body text-secondary ">Limited time offers on top products. Don't miss Out</p>
                     </div>
-                    <div className="w-full grid grid-cols-4 gap-4 mt-5 items-center">
+                    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 items-center">
                         {product.slice(4, 8).map((item: any, index: any) => (
                             <ProductCart
                                 id={item._id}

@@ -41,8 +41,8 @@ const NewArrival = () => {
     return (
         <div className="h-full w-full">
 
-            <div className="min-h-[calc(100vh-8rem)] px-10 space-y-10 mb-10">
-                <div className="w-full flex items-center justify-start gap-2 mt-5">
+            <div className="min-h-[calc(100vh-8rem)] px-4 md:px-10 space-y-10 mb-10">
+                <div className="w-full  flex flex-wrap items-center justify-start gap-2 mt-5">
                     {
                         btnArray.map((item, index) => (
                             <button key={index}
@@ -62,7 +62,7 @@ const NewArrival = () => {
                         ))
                     }
                 </div>
-                <section className="h-full w-full grid grid-cols-4 gap-4 mt-5 items-center">
+                <section className="h-full w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 items-center">
                     {
                         filteredProduct.slice(0, 8).map((item: any, index: any) => (
                             <ProductCart

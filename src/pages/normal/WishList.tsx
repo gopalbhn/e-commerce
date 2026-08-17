@@ -71,18 +71,18 @@ const WishList = () => {
     }
     return (
         <div className="h-full w-full mb-10">
-            <section className="h-full w-full px-10 mb-10 ">
+            <section className="h-full w-full px-4 md:px-10 mb-10 ">
                 <div className="w-full flex items-center justify-between mt-5">
-                    <div >
-                        <h1 className="text-header font-semibold text-primary">My WishList</h1>
-                        <p> Items Saved In Your Wishlist</p>
+                    <div className="min-w-0">
+                        <h1 className="text-title font-bold md:text-header md:font-semibold ">My WishList</h1>
+                        <p className="text-sm font-medium text-body md:text-body"> Items Saved In Your Wishlist</p>
                     </div>
-                    <div className="flex gap-x-2">
-                        <Button variant="default" >Add All to Cart</Button>
-                        <Button variant="default" onClick={clearAll}>Clear All</Button>
+                    <div className="flex gap-2 flex-col md:flex-row">
+                        <Button variant="default" className=" flex-1 md:flex-none px-2 md:px-4 py-2 whitespace-nowrap"  >Add All to Cart</Button>
+                        <Button variant="default" className="flex-1 md:flex-none px-2 md:px-4 py-2 whitespace-nowrap" onClick={clearAll}>Clear All</Button>
                     </div>
                 </div>
-                <div className="h-full grid grid-cols-4 items-center gap-5 mt-5">
+                <div className="h-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center gap-5 mt-5">
                     {
                         products.map((product: any, index: any) => {
                             return <ProductCart key={index} id={product._id} image={product.thumbnails} name={product.name} price={product.price} old={product.oldPrice} discount={product.discount} isDiscounted={product.isDiscounted} wishList={true} onDelete={() => handleDelete(product._id)} />

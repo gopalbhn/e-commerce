@@ -278,7 +278,7 @@ const Dashboard = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="h-full w-full grid grid-cols-4 items-center gap-4 mt-5 ">
+                    <div className="h-full w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center gap-4 mt-5 ">
                         {flashSale.slice(0, 4).map((product, index) => (
                             <ProductCart
                                 id={product._id}
@@ -296,10 +296,10 @@ const Dashboard = () => {
                     </div>
                 </section>
             )}
-            <section className="h-full w-full px-10">
+            <section className="h-full w-full px-4 md:px-10">
                 <h1 className="text-header text-left font-semibold ">Shop by Category</h1>
                 <p className="text-body text-secondary">Best deals and offers for you</p>
-                <div className="w-full grid grid-cols-5 gap-4 items-center mb-10 mt-5">
+                <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-4 items-center mb-10 mt-5">
                     {category.map((item, index) => (
                         <CategoryCart
                             icon={item.icon}
@@ -312,11 +312,11 @@ const Dashboard = () => {
 
             </section>
 
-            <section className="h-full w-full px-10">
+            <section className="h-full w-full px-4 md:px-10 ">
                 <h1 className="text-header font-semibold line-height-[40px]">Just For You</h1>
                 <p className="text-body text-secondary">Curated just for you</p>
 
-                <div className="grid grid-cols-4 gap-4 mt-5">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
                     {products.slice(0, 8).map((product, index) => (
                         <ProductCart
                             id={product._id}

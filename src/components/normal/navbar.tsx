@@ -2,9 +2,9 @@ import useCartStore from "@/store/cartStore"
 import UserStore from "@/store/userStore"
 
 import { useEffect, useState } from "react"
-import { CiHeart } from "react-icons/ci"
+import { CiHeart, CiMenuBurger } from "react-icons/ci"
 import { FaRegUserCircle } from "react-icons/fa"
-import { IoCartOutline } from "react-icons/io5"
+import { IoCartOutline, IoClose } from "react-icons/io5"
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "../ui/button"
 import { toast } from "sonner"
@@ -14,6 +14,7 @@ import { ActionSearchBar } from "../ui/searchSuggestion"
 const NavBar = () => {
     const [color, setColor] = useState<string>("")
     const [open, setOpen] = useState(false)
+    const [mobileView, setMobileView] = useState(false)
     const navigate = useNavigate();
     const cartItem = useCartStore(state => state?.products)
     const cartItemLength = cartItem?.length;
@@ -56,11 +57,12 @@ const NavBar = () => {
     const currentPath = window.location.pathname;
 
     return (
-        <div className={`h-15 w-full flex items-center gap-8 px-10 inset-0 sticky ${color} top-0 left-0 z-100`}>
-            <div className="h-12 w-40  flex items-center justify-center text-white">
+        <div className={`h-15 w-full flex items-center gap-2 md:gap-8 px-4 md:px-10 inset-0 sticky ${color} top-0 left-0 z-100`}>
+            <div className="h-10 md:h-12 w-30 md:w-40  flex items-center justify-center text-white  ">
                 <img src={Logo} alt="logo" className="w-full h-full object-cover " />
             </div>
-            <div className="flex  items-center gap-6">
+
+            <div className="flex  items-center gap-6 hidden md:flex">
                 {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => {
                     const active = item == "Home" ? "/" : item === "New Arrivals" ? "/newarrivals" : `/${item.trim().toLowerCase()}`
                     console.log("current path", currentPath, "item", item)
@@ -75,18 +77,15 @@ const NavBar = () => {
                     )
                 })}
             </div>
-            <div className=" flex-1 flex justify-end  rounded-xl relative">
-                {/* <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400 group-focus-within:text-blue-500 transition-colors duration-300" />
-                <input type="text" placeholder="Search for product"
-                    className="w-full max-w-xl  pl-12 pr-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-primary-light"
-                /> */}
+            <div className=" flex-1 flex justify-end  rounded-xl relative hidden md:flex">
+
                 <ActionSearchBar />
             </div>
-            <div className="flex items-center gap-4 ">
-                <button className="p-2 rounded-full transition hover:bg-gray-100 group " onClick={() => navigate("/wishlist")}>
+            <div className="flex items-center gap-1 md:gap-4 justify-end flex-1 md:flex-0">
+                <button className="p-2 rounded-full transition hover:bg-gray-100 group  " onClick={() => navigate("/wishlist")}>
                     <CiHeart className="text-2xl" />
                 </button>
-                <button className="p-2 rounded-full transition hover:bg-gray-100 relative" onClick={() => navigate('/shoping-cart')}>
+                <button className="p-2 rounded-full transition hover:bg-gray-100 relative  " onClick={() => navigate('/shoping-cart')}>
                     <IoCartOutline className="text-2xl" />
                     {cartItemLength > 0 && (
                         <span className="absolute top-0 right-0 bg-primary text-white rounded-full px-2 text-xs">
@@ -106,9 +105,7 @@ const NavBar = () => {
                                 </div>
                             )}
                         </button>
-                        // <Button variant={"default"} onClick={handleLogOut}>
-                        //     Logout
-                        // </Button>
+
                     ) : (
                         <Button variant={"default"} onClick={() => navigate('/login')}>
                             Login
@@ -116,6 +113,41 @@ const NavBar = () => {
                     )
                 }
             </div>
+
+            <button className=" flex items-center justify-center md:hidden cursor-pointer" onClick={() => setMobileView(!mobileView)}>
+                {
+                    mobileView ?
+                        <IoClose className="text-3xl" /> :
+                        <CiMenuBurger className="text-3xl" />
+                }
+
+            </button>
+
+            {
+                mobileView && (
+                    <div className="fixed top-15 left-0 w-full h-full bg-black/50 z-50">
+                        <div className="w-full h-fit bg-white flex  py-2 px-6">
+
+                            <div className="flex flex-col gap-4">
+                                <ActionSearchBar />
+
+                                <div className="flex flex-col gap-4">
+                                    {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => {
+                                        const active = item == "Home" ? "/" : item === "New Arrivals" ? "/newarrivals" : `/${item.trim().toLowerCase()}`
+                                        return (
+                                            <Link to={
+                                                active
+                                            } key={item} className={`text-sm font-medium  cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : "text-secondary"}`}>
+                                                {item}
+                                            </Link>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
         </div>
     )
 }
