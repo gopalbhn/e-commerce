@@ -55,7 +55,7 @@ const OrderDetail = () => {
   }
   return (
     <div className="h-full w-full">
-      <section className="mt-10 mb-15 px-10">
+      <section className="mt-10 mb-15 px-4 md:px-10">
         <div className="text-primary text-sm mb-5"> Home / My Orders</div>
         {!orders ? (
           <div className="h-[50vh] w-full flex items-center justify-center">
@@ -66,26 +66,26 @@ const OrderDetail = () => {
 
             <div className="flex justify-between items-center mb-5">
               <div>
-                <h1 className=" text-header font-semibold"> Orders Details</h1>
-                <p>Placed On: 2023-10-10</p>
+                <h1 className="md:text-header text-title font-semibold"> Orders Details</h1>
+                <p className="text-body">Placed On: 2023-10-10</p>
               </div>
               <div>
-                <button className="bg-primary text-white px-5 py-2 rounded-md">
+                <button className="bg-primary text-white md:px-5 py-2 rounded-md px-2">
                   Download Invoice
                 </button>
               </div>
             </div>
 
-            <div className="h-15 w-[60%] mx-auto relative flex items-center justify-between gap-2 mt-10">
+            <div className="h-15 md:w-[60%] w-full mx-auto relative flex items-center justify-between gap-2 mt-10">
               <div className=" flex flex-col items-center">
-                <div className={`h-15 w-15 rounded-full  font-bold flex items-center justify-center ${step >= 1 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
+                <div className={`md:h-15 h-10 md:w-15 w-10 rounded-full  font-bold flex items-center justify-center ${step >= 1 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
                   <IoMdCheckmarkCircleOutline className="text-white" size={30} />
                 </div>
                 <p className="text-sm text-primary">Pending</p>
               </div>
               <div className="relative h-0.5 bg-primary flex-1 -mt-6" />
               <div className="flex flex-col items-center">
-                <div className={`h-15 w-15 rounded-full  font-bold flex items-center justify-center ${step > 2 ? `bg-primary text-white` : `bg-gray-200 text-gray-200`}`}>
+                <div className={`md:h-15 h-10 md:w-15 w-10 rounded-full  font-bold flex items-center justify-center ${step > 2 ? `bg-primary text-white` : `bg-gray-200 text-gray-200`}`}>
 
                   <FaVanShuttle className="text-white" size={30} />
                 </div>
@@ -94,7 +94,7 @@ const OrderDetail = () => {
               <div className="relative h-0.5 bg-gray-400 flex-1 -mt-6" />
 
               <div className=" flex flex-col items-center">
-                <div className={`h-15 w-15 rounded-full bg-white border border-primary text-primary font-bold flex items-center justify-center ${step > 3 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
+                <div className={`md:h-15 h-10 md:w-15 w-10 rounded-full bg-white border border-primary text-primary font-bold flex items-center justify-center ${step > 3 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
                   <GrLocation className="text-primary" size={30} />
 
                 </div>
@@ -102,8 +102,8 @@ const OrderDetail = () => {
               </div>
 
             </div>
-            <div className="w-full mt-10 flex gap-10">
-              <div className="h-full w-2/3 shadow-sm rounded-xl ">
+            <div className="w-full mt-10 flex flex-col md:flex-row gap-10">
+              <div className="h-full w-full md:w-2/3 shadow-sm rounded-xl ">
                 <h1 className="text-title font-semibold">Items In Your Order</h1>
 
                 <div>
@@ -171,8 +171,8 @@ function OrderSummary({ order }: any) {
   const shippingAddress = order.shippingAddress
   console.log("shippingAddress", shippingAddress)
   return (
-    <div className="h-full w-1/3 shadow-sm rounded-xl mt-5 p-4">
-      <h1 className="text-title font-semibold">Order Summary</h1>
+    <div className="h-full w-full md:w-1/3 shadow-sm rounded-xl mt-5 p-4">
+      <h1 className="text-title font-bold">Order Summary</h1>
       <div className="flex justify-between items-center">
         <p className="text-body ">Subtotal</p>
         <p className="text-body  text-primary">Npr. {subtotal}</p>
@@ -190,7 +190,7 @@ function OrderSummary({ order }: any) {
         <p className="text-title font-semibold">Total</p>
         <p className="text-title font-semibold text-primary">Npr. {total}</p>
       </div>
-      <div className=" h-30 w-[75%] mx-auto mt-5 border border-primary/20 rounded-xl text-sm p-3">
+      <div className=" h-30 w-[75%] md:mx-auto mt-5 border border-primary/20 rounded-xl text-sm p-3">
         <p className="uppercase text-primary">Shipping Address</p>
         <p>State : {shippingAddress?.state}</p>
         <p>District : {shippingAddress?.district}</p>

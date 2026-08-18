@@ -126,17 +126,28 @@ const removeFromCart = async (req: Request, res: Response) => {
                 message: "Cart not found"
             })
         }
-        console.log("Cart", cart)
-        console.log('cartItemid', productId)
+        if (req.user.id !== cart.userId.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: "You are not authorized to remove product from this cart"
+            })
+        }
+
         const existingProduct = cart.products.find((item) => item.productId.toString() === productId)
-        console.log('existing product', existingProduct)
+        console.log('existingproduct', existingProduct)
         if (!existingProduct) {
             return res.status(404).json({
                 success: false,
                 message: "Product not found in cart"
             })
         }
-
+        if (cart.products.length == 1) {
+            await cart.deleteOne({ userId: req.user.id })
+            return res.status(200).json({
+                success: true,
+                message: "Product removed from cart successfully"
+            })
+        }
         await cart.updateOne({
             $pull: {
                 products: { productId }

@@ -10,6 +10,7 @@ import SuccessModal from '@/components/normal/successModal';
 import BreadcrumbDemo from '@/components/ui/breadCrumbComponent';
 import UserStore from '@/store/userStore';
 import { FaStar } from 'react-icons/fa';
+import BuyNow from '@/components/normal/buyNow';
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
@@ -20,6 +21,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<any>(null)
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [reviews, setReviews] = useState([])
+  const [openProductModal, setOpenProductModal] = useState(false)
   const { id } = useParams();
   const [successModalOpen, setSuccessModalOpen] = useState(false)
   const user = UserStore(state => state.user?.id);
@@ -154,18 +156,21 @@ const ProductDetail = () => {
       {successModalOpen && (
         <SuccessModal text="Product added to cart" onclick={() => setSuccessModalOpen(false)} />
       )}
+      {openProductModal && (
+        <BuyNow onclose={() => setOpenProductModal(false)} productId={product?._id} />
+      )}
       <div className="pl-16 pt-2">
         <BreadcrumbDemo />
       </div>
-      <section className='w-full h-[90vh] rounded-lg flex items-center justify-center gap-1 px-10'>
-        <div className='w-1/2 h-full p-4 group'>
+      <section className='w-full h-full rounded-lg flex flex-col md:flex-row items-center justify-center gap-1 px-4 md:px-10'>
+        <div className='w-full md:w-1/2 h-full p-4 group'>
           <div className='relative h-[60vh] w-full flex justify-center items-center overflow-hidden '>
             <img src={previewimage} alt="Product Image" className='w-full h-full object-cover rounded-lg transition-soft duration-300 hover:scale-110' />
             <button className='absolute top-4 right-4 text-primary bg-white/50 text-2xl p-2 rounded-full hover:scale-110 transition-soft duration-300 backdrop-blur-sm'>
               <HiMiniMagnifyingGlassPlus />
             </button>
           </div>
-          <div className="w-full h-30 grid grid-cols-5 gap-2 mt-6">
+          <div className="w-full h-30 grid grid-cols-3 md:grid-cols-5 gap-5 md:gap-2 mt-2 md:mt-6">
             {product?.images?.map((img: string, index: number) => (
               <div key={index} className="h-25 w-25 overflow-hidden rounded-lg hover:border border-primary " onClick={() => setPreviewimage(img)}>
                 <img
@@ -177,7 +182,7 @@ const ProductDetail = () => {
             ))}
           </div>
         </div>
-        <div className='w-1/2 h-full p-4 flex flex-col justify-center gap-y-3'>
+        <div className='w-full md:w-1/2 h-full p-4 flex flex-col justify-center gap-y-3'>
 
           <h1 className='text-header font-bold'>{product?.name}</h1>
 
@@ -221,7 +226,7 @@ const ProductDetail = () => {
               </button>
             )}
           </div>
-          <div className='flex flex-col gap-4 '>
+          {/* <div className='flex flex-col gap-4 '>
             <p>
               <span className='font-bold text-sm mr-2'>Color:</span>
               Dark Walnut
@@ -232,7 +237,7 @@ const ProductDetail = () => {
               <div className='rounded-full bg-[#8D6E63] h-10 w-10 border border-gray-400'></div>
 
             </div>
-          </div>
+          </div> */}
           <div className='flex flex-col gap-4 mb-6'>
             <p>Quantity</p>
             <div className='flex items-center gap-4 rounded-xl '>
@@ -257,12 +262,12 @@ const ProductDetail = () => {
                 })}>+</button>
 
               </div>
-              <button disabled={buttonDisabled} className={`w-full max-w-xl px-10 py-4 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300 ${buttonDisabled ? "opacity-50 cursor-not-allowed" : ""}`} onClick={AddToCart}>
+              <button disabled={buttonDisabled} className={`w-full max-w-xl md:px-10 md:py-4 py-3 px-6 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300 ${buttonDisabled ? "opacity-50 cursor-not-allowed" : ""}`} onClick={AddToCart}>
                 <BiCart className='text-xl' /> Add To cart
               </button>
             </div>
 
-            <button className='w-full max-w-xl px-10 py-4 rounded-xl bg-black text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300'>
+            <button className='w-full max-w-xl md:px-10 md:py-4 py-3 px-6 rounded-xl bg-black text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300' onClick={() => setOpenProductModal(true)}>
               Buy Now
             </button>
           </div>
@@ -280,9 +285,9 @@ const ProductDetail = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                 {
                   product?.specification && Object.entries(product?.specification).map(([key, value]: [string, any]) => (
-                    <div className="flex justify-between border-b border-outline-variant py-2">
+                    <div className="flex justify-between gap-10 border-b border-outline-variant py-2">
                       <span className="text-on-surface-variant">{key}</span>
-                      <span className="">{value}</span>
+                      <span className="text-end">{value}</span>
                     </div>
                   ))
                 }

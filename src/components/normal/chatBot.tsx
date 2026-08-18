@@ -1,3 +1,4 @@
+import UserStore from "@/store/userStore"
 import { useEffect, useState } from "react"
 import { FaPaperPlane } from "react-icons/fa"
 import { ImSpinner8 } from "react-icons/im"
@@ -49,22 +50,52 @@ function MessageBox({ messages, setMessages }: { messages: Array<{ role: "user" 
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [limit, setLimit] = useState(false)
+    const user = UserStore(state => state.user?.id)
+    console.log("user from chat", user)
     async function sendMessage() {
 
         if (input.length <= 0 || disabled) {
             return
         }
         console.log("send msg", messages)
-        setMessages(prev => [...prev, { role: "user", content: input }]);
+        if (messages.length > 0) {
+
+            setMessages(prev => [...prev, { role: "user", content: input }]);
+        }
+
         setInput("");
         setLoading(true);
+        if (user) {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/chat`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question: input, mode: "logged" })
+            })
+            if (res.status == 429) {
+                setTimeout(() => {
+                    toast.error("Too many requests, please wait for 5 minutes")
+                }, 500)
+                setLoading(false)
+                setLimit(true)
+                return;
+
+            }
+            const data = await res.json();
+            setMessages(prev => [...prev, { role: "assistant", content: data.answer }]);
+            setLoading(false);
+
+            return
+        }
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/chat`, {
             method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ question: input })
+            body: JSON.stringify({ question: input, mode: "guest" })
         });
 
         if (response.status == 429) {
@@ -90,7 +121,7 @@ function MessageBox({ messages, setMessages }: { messages: Array<{ role: "user" 
     }
     console.log("messages", messages)
     return (
-        <div className={`h-96 w-96 overflow-hidden bg-slate-300 fixed z-50 right-5 bottom-22 rounded-xl transition-all duration-200`}>
+        <div className={`h-96 w-96 overflow-hidden bg-slate-300 fixed z-100 right-5 bottom-22 rounded-xl transition-all duration-200`}>
             <h1 className="bg-primary w-full h-16 flex items-center justify-center text-white font-semibold text-xl">Easy Mart Support</h1>
             <div className=" w-full flex flex-col justify-end">
                 <div className=" h-65 flex flex-col gap-2 p-2 overflow-y-scroll">

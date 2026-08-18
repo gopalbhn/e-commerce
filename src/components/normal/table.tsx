@@ -17,47 +17,48 @@ export default function Table<T>({
     message = "No Data Found",
 }: TableProps<T>) {
     return (
-        <div className="rounded-xl shadow-sm bg-white">
-            <table className="w-full">
-                <thead>
-                    <tr className="text-left text-xs uppercase tracking-wider text-gray-400 border-b">
-                        {columns.map((column) => (
-                            <th
-                                key={column.header}
-                                className="py-4 px-4"
-                            >
-                                {column.header}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.length === 0 ? (
-                        <tr>
-                            <td colSpan={columns.length} className="py-12 text-center text-slate-500">
-                                {message}
-                            </td>
+        <div className=" w-full rounded-xl overflow-hidden shadow-sm bg-white">
+            <div className="w-full overflow-x-auto">
+                <table className="w-full overflow-x-auto">
+                    <thead>
+                        <tr className="text-left text-xs uppercase tracking-wider text-gray-400 border-b">
+                            {columns.map((column) => (
+                                <th
+                                    key={column.header}
+                                    className="py-4 px-4"
+                                >
+                                    {column.header}
+                                </th>
+                            ))}
                         </tr>
-                    ) : (
-                        data.map((row: any, index) => (
-                            <tr
-                                key={row._id || index}
-                                className="  hover:bg-gray-50 transition"
-                            >
-                                {columns.map(column => (
-                                    <td
-                                        key={column.header}
-                                        className="py-5 font-normal text-sm text-gray-800 px-4"
-                                    >
-                                        {column.render ? column.render(row) : row[column.accessor]}
-                                    </td>
-                                ))}
+                    </thead>
+                    <tbody>
+                        {data.length === 0 ? (
+                            <tr>
+                                <td colSpan={columns.length} className="py-12 text-center text-slate-500">
+                                    {message}
+                                </td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
-
+                        ) : (
+                            data.map((row: any, index) => (
+                                <tr
+                                    key={row._id || index}
+                                    className="  hover:bg-gray-50 transition"
+                                >
+                                    {columns.map(column => (
+                                        <td
+                                            key={column.header}
+                                            className="py-5 font-normal text-sm text-gray-800 px-4"
+                                        >
+                                            {column.render ? column.render(row) : row[column.accessor]}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
         </div>
     )

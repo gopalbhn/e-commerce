@@ -131,6 +131,7 @@ function Init() {
     <>
       {role !== "Seller" && role !== "Admin" && location.pathname !== "/login" && <NavBar />}
       <Routes>
+        <Route path="/seller" element={<SellerDashboard />} />
         <Route path='/' element={
           role === "Seller" ? <SellerDashboard /> : role === "Admin" ? <AdminDashboard /> : <Dashboard />
         } />

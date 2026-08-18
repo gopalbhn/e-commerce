@@ -175,11 +175,11 @@ const ShopingCart = () => {
 
     return (
         <div className="h-full w-full flex flex-col">
-            <section className='h-full w-full px-10 mt-5 mb-10'>
+            <section className='h-full w-full px-4 md:px-10 mt-5 mb-10'>
                 <h1 className="text-title font-bold mb-8 mt-2">Your Shoping Cart</h1>
-                <div className="flex  justify-center gap-10">
+                <div className="flex flex-col md:flex-row justify-center gap-10">
 
-                    <div className="w-2/3  rounded-xl">
+                    <div className="w-full md:w-2/3  rounded-xl">
                         {
                             products?.map((item) => (
 
@@ -227,7 +227,7 @@ const ShopingCart = () => {
                             )
                             )}
                     </div>
-                    <div className="w-1/3  p-6 rounded-xl shadow-md">
+                    <div className="w-full md:w-1/3  p-6 rounded-xl shadow-md">
 
                         <OrderSummaryTable total={total} tax={tax} shipping={shipping} subTotal={subTotal} code={code} setCode={setCode} applyCode={applyDiscount} isCouponApplied={isCouponApplied} coupon={coupon} discount={discount} totalDiscountRate={totalDiscountRate} />
                     </div>
@@ -288,14 +288,14 @@ function OrderSummaryTable({
             </div>
             <div className="w-full border-b border-gray-400">
                 <p>Discount Code</p>
-                <div className="w-full flex items-center justify-between my-3">
+                <div className="w-full flex items-center justify-between my-3 gap-x-3">
                     <input placeholder="Enter Code"
                         onChange={(e) => {
                             const value = e.target.value.trim().toUpperCase()
                             setCode(value)
                         }}
                         value={code}
-                        className="py-1.5  px-8 rounded-xl border border-gray-300 bg-white"
+                        className="py-1.5 w-full  px-8 rounded-xl border border-gray-300 bg-white"
                     >
                     </input>
                     {

@@ -70,19 +70,11 @@ export const rules = [
 
 export const chatResponse = async (req: Request, res: Response) => {
     try {
-        const { question } = req.body;
+        const { question, mode } = req.body;
 
         const msg = question.trim().toLowerCase();
 
 
-        // const matchingRule = rules.find(r =>
-        //     r.keywords.some(keyword => {
-        //         const matchingString = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-        //         console.log(matchingString)
-        //         const regex = new RegExp(`\\b${matchingString}\\b`, "i");
-        //         return regex.test(msg)
-        //     })
-        // );
         const matchingRule = rules.find(rule =>
             rule.keywords.some(keyword => {
                 const escaped = keyword
@@ -91,7 +83,47 @@ export const chatResponse = async (req: Request, res: Response) => {
                 return new RegExp(`^${escaped}$`, "i").test(msg);
             })
         );
-        let session = await getUserSession(req, res);
+
+        let session;
+        if (mode === "logged") {
+            session = await getUserSession(req, res);
+            console.log("session", session)
+            if (!session) {
+                session = await generateSession();
+                res.cookie("sessionId", session!.sessionId, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "strict",
+                    maxAge: 15 * 24 * 60 * 60 * 1000
+                });
+            }
+
+            session?.messages.push({
+                role: "user",
+                content: question,
+                userId: req.user?.id
+            })
+            await session?.save();
+
+            if (matchingRule) {
+                session!.messages.push({
+                    role: "assistant",
+                    content: matchingRule.response
+                })
+                await session?.save();
+                res.json({ answer: matchingRule.response });
+            } else {
+                const answer = await llmResponse(question, session!.messages);
+                session!.messages.push({
+                    role: "assistant",
+                    content: answer
+                })
+                await session!.save();
+                res.json({ answer });
+            }
+        }
+
+        session = await getUserSession(req, res);
         if (!session) {
             session = await generateSession();
             res.cookie("sessionId", session!.sessionId, {
@@ -104,9 +136,10 @@ export const chatResponse = async (req: Request, res: Response) => {
 
         session?.messages.push({
             role: "user",
-            content: question
+            content: question,
         })
         await session?.save();
+
 
         if (matchingRule) {
             session!.messages.push({
@@ -121,9 +154,11 @@ export const chatResponse = async (req: Request, res: Response) => {
                 role: "assistant",
                 content: answer
             })
-            await session!.save();
+            await session?.save();
             res.json({ answer });
         }
+
+
     } catch (error) {
         console.error("Error in chatResponse:", error);
         res.status(500).json({ error: "Internal server error" });

@@ -30,14 +30,14 @@ function OrderComponent({ order }: { order: any }) {
                         </span>
                     </p>
 
-                    <p className="text-2xl font-bold text-primary">
+                    <p className="text-body font-bold ">
                         NPR.{finalTotal}
                     </p>
                 </div>
 
                 <div className="flex flex-col items-start md:items-end gap-4">
                     <span
-                        className={`px-4 py-1 rounded-full text-sm font-semibold `}
+                        className={`px-4 py-1 rounded-full text-sm font-semibold border border-primary/50`}
                     >
                         {status}
                     </span>

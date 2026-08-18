@@ -46,7 +46,7 @@ const PurchaseHistory = () => {
                                     className="w-full shadow-sm p-4 mt-3"
                                 >
                                     <div className="flex items-center gap-2">
-                                        <div className="h-15 w-15 flex items-center justify-center overflow-hidden rounded-xl">
+                                        <div className="md:h-15 md:w-15 h-18 w-18 flex items-center justify-center overflow-hidden rounded-xl">
                                             <img
                                                 src={prod.product?.thumbnails}
                                                 alt={prod.product?.name}
@@ -56,7 +56,7 @@ const PurchaseHistory = () => {
 
                                         <div className="flex w-full items-center justify-between">
                                             <div className="flex flex-col gap-1">
-                                                <p className="font-semibold text-body">
+                                                <p className="font-bold text-body line-clamp-2">
                                                     {prod.product?.name}
                                                 </p>
                                                 <p className="text-body ">Quantity: {prod.quantity}</p>
@@ -64,13 +64,13 @@ const PurchaseHistory = () => {
                                             </div>
 
                                             <button
-                                                className="bg-primary px-5 py-3 rounded-xl text-white"
+                                                className="bg-primary px-4 py-2 md:px-5 md:py-3  rounded-xl text-white"
                                                 onClick={() => {
                                                     setOpenReviewModal(true);
                                                     setProductId(prod.product?._id || null);
                                                 }}
                                             >
-                                                Write a Review
+                                                Review
                                             </button>
                                         </div>
                                     </div>
@@ -139,7 +139,7 @@ const CreateReviewModal = ({ onClose, productId }: { onClose: () => void; produc
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-black/20 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-5 rounded-lg w-1/3">
+            <div className="bg-white p-5 rounded-lg w-2/3  md:w-1/3">
                 <h1 className="text-xl font-semibold mb-4">Write a Review</h1>
                 <textarea
                     value={comment}

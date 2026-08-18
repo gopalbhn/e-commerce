@@ -143,25 +143,25 @@ const SellerDashboard = () => {
         )
     }
     return (
-        <div className="min-h-screen bg-gray-100 flex">
+        <div className="min-h-screen w-full bg-gray-100 flex">
             <SellerSideBar open={open} />
             {viewOrder && <OrderDetailComponent onclose={() => setViewOrder(false)} orders={orderDetail} />}
             <section
-                className={`flex-1 transition-all duration-300 ${open ? "ml-[15%]" : "ml-0"
+                className={`flex-1 flex h-full  flex-col min-w-0 transition-all duration-300 ${open ? "ml-[15%] bg-black/10 md:bg-gray-100 md:overflow-scroll overflow-hidden h-screen" : "ml-0 bg-gray-100 "
                     }`}
             >
                 {/* Header */}
-                <div className="h-16 flex items-center px-8 bg-white shadow-sm">
+                <div className={`h-16 w-full ${open ? "px-10 " : "p-4 "} md:px-8 flex gap-2 flex-shrink-0 items-center  bg-white shadow-sm`}>
                     <button onClick={() => setOpen(!open)}>
                         <MdMenu size={28} />
                     </button>
 
-                    <h1 className="ml-4 text-2xl font-bold">Dashboard</h1>
+                    <h1 className="text-2xl font-bold">Dashboard</h1>
                 </div>
 
                 {/* Cards */}
-                <div className="p-8">
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-6">
+                <div className="p-2 md:p-8">
+                    <div className=" grid grid-cols-[repeat(1,minmax(150px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-6">
                         {cards.map((card: any) => (
                             <MetricChart
                                 title={card.title}
@@ -176,7 +176,7 @@ const SellerDashboard = () => {
                         ))}
                     </div>
                 </div>
-                <div className="w-full p-4">
+                <div className="w-full p-4 md:p-8">
                     <h1 className=" text-title font-semibold">Low Stocks</h1>
                     <div className="w-full flex flex-col gap-2">
                         {lowStockProduct.length == 0 ? (
@@ -202,7 +202,7 @@ const SellerDashboard = () => {
                     </div>
                 </div>
 
-                <div className="p-4">
+                <div className="md:p-8">
                     <h1 className="font-semibold text-title my-2">Pending Orders</h1>
                     <Table data={pendingOrder} columns={pendingOrderColumn} />
                 </div>
