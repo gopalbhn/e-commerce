@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 
@@ -16,6 +17,7 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
     const [totalCartItem, setTotalCartItem] = useState(1);
     const [address, setAddress] = useState<any>([])
     const [totalItem, setTotalItem] = useState(0)
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchProduct = async () => {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/product/${productId}`, {
@@ -42,21 +44,46 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
         }
     }
 
-    const buyNow = async () => {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/payment/create-payment-intent`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                amount: total,
-                currency: "NPR",
-            }),
-            credentials: "include"
-        })
-        const data = await res.json()
-        console.log("Payment Intent", data)
-    }
+    const handleBuyNow = async () => {
+        if (totalItem > products?.stock) {
+            toast.error("Out of Stock")
+            return;
+        }
+
+        if (totalItem <= 0) {
+            toast.error("Quantity must be greater than 0")
+            return;
+        }
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URI}/api/buy-now/create`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        productId,
+                        quantity: totalItem,
+                    }),
+                }
+            );
+
+            const data = await res.json();
+
+            if (!data.success) {
+                toast.error(data.message);
+                return;
+            }
+
+            navigate("/checkout?mode=buy-now");
+
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong");
+        }
+    };
 
     if (!products) {
         return <div>Loading...</div>
@@ -95,6 +122,7 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
                     >
                         <RxCross1 />
                     </button>
+
                 </div>
 
                 <div className="w-full flex  gap-6 p-6">
@@ -170,7 +198,9 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
 
 
                         </div>
-
+                        <button onClick={handleBuyNow} className="mt-6 px-10 py-2 bg-primary hover:bg-primary/80 text-white py-2 rounded-lg transition">
+                            Buy Now
+                        </button>
                     </div>
 
 
@@ -213,13 +243,14 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
                             <h3 className="font-semibold mb-3">
                                 Shipping Address
                             </h3>
-                            {console.log("addresssadf", address)}
+
                             <p>State: {address?.state} </p>
                             <p>City: {address?.city}</p>
                             <p>District: {address?.district}</p>
                             <p>Street: {address?.street}</p>
 
                         </div>
+
 
                     </div>
 

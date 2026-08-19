@@ -7,15 +7,19 @@ import type { ShippingAddressState } from "@/types/types";
 import Loader from "@/components/normal/Loader";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaPen } from "react-icons/fa";
 const Checkout = () => {
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false)
   const [address, setAddress] = useState<ShippingAddressState | null>(null)
   const [products, setProducts] = useState<any[]>([]);
+  const [product, setProduct] = useState<any>(null)
   const [editAddress, setEditAddress] = useState<boolean>(false)
   const [coupon, setCoupon] = useState<any>(null)
+  const [param] = useSearchParams()
+  const checkout = param.get("mode")
+  console.log("checkout", checkout)
   async function fetchShippingAddress() {
     setLoading(true)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/address`, {
@@ -35,6 +39,7 @@ const Checkout = () => {
 
 
   async function fetchCartItems() {
+
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/cart/cart`, {
       credentials: "include",
     });
@@ -57,11 +62,34 @@ const Checkout = () => {
     }
   }
 
+  async function fetchBuyNowProduct() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/buy-now`, {
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    console.log("res", data)
+    console.log(data)
+    if (res.ok) {
+      console.log("data", data.data)
+
+      setProduct(data.data?.productId);
+
+    }
+  }
 
   useEffect(() => {
     fetchShippingAddress()
-    fetchCartItems()
+    if (checkout == "buy-now") {
+      console.log("control buy now adfasdf")
+      fetchBuyNowProduct();
+    } else {
+      fetchCartItems()
+    }
   }, [])
+
+
+
 
   if (loading) {
     return (
@@ -71,8 +99,10 @@ const Checkout = () => {
 
   async function handleEsewaPayment() {
     const { total } = calculateTotal();
+
     console.log("total")
     try {
+
       let res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order`, {
         method: "POST",
         credentials: "include",
@@ -113,6 +143,7 @@ const Checkout = () => {
       console.log(error)
     }
   }
+
   function redirectURI(url: string, obj: any) {
     console.log("obj payment", obj)
     const form = document.createElement("form")
@@ -181,7 +212,17 @@ const Checkout = () => {
   }
 
   function calculateTotal() {
-
+    if (checkout === "buy-now") {
+      console.log("buy", product)
+      return {
+        total: Number(product?.price),
+        tax: Number(product?.price) * 0.13,
+        shipping: 10,
+        Subtotal: Number(product?.price),
+        discount: 0,
+        totalDiscountRate: 0
+      }
+    }
     const Subtotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
 
     const tax = Subtotal * 0.13
@@ -235,7 +276,7 @@ const Checkout = () => {
             {step == 2 && <PaymentSetup nextStep={() => setStep(step + 1)} handleEsewaPayment={handleEsewaPayment} handleKhaltiPayment={handleKhaltiPayment} />}
             {step == 3 && <Review />}
           </div>
-          {step !== 3 && <OrderSummary products={products} coupon={coupon} calculateTotal={calculateTotal} />}
+          {step !== 3 && <OrderSummary products={products} coupon={coupon} calculateTotal={calculateTotal} product={product} />}
         </div>
       </section >
       <Footer />
@@ -509,7 +550,7 @@ const AddressDetail = ({ address, nextStep, toogleEditAddress }: any) => {
   )
 }
 
-const OrderSummary = ({ products, coupon, calculateTotal }: any) => {
+const OrderSummary = ({ products, coupon, calculateTotal, product }: any) => {
 
   console.log(" from checkout", products)
   console.log("coupon checkout", coupon)
@@ -520,28 +561,78 @@ const OrderSummary = ({ products, coupon, calculateTotal }: any) => {
   return (
     <div className="w-1/3 rounded-2xl bg-white shadow-md p-6">
       <h1 className="text-title font-bold mb-6">Order Summary</h1>
-      {products.map((item: any) => (
+
+      {products?.length > 0 ? (
+        products.map((pro: any) => (
+          <div
+            key={pro._id}
+            className="flex gap-4 mb-6"
+          >
+            <div className="w-15 h-15 rounded-xl overflow-hidden shrink-0">
+              <img
+                src={pro?.images?.[0] || pro?.thumbnails?.[0]}
+                alt={pro?.name || "Product"}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="flex justify-between w-full">
+              <div>
+                <h2 className="font-semibold text-sm">
+                  {pro?.name}
+                </h2>
+
+                <p className="text-gray-500">
+                  {pro?.color}
+                </p>
+
+                <p className="text-sm">
+                  Qty: {pro?.quantity}
+                </p>
+              </div>
+
+              <p className="font-semibold text-sm">
+                Npr.{Number(pro?.price) * Number(pro?.quantity)}
+              </p>
+            </div>
+          </div>
+        ))
+      ) : product ? (
         <div className="flex gap-4 mb-6">
           <div className="w-15 h-15 rounded-xl overflow-hidden shrink-0">
             <img
-              src={item.images[0]}
-              alt="Product"
+              src={product?.images?.[0] || product?.thumbnails?.[0]}
+              alt={product?.name || "Product"}
               className="w-full h-full object-cover"
             />
           </div>
 
           <div className="flex justify-between w-full">
             <div>
-              <h2 className="font-semibold text-sm">{item.name}</h2>
-              <p className="text-gray-500">{item.color}</p>
-              <p className="text-sm ">Qty: {item.quantity}</p>
+              <h2 className="font-semibold text-sm">
+                {product?.name}
+              </h2>
+
+              <p className="text-gray-500">
+                {product?.color}
+              </p>
+
+              <p className="text-sm">
+                Qty: {product?.quantity || 1}
+              </p>
             </div>
 
-            <p className="font-semibold text-sm">Npr.{item.price * item.quantity}</p>
+            <p className="font-semibold text-sm">
+              Npr.
+              {Number(product?.price) * Number(product?.quantity || 1)}
+            </p>
           </div>
         </div>
-      ))
-      }
+      ) : (
+        <p className="text-gray-500">
+          Loading product...
+        </p>
+      )}
 
 
 

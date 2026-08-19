@@ -18,6 +18,7 @@ import adminRouter from "./routes/adminRouter.js"
 import reviewRouter from "./routes/reviewRouter.js";
 import flashSaleRouter from "./routes/flashSaleRouter.js";
 import chatRouter from "./routes/chatRouter.js";
+import buyRouter from "./routes/buyNowRouter.js";
 const app = express();
 
 app.use(cookieParser());
@@ -45,6 +46,7 @@ app.use('/api/admin', adminRouter)
 app.use('/api/review', reviewRouter)
 app.use('/api/flash-sale', flashSaleRouter)
 app.use('/api/chat', chatRouter)
+app.use("/api/buy-now", buyRouter)
 app.get('/health-check', (req, res) => {
   const healthData = {
     uptime: process.uptime(),

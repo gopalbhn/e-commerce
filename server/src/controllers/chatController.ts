@@ -70,7 +70,7 @@ export const rules = [
 
 export const chatResponse = async (req: Request, res: Response) => {
     try {
-        const { question, mode } = req.body;
+        const { question } = req.body;
 
         const msg = question.trim().toLowerCase();
 
@@ -84,46 +84,13 @@ export const chatResponse = async (req: Request, res: Response) => {
             })
         );
 
-        let session;
-        if (mode === "logged") {
-            session = await getUserSession(req, res);
-            console.log("session", session)
-            if (!session) {
-                session = await generateSession();
-                res.cookie("sessionId", session!.sessionId, {
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: "strict",
-                    maxAge: 15 * 24 * 60 * 60 * 1000
-                });
-            }
-
-            session?.messages.push({
-                role: "user",
-                content: question,
-                userId: req.user?.id
+        let session
+        if (req.user?.id) {
+            session = await ChatSession.findOne({
+                userId: req.user.id
             })
-            await session?.save();
-
-            if (matchingRule) {
-                session!.messages.push({
-                    role: "assistant",
-                    content: matchingRule.response
-                })
-                await session?.save();
-                res.json({ answer: matchingRule.response });
-            } else {
-                const answer = await llmResponse(question, session!.messages);
-                session!.messages.push({
-                    role: "assistant",
-                    content: answer
-                })
-                await session!.save();
-                res.json({ answer });
-            }
         }
 
-        session = await getUserSession(req, res);
         if (!session) {
             session = await generateSession();
             res.cookie("sessionId", session!.sessionId, {
@@ -134,7 +101,11 @@ export const chatResponse = async (req: Request, res: Response) => {
             });
         }
 
-        session?.messages.push({
+        if (req.user?.id) {
+            session!.userId = req.user.id;
+        }
+
+        session!.messages.push({
             role: "user",
             content: question,
         })
@@ -278,10 +249,14 @@ export const chatHistory = async (req: Request, res: Response) => {
     try {
         const { sessionId } = req.cookies;
         const session = await ChatSession.findOne({ sessionId });
-        if (!session) {
+        if (!session && !req.user?.id) {
             return res.status(404).json({ error: "Session not found" });
         }
-        res.json({ messages: session.messages });
+        if (req.user?.id) {
+            const session = await ChatSession.findOne({ userId: req.user.id });
+            return res.json({ messages: session?.messages });
+        }
+        res.json({ messages: session!.messages });
     } catch (error) {
         console.error("Error in chatHistory:", error);
         res.status(500).json({ error: "Internal server error" });

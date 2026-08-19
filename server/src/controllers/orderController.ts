@@ -3,6 +3,7 @@ import Order from "../models/orderModel.js";
 import { Cart } from "../models/cartModel.js";
 import Address from "../models/addressModel.js";
 import Product from "../models/productModel.js";
+import BuyNow from "../models/buyNowModel.js";
 
 
 
@@ -103,6 +104,38 @@ const getOrder = async (req: Request, res: Response) => {
 const createOrder = async (req: Request, res: Response) => {
     try {
         const buyer = req.user?.id;
+
+        const product = await BuyNow.findOne({ userId: buyer }).populate("productId");
+        console.log("Product", product);
+
+        if (product) {
+            const shippingAddress = await Address.findOne({ user: buyer });
+            if (!shippingAddress) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Shipping address not found",
+                });
+            }
+            const order = await Order.create({
+                buyer,
+                items: [
+                    {
+                        product: product.productId,
+                        quantity: product.quantity,
+                        price: product.price,
+                    },
+                ],
+                totalPrice: product.price,
+                paymentMethod: req.body.paymentMethod,
+                shippingAddress: shippingAddress._id,
+                orderStatus: "Pending",
+            });
+            await BuyNow.deleteOne({ userId: buyer });
+            return res.status(201).json({
+                success: true,
+                data: order,
+            });
+        }
 
         const cart = await Cart.findOne({ userId: buyer }).populate("coupon");
 

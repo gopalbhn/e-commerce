@@ -21,10 +21,23 @@ const addToCartLimiter = rateLimit({
 
 const messageLimiter = rateLimit({
     windowMs: 5 * 60 * 1000,
-    max: 5,
-    keyGenerator: (req: Request) => {
-        return req.cookies.sessionId
+
+    max: (req: Request) => {
+        return req.user?.id ? 20 : 10;
     },
-    message: "You can send 5 messages in 5 minutes"
-})
+
+    keyGenerator: (req: Request) => {
+        if (req.user?.id) {
+            return req.user.id;
+        }
+
+        return req.cookies.sessionId;
+    },
+
+    message: (req: Request) => {
+        return req.user?.id
+            ? "You can send 20 messages in 5 minutes"
+            : "You can send 10 messages in 5 minutes";
+    }
+});
 export { loginLimiter, appLimiter, addToCartLimiter, messageLimiter };

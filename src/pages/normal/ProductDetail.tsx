@@ -162,8 +162,8 @@ const ProductDetail = () => {
       <div className="pl-16 pt-2">
         <BreadcrumbDemo />
       </div>
-      <section className='w-full h-full rounded-lg flex flex-col md:flex-row items-center justify-center gap-1 px-4 md:px-10'>
-        <div className='w-full md:w-1/2 h-full p-4 group'>
+      <section className='w-full h-full rounded-lg flex flex-col lg:flex-row items-center justify-center gap-1 px-4 md:px-10'>
+        <div className='w-full lg:w-1/2 h-full p-4 group'>
           <div className='relative h-[60vh] w-full flex justify-center items-center overflow-hidden '>
             <img src={previewimage} alt="Product Image" className='w-full h-full object-cover rounded-lg transition-soft duration-300 hover:scale-110' />
             <button className='absolute top-4 right-4 text-primary bg-white/50 text-2xl p-2 rounded-full hover:scale-110 transition-soft duration-300 backdrop-blur-sm'>
@@ -182,7 +182,7 @@ const ProductDetail = () => {
             ))}
           </div>
         </div>
-        <div className='w-full md:w-1/2 h-full p-4 flex flex-col justify-center gap-y-3'>
+        <div className='w-full lg:w-1/2 h-full p-4 flex flex-col justify-center gap-y-3'>
 
           <h1 className='text-header font-bold'>{product?.name}</h1>
 

@@ -24,6 +24,12 @@ const chatSessionSchema = new Schema({
         type: String,
         required: true
     },
+    userId: {
+        type: Schema.ObjectId,
+        ref: "User",
+        required: false,
+        default: null
+    },
     messages: {
         type: [chatMessageSchema],
         default: [],

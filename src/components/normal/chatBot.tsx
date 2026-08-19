@@ -18,9 +18,13 @@ const ChatBot = () => {
                 method: "GET",
                 credentials: "include"
             })
+            console.log('res', res)
             const data = await res.json();
-            console.log("msg", data.messages)
-            setMessages(data.messages);
+            console.log("data", data)
+            if (res.ok) {
+                setMessages(data.messages);
+            }
+            console.log("messages ", data.messages)
 
 
         } catch (err) {
@@ -31,7 +35,7 @@ const ChatBot = () => {
     useEffect(() => {
         getPreviousChat();
     }, [])
-
+    console.log("chat", messages)
     return (
         <>
             {active && <MessageBox messages={messages} setMessages={setMessages} />}
@@ -58,44 +62,18 @@ function MessageBox({ messages, setMessages }: { messages: Array<{ role: "user" 
             return
         }
         console.log("send msg", messages)
-        if (messages.length > 0) {
 
-            setMessages(prev => [...prev, { role: "user", content: input }]);
-        }
-
+        setMessages(prev => [...prev, { role: "user", content: input }]);
         setInput("");
         setLoading(true);
-        if (user) {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/chat`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ question: input, mode: "logged" })
-            })
-            if (res.status == 429) {
-                setTimeout(() => {
-                    toast.error("Too many requests, please wait for 5 minutes")
-                }, 500)
-                setLoading(false)
-                setLimit(true)
-                return;
 
-            }
-            const data = await res.json();
-            setMessages(prev => [...prev, { role: "assistant", content: data.answer }]);
-            setLoading(false);
-
-            return
-        }
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/chat`, {
             method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ question: input, mode: "guest" })
+            body: JSON.stringify({ question: input, })
         });
 
         if (response.status == 429) {

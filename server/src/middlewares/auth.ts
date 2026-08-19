@@ -62,4 +62,26 @@ const requireRole = (...roles: string[]) => {
     }
 }
 
-export { authenticateUser, generateAccessToken, generateRefreshToken, requireRole }
+const chatMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const token = req.cookies?.accessToken;
+
+        if (!token) {
+            return next()
+        }
+        jwt.verify(token, process.env.JWT_SECRET!, (err: any, user: any) => {
+            if (err) {
+                return res.status(403).json({
+                    success: false,
+                    message: err.message
+                })
+            }
+            req.user = user
+            next()
+        })
+    } catch (error) {
+
+    }
+}
+
+export { authenticateUser, generateAccessToken, generateRefreshToken, requireRole, chatMiddleware }

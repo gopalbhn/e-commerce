@@ -77,7 +77,7 @@ const NavBar = () => {
                     )
                 })}
             </div>
-            <div className=" flex-1 flex justify-end  rounded-xl relative hidden md:flex">
+            <div className=" flex-1  flex justify-end  rounded-xl relative hidden md:flex">
 
                 <ActionSearchBar />
             </div>
