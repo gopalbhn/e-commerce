@@ -14,9 +14,34 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
         return;
     }
     const [products, setProducts] = useState<any>(null)
-    const [totalCartItem, setTotalCartItem] = useState(1);
+
     const [address, setAddress] = useState<any>([])
-    const [totalItem, setTotalItem] = useState(0)
+    const [totalItem, setTotalItem] = useState(1)
+    const [code, setCode] = useState("")
+    const [isCouponApplied, setIsCouponApplied] = useState(false)
+    const [discount, setDiscount] = useState(0)
+    const [coupon, setCoupon] = useState<any>([])
+    const applyCode = async () => {
+        // try {
+        //     const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/apply/${code}`, {
+        //         credentials: "include"
+        //     })
+        //     const data = await res.json()
+        //     if (data.success) {
+        //         setIsCouponApplied(true)
+        //         setDiscount(data.data.discount)
+        //     }
+
+        // } catch (error) {
+        //     console.log(error)
+        // }
+        setCoupon((prev: any) => [...prev, {
+            code
+        }])
+        setIsCouponApplied(true)
+        setDiscount(10)
+    }
+
     const navigate = useNavigate();
     useEffect(() => {
         const fetchProduct = async () => {
@@ -215,14 +240,14 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
 
                                 <div className="flex justify-between">
                                     <span>SubTotal</span>
-                                    <span>{subTotal}</span>
+                                    <span>{subTotal.toFixed(2)}</span>
                                 </div>
 
                                 <div className="flex justify-between">
                                     <span>Tax</span>
 
 
-                                    {tax}
+                                    {tax.toFixed(2)}
 
                                 </div>
 
@@ -230,7 +255,43 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
                                     <span>Shipping</span>
                                     <span>{shipping}</span>
                                 </div>
-
+                                <div className="w-full border-b border-gray-400">
+                                    <p>Discount Code</p>
+                                    <div className="w-full flex items-center justify-between my-3 gap-x-3">
+                                        <input placeholder="Enter Code"
+                                            onChange={(e) => {
+                                                const value = e.target.value.trim().toUpperCase()
+                                                setCode(value)
+                                            }}
+                                            value={code}
+                                            className="py-1.5 w-full  px-8 rounded-xl border border-gray-300 bg-white"
+                                        >
+                                        </input>
+                                        {
+                                            code.length > 4 ? (
+                                                <button className="py-1.5 px-3 rounded-xl bg-primary text-white" onClick={applyCode}>Apply</button>
+                                            ) : (
+                                                <button disabled className="py-1.5 px-3 rounded-xl bg-secondary-light text-white">Apply</button>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        {
+                                            isCouponApplied && (
+                                                <div className="w-full flex items-center justify-between my-3">
+                                                    {coupon.map((coupon: any, index: number) => (
+                                                        <div key={index} className="w-full flex items-center justify-between ">
+                                                            <div className="bg-secondary-light text-primary px-3 rounded-lg">
+                                                                {coupon?.code}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                    <p className="text-primary"> Discount: {1}%</p>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                </div>
                                 <div className="border-t pt-3 flex justify-between font-bold text-lg">
                                     <span>Total</span>
                                     <span>{total.toFixed(2)}</span>

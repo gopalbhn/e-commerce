@@ -104,11 +104,11 @@ const getOrder = async (req: Request, res: Response) => {
 const createOrder = async (req: Request, res: Response) => {
     try {
         const buyer = req.user?.id;
+        const buyNowData = await BuyNow.findOne({ userId: buyer });
+        if (buyNowData) {
+            const { productId, quantity } = buyNowData;
+            const product = await Product.findById(productId);
 
-        const product = await BuyNow.findOne({ userId: buyer }).populate("productId");
-        console.log("Product", product);
-
-        if (product) {
             const shippingAddress = await Address.findOne({ user: buyer });
             if (!shippingAddress) {
                 return res.status(400).json({
@@ -116,19 +116,20 @@ const createOrder = async (req: Request, res: Response) => {
                     message: "Shipping address not found",
                 });
             }
+
             const order = await Order.create({
                 buyer,
-                items: [
-                    {
-                        product: product.productId,
-                        quantity: product.quantity,
-                        price: product.price,
-                    },
-                ],
-                totalPrice: product.price,
+                items: [{
+                    product: product?._id,
+                    quantity,
+                    price: product?.price,
+
+                }],
+                totalPrice: quantity * product?.price!,
                 paymentMethod: req.body.paymentMethod,
                 shippingAddress: shippingAddress._id,
                 orderStatus: "Pending",
+                paymentStatus: "Pending",
             });
             await BuyNow.deleteOne({ userId: buyer });
             return res.status(201).json({

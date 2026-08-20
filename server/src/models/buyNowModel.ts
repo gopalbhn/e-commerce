@@ -16,7 +16,14 @@ const buyNowModel = new Schema({
         type: Number,
         required: true,
     },
-
+    couponId: {
+        type: Schema.Types.ObjectId,
+        ref: "Coupon",
+    },
+    couponApplied: {
+        type: Boolean,
+        default: false,
+    },
     status: {
         type: String,
         enum: ["active", "inactive"],

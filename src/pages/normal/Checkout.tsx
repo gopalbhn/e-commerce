@@ -651,7 +651,7 @@ const OrderSummary = ({ products, coupon, calculateTotal, product }: any) => {
 
         <div className="flex justify-between">
           <span className="text-gray-600">Tax</span>
-          <span>NPR.{tax}</span>
+          <span>NPR.{tax.toFixed(2)}</span>
         </div>
       </div>
 
