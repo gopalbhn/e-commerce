@@ -31,9 +31,13 @@ const buyNowModel = new Schema({
     },
     expiresAt: {
         type: Date,
+        default: Date.now() + 15 * 60 * 1000,
+        expires: 0
     },
 },
     { timestamps: true })
+
+
 const BuyNow = mongoose.model("BuyNow", buyNowModel)
 
 export default BuyNow

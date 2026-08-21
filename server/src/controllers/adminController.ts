@@ -198,7 +198,13 @@ const rejectSeller = async (req: Request, res: Response) => {
 
 const mostSoldProduct = async (req: Request, res: Response) => {
     try {
-        const products = await Product.find({}).sort({
+        const products = await Product.find({}).populate({
+            path: "category",
+            select: "name"
+        }).populate({
+            path: "seller",
+            select: "name"
+        }).sort({
             sold: -1
         }).limit(10)
         return res.status(200).json({
@@ -221,9 +227,14 @@ const recentProduct = async (req: Request, res: Response) => {
         }).populate({
             path: "category",
             select: "name"
-        }).sort({
-            updatedAt: -1
-        }).limit(4)
+        }).populate({
+            path: "seller",
+            select: "name"
+        })
+
+            .sort({
+                updatedAt: -1
+            }).limit(4)
         return res.status(200).json({
             success: true,
             products

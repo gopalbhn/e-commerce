@@ -143,14 +143,14 @@ const SellerDashboard = () => {
         )
     }
     return (
-        <div className="min-h-screen w-full bg-gray-100 flex">
+        <div className="min-h-screen w-full bg-gray-100 flex overflow-x-hidden">
             <SellerSideBar open={open} />
             {viewOrder && <OrderDetailComponent onclose={() => setViewOrder(false)} orders={orderDetail} />}
             <section
-                className={`flex-1 flex h-full  flex-col min-w-0 transition-all duration-300 ${open ? "ml-[15%] bg-black/10 md:bg-gray-100 md:overflow-scroll overflow-hidden h-screen" : "ml-0 bg-gray-100 "
+                className={`flex-1 min-w-0 flex h-full flex-col transition-all duration-300 ${open ? "ml-[20%] lg:ml-[15%]  " : "ml-0 bg-gray-100 "
                     }`}
             >
-                {/* Header */}
+
                 <div className={`h-16 w-full ${open ? "px-10 " : "p-4 "} md:px-8 flex gap-2 flex-shrink-0 items-center  bg-white shadow-sm`}>
                     <button onClick={() => setOpen(!open)}>
                         <MdMenu size={28} />
@@ -159,7 +159,7 @@ const SellerDashboard = () => {
                     <h1 className="text-2xl font-bold">Dashboard</h1>
                 </div>
 
-                {/* Cards */}
+
                 <div className="p-2 md:p-8">
                     <div className=" grid grid-cols-[repeat(1,minmax(150px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-6">
                         {cards.map((card: any) => (

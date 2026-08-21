@@ -14,7 +14,7 @@ import type { DashboardStats, SellerRequest } from '@/types/adminTypes.js'
 const AdminDashboard = () => {
   const [open, setOpen] = useState<boolean>(true)
   const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [, setMostSoldProduct] = useState<any[]>([])
+  const [mostSoldProduct, setMostSoldProduct] = useState<any[]>([])
   const [recentProducts, setRecentProducts] = useState<any[]>([])
   const [sellerRequests, setSellerRequests] = useState<SellerRequest[]>([])
   async function fetchstats() {
@@ -39,7 +39,8 @@ const AdminDashboard = () => {
 
       const data = await res.json()
       if (data.success) {
-        setMostSoldProduct(data.data)
+        console.log("most", data.products)
+        setMostSoldProduct(data.products)
       }
 
     } catch (error: any) {
@@ -55,6 +56,7 @@ const AdminDashboard = () => {
 
       const data = await res.json()
       if (data.success) {
+        console.log("recent", data.products)
         setRecentProducts(data.products)
       }
     } catch (error: any) {
@@ -163,7 +165,7 @@ const AdminDashboard = () => {
       )
     }, {
       header: "Seller",
-      render: (item: any) => item?.owner?.shopName
+      render: (item: any) => item?.seller?.name
     }
   ]
 
@@ -191,7 +193,7 @@ const AdminDashboard = () => {
     },
     {
       header: "Seller",
-      render: (item: any) => item?.owner?.shopName
+      render: (item: any) => item?.seller.name
     }
   ]
 
@@ -294,7 +296,7 @@ const AdminDashboard = () => {
 
         <div className='w-full mt-10'>
           <h1 className='text-body font-semibold mb-4'>Most Sold Products</h1>
-          <Table data={recentProducts} columns={SoldProductColumn} />
+          <Table data={mostSoldProduct} columns={SoldProductColumn} />
         </div>
         <div className='w-full mt-10'>
           <h1 className='text-body font-semibold mb-4'>Recent Products</h1>

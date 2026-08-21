@@ -9,12 +9,15 @@ import Table from '@/components/normal/table'
 import { Eye } from 'lucide-react'
 import { CiDeliveryTruck } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
+import OrderDetailComponent from '@/components/normal/orderDetail'
 
 const AllOrders = () => {
     const [open, setOpen] = useState<boolean>(true)
     const [order, setOrder] = useState<any[] | null>(null)
     const [filteredOrder, setFilteredOrder] = useState<any[]>([])
     const [view, setView] = useState<string>("all")
+    const [viewOrder, setViewOrder] = useState(false);
+    const [orderDetail, setOrderDetail] = useState<any>(null);
     const navigate = useNavigate();
     const totalPendingOrder = order?.filter((item: any) => item.orderStatus === "Pending").length;
     const totalCompletedOrder = order?.filter((item: any) => item.orderStatus === "Delivered").length;
@@ -39,6 +42,21 @@ const AllOrders = () => {
     useEffect(() => {
         fetchAllOrder()
     }, [])
+    async function fetchOrderDetail(id: string) {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/${id}`, {
+                method: "GET",
+                credentials: "include"
+            })
+            const data = await res.json()
+            console.log(data)
+            if (data.success) {
+                setOrderDetail(data.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     function handleShippedOrder() {
         setView("shipped");
         setFilteredOrder(order?.filter((item: any) => item.orderStatus === "Shipped"))
@@ -99,7 +117,8 @@ const AllOrders = () => {
 
                     <button
                         onClick={() => {
-                            navigate(`/seller/order/${order._id}`)
+                            fetchOrderDetail(order._id)
+                            setViewOrder(true)
                         }}
                         className="text-gray-400 hover:text-primary-hover transition-colors"
                         title="View Order"
@@ -152,7 +171,7 @@ const AllOrders = () => {
     return (
         <div className="h-full w-full bg-gray-50 flex">
             <SellerSideBar open={open} />
-
+            {viewOrder && <OrderDetailComponent onclose={() => setViewOrder(false)} orders={orderDetail} />}
             <section className={`w-full h-full ${open ? "ml-[15%] p-4" : "ml-0 "} transition-all duration-300 px-10`}>
                 <div className="h-15 w-full flex items-center ">
                     <div className="flex gap-3 items-center">
@@ -167,8 +186,8 @@ const AllOrders = () => {
                 </div>
 
                 <div className="max-w-7xl flex gap-4 items-center ">
-                    <StatsCard title="Pending Shipments" statsNum={totalPendingOrder} icon={<FaCar size={20} />} />
-                    <StatsCard title="Completed Orders" statsNum={totalCompletedOrder} icon={<FaCalendarAlt size={20} />} />
+                    <StatsCard title="Pending Shipments" statsNum={totalPendingOrder} />
+                    <StatsCard title="Completed Orders" statsNum={totalCompletedOrder} />
                 </div>
 
                 <div className="w-full h-full mt-5">
@@ -194,27 +213,27 @@ const AllOrders = () => {
 const StatsCard = ({
     title,
     statsNum,
-    icon,
 
 }: {
-    title: string
-    statsNum: number
-    icon: React.ReactNode
+    title: string;
+    statsNum: number;
+
 }) => {
 
 
+
     return (
-        <div className={`bg-white p-4 rounded-xl shadow-sm border border-gray-100  flex items-center gap-4 hover:shadow-md transition-shadow`}>
-            <div className={`w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary`}>
-                {icon}
-            </div>
-            <div>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{title}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-0.5">{statsNum}</p>
-            </div>
+        <div className="w-[170px] bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+
+            <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide text-primary/80">
+                {title}
+            </p>
+            <h2 className={`text-2xl font-bold mt-1 `}>
+                {statsNum}
+            </h2>
         </div>
-    )
-}
+    );
+};
 
 
 

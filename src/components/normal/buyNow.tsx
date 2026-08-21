@@ -2,14 +2,20 @@ import { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
+interface Icoupon {
+    _id?: string,
+    code?: string,
+    discountRate?: number
+}
 
 interface BuyNowProps {
     productId: string
     onclose: () => void
+    coupon?: Icoupon[]
+    setCoupon?: (data: any) => void
 }
 
-const BuyNow = ({ onclose, productId }: BuyNowProps) => {
+const BuyNow = ({ onclose, productId, coupon, setCoupon }: BuyNowProps) => {
     if (!productId) {
         return;
     }
@@ -19,28 +25,22 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
     const [totalItem, setTotalItem] = useState(1)
     const [code, setCode] = useState("")
     const [isCouponApplied, setIsCouponApplied] = useState(false)
-    const [discount, setDiscount] = useState(0)
-    const [coupon, setCoupon] = useState<any>([])
     const applyCode = async () => {
-        // try {
-        //     const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/apply/${code}`, {
-        //         credentials: "include"
-        //     })
-        //     const data = await res.json()
-        //     if (data.success) {
-        //         setIsCouponApplied(true)
-        //         setDiscount(data.data.discount)
-        //     }
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/apply/${code}`, {
+                credentials: "include"
+            })
+            const data = await res.json()
+            if (data.success) {
+                setCoupon((prev: any) => [...prev, data.data])
+            }
 
-        // } catch (error) {
-        //     console.log(error)
-        // }
-        setCoupon((prev: any) => [...prev, {
-            code
-        }])
-        setIsCouponApplied(true)
-        setDiscount(10)
+        } catch (error) {
+            console.log(error)
+        }
+
     }
+
 
     const navigate = useNavigate();
     useEffect(() => {
@@ -56,6 +56,10 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
         }
         fetchProduct()
         fetchAddresses()
+
+        if (coupon?.length > 0) {
+            setIsCouponApplied(true)
+        }
     }, [productId])
 
     const fetchAddresses = async () => {
@@ -117,7 +121,7 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
     const calculateTotal = () => {
         const subTotal = products?.price * totalItem;
         const tax = subTotal * 0.13;
-        const shipping = 300
+        const shipping = 10
         const total = subTotal + tax + shipping
         return {
             subTotal,
@@ -126,7 +130,7 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
             total
         }
     }
-
+    console.log("couponse", coupon)
     const { subTotal, tax, shipping, total } = calculateTotal()
     return (
         <div className="fixed top-0 left-0 z-100  w-full h-full  flex items-center justify-center backdrop-blur-sm bg-black/50">
@@ -178,7 +182,7 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
                                             {products.name}
                                         </h4>
 
-                                        <div className='flex flex-col gap-4 mb-6'>
+                                        <div className='flex items-center gap-4 mb-2'>
                                             <p>Quantity</p>
                                             <div className='flex items-center gap-4 rounded-xl '>
                                                 <div className='rounded-xl border border-gray-300 bg-white flex items-center gap-4'>
@@ -200,14 +204,9 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
                                                             return prev;
                                                         }
                                                     })}>+</button>
-
                                                 </div>
-
                                             </div>
-
-
                                         </div>
-
                                         <p className="text-gray-500 text-sm">
                                             Stock: {products.stock}
                                         </p>
@@ -227,8 +226,6 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
                             Buy Now
                         </button>
                     </div>
-
-
                     <div className="w-1/3 space-y-5 ">
 
                         <div className="shadow-md rounded-xl p-5">
@@ -245,16 +242,14 @@ const BuyNow = ({ onclose, productId }: BuyNowProps) => {
 
                                 <div className="flex justify-between">
                                     <span>Tax</span>
-
-
                                     {tax.toFixed(2)}
-
                                 </div>
 
                                 <div className="flex justify-between">
                                     <span>Shipping</span>
                                     <span>{shipping}</span>
                                 </div>
+
                                 <div className="w-full border-b border-gray-400">
                                     <p>Discount Code</p>
                                     <div className="w-full flex items-center justify-between my-3 gap-x-3">

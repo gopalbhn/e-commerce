@@ -40,7 +40,7 @@ const SellerSideBar = ({ open }: { open: boolean }) => {
     }
 
     return (
-        <div className={` h-full w-[25%] md:w-[15%] flex flex-col fixed top-0 left-0 z-20 bg-white shadow-sm border-r border-gray-400 p-4 transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className={` h-screen w-[20%] md:w-[15%] flex flex-col fixed top-0 left-0 z-20 bg-white shadow-sm border-r border-gray-400 p-4 overflow-y-scroll  transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}>
 
             <div className="h-12 w-full md:w-40  flex items-center justify-center text-white">
                 <img src={Logo} alt="logo" className="w-full h-full object-cover " />
