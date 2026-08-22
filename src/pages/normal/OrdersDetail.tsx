@@ -52,6 +52,7 @@ const OrderDetail = () => {
   if (loading) {
     return <Loader />
   }
+  console.log('order detail', orders)
   return (
     <div className="h-full w-full">
       <section className="mt-10 mb-15 px-4 md:px-10">
@@ -138,10 +139,9 @@ const OrderDetail = () => {
                   }
 
 
-
                 </div>
               </div>
-              <OrderSummary order={orders} />
+              <OrderSummary data={orders} />
             </div>
           </div>
         )}
