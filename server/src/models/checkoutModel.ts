@@ -6,7 +6,7 @@ const checkoutSchema = new Schema({
         ref: "User",
         required: true,
     },
-    items: {
+    items: [{
         product: {
             type: Schema.Types.ObjectId,
             ref: "Product",
@@ -17,6 +17,10 @@ const checkoutSchema = new Schema({
             required: true,
             default: 1,
         }
+    }],
+    coupon: {
+        type: [Schema.Types.ObjectId],
+        ref: "Coupon",
     },
 })
 

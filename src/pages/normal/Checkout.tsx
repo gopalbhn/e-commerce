@@ -9,14 +9,16 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaPen } from "react-icons/fa";
+import OrderSummaryTable from "@/components/normal/orderSummary";
 const Checkout = () => {
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false)
   const [address, setAddress] = useState<ShippingAddressState | null>(null)
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<any>();
   const [product, setProduct] = useState<any>(null)
   const [editAddress, setEditAddress] = useState<boolean>(false)
   const [coupon, setCoupon] = useState<any>(null)
+  const [code, setCode] = useState<string>("")
   const [param] = useSearchParams()
   const checkout = param.get("mode")
   console.log("checkout", checkout)
@@ -38,58 +40,39 @@ const Checkout = () => {
   }
 
 
-  async function fetchCartItems() {
 
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/cart/cart`, {
-      credentials: "include",
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      console.log("cart data", data.data)
-
-      const allProducts = data.data.products.map((item: any) => ({
-        ...item.productId,
-        quantity: item.quantity
-      }));
-      console.log("all products", allProducts)
-      if (data.data.couponApplied) {
-        setCoupon(data.data.coupon)
-      }
-      setProducts(allProducts);
-
-    }
-  }
-
-  async function fetchBuyNowProduct() {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/buy-now`, {
-      credentials: "include",
-    });
-
-    const data = await res.json();
-    console.log("res", data)
-    console.log(data)
-    if (res.ok) {
-      console.log("data", data.data)
-
-      setProduct(data.data?.productId);
-
-    }
-  }
 
   useEffect(() => {
     fetchShippingAddress()
-    if (checkout == "buy-now") {
-      console.log("control buy now adfasdf")
-      fetchBuyNowProduct();
-    } else {
-      fetchCartItems()
-    }
+
+    getCheckoutSession();
+
   }, [])
 
 
-
+  async function getCheckoutSession() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/checkout`,
+      {
+        credentials: "include",
+      }
+    )
+    if (!res.ok) {
+      return
+    }
+    const data = await res.json();
+    if (data.success) {
+      console.log("checkout session", data.data)
+      // const allProducts = data.data.items.map((item: any) => ({
+      //   ...item.product,
+      //   quantity: item.quantity
+      // }));
+      console.log(data.data)
+      setProducts(data.data)
+      if (data.data?.coupon) {
+        setCoupon(data.data.coupon)
+      }
+    }
+  }
 
   if (loading) {
     return (
@@ -212,22 +195,22 @@ const Checkout = () => {
   }
 
   function calculateTotal() {
-    if (checkout === "buy-now") {
-      console.log("buy", product)
-      return {
-        total: Number(product?.price),
-        tax: Number(product?.price) * 0.13,
-        shipping: 10,
-        Subtotal: Number(product?.price),
-        discount: 0,
-        totalDiscountRate: 0
-      }
-    }
-    const Subtotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
+    // const Subtotal = products.reduce((acc: number, item: any) => acc + Number(item.price) * Number(item.quantity), 0)
+    const data = products;
+    console.log("calculateTotal", data)
+    const product = data?.products ?? data?.items ?? [];
+    console.log("products", products)
+    const subTotal = product.reduce((acc: number, item: any) => {
+      const product = item?.productId ?? item?.product;
+      const price = Number(product?.price ?? 0);
+      const quantity = Number(item?.quantity ?? 0);
 
-    const tax = Subtotal * 0.13
+      return acc + price * quantity;
+    }, 0);
+
+    const tax = subTotal * 0.13
     const shipping = 10
-    let total = Subtotal + tax + shipping
+    let total = subTotal + tax + shipping
 
     let discount = 0
     let totalDiscountRate: number = 0
@@ -237,10 +220,29 @@ const Checkout = () => {
       total = total - coupon.reduce((acc: number, coupon: any) => acc + (coupon.discountRate * total) / 100, 0)
       discount = coupon.reduce((acc: number, coupon: any) => acc + (coupon.discountRate * total) / 100, 0)
       totalDiscountRate = coupon.reduce((acc: number, coupon: any) => acc + coupon.discountRate, 0)
+      console.log('total above', total)
     }
-    return { total, tax, shipping, Subtotal, discount, totalDiscountRate }
+    console.log('total', total)
+    return { total, tax, shipping, subTotal, discount, totalDiscountRate }
   }
-
+  async function applyDiscount() {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/apply/${code}`, {
+        credentials: "include"
+      })
+      const data = await res.json()
+      if (data.success) {
+        toast.success("Coupon Applied Successfully")
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div className="w-full h-full">
       <section className="w-full h-full mt-10 mb-15 px-10">
@@ -276,7 +278,9 @@ const Checkout = () => {
             {step == 2 && <PaymentSetup nextStep={() => setStep(step + 1)} handleEsewaPayment={handleEsewaPayment} handleKhaltiPayment={handleKhaltiPayment} />}
             {step == 3 && <Review />}
           </div>
-          {step !== 3 && <OrderSummary products={products} coupon={coupon} calculateTotal={calculateTotal} product={product} />}
+          {/* {step !== 3 && <OrderSummary products={products} coupon={coupon} calculateTotal={calculateTotal} product={product} />} */}
+          {step !== 3 && <OrderSummaryTable data={products} mode="checkout" applyCode={applyDiscount} code={code} setCode={setCode} />}
+
         </div>
       </section >
       <Footer />
@@ -550,129 +554,7 @@ const AddressDetail = ({ address, nextStep, toogleEditAddress }: any) => {
   )
 }
 
-const OrderSummary = ({ products, coupon, calculateTotal, product }: any) => {
 
-  console.log(" from checkout", products)
-  console.log("coupon checkout", coupon)
-
-  const { total, tax, shipping, Subtotal, discount } = calculateTotal()
-
-
-  return (
-    <div className="w-1/3 rounded-2xl bg-white shadow-md p-6">
-      <h1 className="text-title font-bold mb-6">Order Summary</h1>
-
-      {products?.length > 0 ? (
-        products.map((pro: any) => (
-          <div
-            key={pro._id}
-            className="flex gap-4 mb-6"
-          >
-            <div className="w-15 h-15 rounded-xl overflow-hidden shrink-0">
-              <img
-                src={pro?.images?.[0] || pro?.thumbnails?.[0]}
-                alt={pro?.name || "Product"}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            <div className="flex justify-between w-full">
-              <div>
-                <h2 className="font-semibold text-sm">
-                  {pro?.name}
-                </h2>
-
-                <p className="text-gray-500">
-                  {pro?.color}
-                </p>
-
-                <p className="text-sm">
-                  Qty: {pro?.quantity}
-                </p>
-              </div>
-
-              <p className="font-semibold text-sm">
-                Npr.{Number(pro?.price) * Number(pro?.quantity)}
-              </p>
-            </div>
-          </div>
-        ))
-      ) : product ? (
-        <div className="flex gap-4 mb-6">
-          <div className="w-15 h-15 rounded-xl overflow-hidden shrink-0">
-            <img
-              src={product?.images?.[0] || product?.thumbnails?.[0]}
-              alt={product?.name || "Product"}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          <div className="flex justify-between w-full">
-            <div>
-              <h2 className="font-semibold text-sm">
-                {product?.name}
-              </h2>
-
-              <p className="text-gray-500">
-                {product?.color}
-              </p>
-
-              <p className="text-sm">
-                Qty: {product?.quantity || 1}
-              </p>
-            </div>
-
-            <p className="font-semibold text-sm">
-              Npr.
-              {Number(product?.price) * Number(product?.quantity || 1)}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <p className="text-gray-500">
-          Loading product...
-        </p>
-      )}
-
-
-
-      <hr className="my-6 bg-primary" />
-
-      <div className="space-y-4 text-sm">
-        <div className="flex justify-between">
-          <span className="text-gray-600">Subtotal</span>
-          <span>NPR.{Subtotal}</span>
-        </div>
-
-        <div className="flex justify-between">
-          <span className="text-gray-600">Shipping</span>
-          <span className="text-green-600 font-semibold">NPR.{shipping}</span>
-        </div>
-
-        <div className="flex justify-between">
-          <span className="text-gray-600">Tax</span>
-          <span>NPR.{tax.toFixed(2)}</span>
-        </div>
-      </div>
-
-      <hr className="my-6" />
-
-      <div className="flex justify-between items-center">
-        <div className="w-full ">
-          <div className="flex items-center justify-between">
-
-            <h2>Discount</h2>
-            <h2>NPR.{discount.toFixed(2)}</h2>
-          </div>
-          <div className="flex items-center justify-between my-3">
-            <p>Total</p>
-            <p>NPR.{total.toFixed(2)}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 const Review = () => {
   const navigate = useNavigate()

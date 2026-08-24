@@ -152,6 +152,38 @@ const ProductDetail = () => {
 
   }
 
+  const handleBuyNow = async () => {
+    if (!user) {
+      toast.error("Please login to buy product")
+      setTimeout(() => {
+
+        navigate("/login")
+      }, 1500)
+      return;
+    }
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/checkout/create`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        items: [
+          {
+            id,
+            quantity: 1
+          }
+        ]
+      })
+    })
+
+    const data = await res.json()
+    if (data.success) {
+      navigate("/checkout")
+    }
+  }
+
   return (
     <div className='h-full w-full relative'>
       {successModalOpen && (
@@ -268,7 +300,7 @@ const ProductDetail = () => {
               </button>
             </div>
 
-            <button className='w-full max-w-xl md:px-10 md:py-4 py-3 px-6 rounded-xl bg-black text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300' onClick={() => setOpenProductModal(true)}>
+            <button className='w-full max-w-xl md:px-10 md:py-4 py-3 px-6 rounded-xl bg-black text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300' onClick={handleBuyNow}>
               Buy Now
             </button>
           </div>

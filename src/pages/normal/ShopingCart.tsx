@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { FiHeart } from "react-icons/fi";
 
 import OrderSummaryTable from "@/components/normal/orderSummary";
+import { useNavigate } from "react-router-dom";
 interface Icoupon {
     _id?: string,
     code?: string,
@@ -12,24 +13,37 @@ interface Icoupon {
 }
 const ShopingCart = () => {
 
-    const [quantity, setQuantity] = useState<number>(0);
+
     const [products, setProducts] = useState<any[]>([]);
     const [isWishListed, setIsWishlisted] = useState(false)
     const [isCouponApplied, setIsCouponApplied] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<any[]>([])
-    const [cart, setCart] = useState<any>()
+    const [cart, setCart] = useState<any[]>([])
     const [coupon, setCoupon] = useState<Icoupon[]>([]);
     const [code, setCode] = useState("")
+    const navigate = useNavigate();
+
     useEffect(() => {
         fetchCartItems();
     }, []);
 
-    const handleSelectedProduct = (id: string) => {
 
-        if (selectedProduct.includes(id)) {
-            setSelectedProduct(selectedProduct.filter((item) => item !== id))
+    console.log("selected", selectedProduct)
+    const handleSelectedProduct = (id: string) => {
+        console.log("id", id)
+        if (selectedProduct.some(selected => selected.id === id)) {
+            setSelectedProduct(selectedProduct.filter((item) => item.id !== id))
+            setCart(prev => prev.filter(item => item.products._id !== id))
         } else {
-            setSelectedProduct([...selectedProduct, id])
+            const quantity = products.find(item => item._id === id)?.quantity
+            setSelectedProduct([...selectedProduct, { id, quantity: quantity }])
+            setCart(prev => [
+                ...prev,
+                {
+                    products: products.find((item: any) => item._id === id),
+                    quantity: products?.find((item: any) => item._id === id)?.quantity,
+                }
+            ])
         }
     }
 
@@ -40,7 +54,6 @@ const ShopingCart = () => {
 
         const data = await res.json();
         if (data.success) {
-            setCart(data.data)
             const allProducts = data.data.products.map((item: any) => ({
                 ...item.productId,
                 quantity: item.quantity
@@ -65,7 +78,7 @@ const ShopingCart = () => {
         if (data.success) {
             toast.success("Item Removed Successfully");
             setTimeout(() => {
-                window.location.reload()
+                fetchCartItems()
             }, 500)
         }
     }
@@ -115,7 +128,60 @@ const ShopingCart = () => {
         }
     }
 
+    async function updateProductQuantitiy(id: string, quantity: number) {
+        console.log("quantity", quantity)
+        if (quantity < 1) {
+            toast.error("Quantity must be at least 1")
+            return
+        }
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/cart/update-cart/${id}`, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity
+                })
+            })
+            const data = await res.json()
+            if (data.success) {
+                await fetchCartItems()
+                toast.success("Quantity Updated Successfully")
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
+    const handleProceedToCheckout = async () => {
+        console.log("control here ")
+        if (selectedProduct.length === 0) {
+            toast.error("Please select at least one product")
+            return
+        }
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/checkout/create`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                items: selectedProduct
+            })
+        })
+
+        const data = await res.json()
+        if (data.success) {
+            navigate("/checkout",)
+        }
+
+    }
+
+    console.log("cart", cart)
 
     if (products.length == 0) {
         return (
@@ -141,10 +207,11 @@ const ShopingCart = () => {
                     <div className="w-full md:w-2/3 space-y-5  rounded-xl">
                         {
                             products?.map((item) => {
-                                const isSelected = selectedProduct.includes(item._id)
+                                console.log("product selected", selectedProduct)
+                                const isSelected = selectedProduct.some(selected => selected.id == item._id)
                                 return (
 
-                                    <div className={`w-full  flex gap-2 shadow-md p-3 font-medium text-sm ${isSelected ? "bg-primary/5 scale-95" : ""}`} key={item.id} onClick={() => handleSelectedProduct(item._id)}>
+                                    <div className={`w-full  flex gap-2 shadow-md p-3 font-medium text-sm ${isSelected ? "bg-primary/5 scale-95" : ""}`} key={item.id} onClick={() => handleSelectedProduct(item._id)} >
                                         <div className="h-30 w-30 overflow-hidden rounded-xl">
 
                                             <img src={item?.thumbnails} alt="Product Image" className="w-full h-full object-cover" />
@@ -163,14 +230,14 @@ const ShopingCart = () => {
                                             </div>
                                             <div className="w-full flex justify-between">
                                                 <div className='rounded-xl border border-gray-300 bg-white flex items-center gap-4'>
-                                                    <button className='px-3 py-1.5 hover:bg-gray-200' onClick={(e) => {
+                                                    <button className={`px-3 py-1.5 hover:bg-gray-200 ${isSelected ? "bg-primary/5" : ""}`} disabled={isSelected} onClick={(e) => {
                                                         e.stopPropagation()
-                                                        setQuantity(quantity - 1)
+                                                        updateProductQuantitiy(item._id, item.quantity - 1)
                                                     }} >-</button>
-                                                    <span className='text-sm font-semibold'>{quantity}</span>
-                                                    <button className='px-3 py-1.5 hover:bg-gray-200' onClick={(e) => {
+                                                    <span className='text-sm font-semibold'>{item.quantity}</span>
+                                                    <button className={`px-3 py-1.5 hover:bg-gray-200 ${isSelected ? "bg-primary/5" : ""}`} disabled={isSelected} onClick={(e) => {
                                                         e.stopPropagation()
-                                                        setQuantity(quantity + 1)
+                                                        updateProductQuantitiy(item._id, item.quantity + 1)
                                                     }} >+</button>
 
                                                 </div>
@@ -205,7 +272,7 @@ const ShopingCart = () => {
                     </div>
                     <div className="w-full md:w-1/3  p-6 rounded-xl shadow-md">
 
-                        <OrderSummaryTable data={cart} applyCode={applyDiscount} />
+                        <OrderSummaryTable data={cart} applyCode={applyDiscount} handleCheckout={handleProceedToCheckout} />
                     </div>
                 </div>
             </section >

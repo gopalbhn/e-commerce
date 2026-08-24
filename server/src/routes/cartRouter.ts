@@ -9,6 +9,6 @@ const router = Router();
 router.get("/cart", authenticateUser, getAllCartItem)
 router.post("/add-to-cart", authenticateUser, addToCartLimiter, addToCart)
 router.delete("/remove/:id", authenticateUser, removeFromCart)
-router.put("/update-cart", authenticateUser, updateCart)
+router.put("/update-cart/:cartItemId", authenticateUser, updateCart)
 
 export default router

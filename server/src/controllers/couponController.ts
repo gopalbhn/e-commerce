@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Coupon from "../models/couponModel.js";
 import { couponSchema } from "../schemas/couponSchema.js";
 import { Cart } from "../models/cartModel.js";
+import Checkout from "../models/checkoutModel.js";
 
 const createCoupon = async (req: Request, res: Response) => {
     try {
@@ -88,16 +89,16 @@ const useCoupon = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Coupon is used up" })
         }
 
-        const cart = await Cart.findOne({ userId: userId });
-        if (!cart) {
+        const checkout = await Checkout.findOne({ user: userId });
+        if (!checkout) {
             return res.status(404).json({ success: false, message: "Cart not found" });
         }
         // if (cart.couponApplied) {
         //     return res.status(400).json({ success: false, message: "Coupon is already applied" })
         // }
 
-        if (cart.couponApplied) {
-            const cartCoupon = await Cart.findOne({ userId: userId }).populate({
+        if (checkout.coupon.length > 0) {
+            const cartCoupon = await Checkout.findOne({ user: userId }).populate({
                 path: "coupon",
                 select: "code"
             })
@@ -105,16 +106,15 @@ const useCoupon = async (req: Request, res: Response) => {
             if ((cartCoupon as any)?.coupon.some((c: any) => c.code === code)) {
                 return res.status(400).json({ success: false, message: "Coupon is already applied" })
             } else {
-                cart.coupon.push(coupon._id);
-                await cart.save();
+                checkout.coupon.push(coupon._id);
+                await checkout.save();
                 coupon.usedCount++
                 await coupon.save()
                 return res.status(200).json({ success: true, message: "Coupon applied successfully" })
             }
         }
-        cart.coupon.push(coupon._id);
-        cart.couponApplied = true;
-        await cart.save();
+        checkout.coupon.push(coupon._id);
+        await checkout.save();
 
         coupon.usedCount++
         await coupon.save()

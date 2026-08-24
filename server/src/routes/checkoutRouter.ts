@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { createCheckoutSession, getCheckoutSession } from "../controllers/checkoutController.js";
 import { authenticateUser } from "../middlewares/auth.js";
+import { createCheckoutSession, getCheckoutSession } from "../controllers/checkoutController.js";
 
 
 const router = Router();
 
-router.post("/create-checkout-session", authenticateUser, createCheckoutSession);
+router.post("/create", authenticateUser, createCheckoutSession);
 router.get("/", authenticateUser, getCheckoutSession);
 
 export default router;

@@ -168,8 +168,12 @@ const removeFromCart = async (req: Request, res: Response) => {
 
 const updateCart = async (req: Request, res: Response) => {
     try {
+        console.log("req.body", req.body, "Req.params", req.params)
         const { cartItemId } = req.params;
         const { quantity } = req.body;
+        if (quantity == 0) {
+
+        }
         if (!cartItemId) {
             return res.status(400).json({
                 success: false,

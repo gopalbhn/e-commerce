@@ -4,6 +4,7 @@ import { Cart } from "../models/cartModel.js";
 import Address from "../models/addressModel.js";
 import Product from "../models/productModel.js";
 import BuyNow from "../models/buyNowModel.js";
+import Checkout from "../models/checkoutModel.js";
 
 
 
@@ -138,12 +139,12 @@ const createOrder = async (req: Request, res: Response) => {
             });
         }
 
-        const cart = await Cart.findOne({ userId: buyer }).populate("coupon");
+        const checkout = await Checkout.findOne({ user: buyer }).populate("coupon");
 
-        if (!cart || cart.products.length === 0) {
+        if (!checkout || checkout.items.length === 0) {
             return res.status(400).json({
                 success: false,
-                message: "Cart is empty",
+                message: "Checkout session is empty",
             });
         }
 
@@ -156,7 +157,7 @@ const createOrder = async (req: Request, res: Response) => {
             });
         }
 
-        const productIds = cart.products.map((p) => p.productId);
+        const productIds = checkout.items.map((p) => p.product);
 
         const allProducts = await Product.find({
             _id: { $in: productIds },
@@ -169,9 +170,9 @@ const createOrder = async (req: Request, res: Response) => {
             });
         }
 
-        const items = cart.products.map((cartItem) => {
+        const items = checkout.items.map((item) => {
             const product = allProducts.find(
-                (p) => p._id.toString() === cartItem.productId.toString()
+                (p) => p._id.toString() === item.product.toString()
             );
 
             if (!product) {
@@ -179,9 +180,9 @@ const createOrder = async (req: Request, res: Response) => {
             }
 
             return {
-                product: cartItem.productId,
-                quantity: cartItem.quantity,
-                price: product.price * cartItem.quantity,
+                product: item.product,
+                quantity: item.quantity,
+                price: product.price * item.quantity,
             };
         });
         const subTotal = items.reduce((acc, item) => acc + item.price, 0);
@@ -194,8 +195,8 @@ const createOrder = async (req: Request, res: Response) => {
         let totalDiscountRate = 0;
         let discount = 0;
 
-        if (cart.couponApplied && Array.isArray(cart.coupon)) {
-            totalDiscountRate = cart.coupon.reduce(
+        if (checkout.coupon.length > 0) {
+            totalDiscountRate = checkout.coupon.reduce(
                 (acc: number, c: any) => acc + c.discountRate,
                 0
             );
@@ -209,14 +210,14 @@ const createOrder = async (req: Request, res: Response) => {
             buyer,
             items,
             totalPrice,
-            couponApplied: cart.couponApplied,
+
             discountAmount: discount,
             paymentMethod: req.body.paymentMethod,
             shippingAddress: shippingAddress._id,
             orderStatus: "Pending",
         });
 
-        await Cart.deleteOne({ userId: buyer });
+        await Checkout.deleteOne({ user: buyer });
 
         return res.status(201).json({
             success: true,
