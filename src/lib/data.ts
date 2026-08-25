@@ -1,6 +1,11 @@
 import { BiDevices, BiDumbbell, BiFace, BiHome } from "react-icons/bi";
 import { TbShirt } from "react-icons/tb";
 
+import Electornics from "../assets/category/cart-electornics.webp"
+import Fashon from "../assets/category/cart-fashon.webp"
+import Beauty from "../assets/category/cart-beauty.webp"
+import Sports from "../assets/category/cart-sports.webp"
+import Home from "../assets/category/cart-home-appliance.webp"
 export const AprovalRequestData = [
     {
         sotre: "Urban Threads",
@@ -727,14 +732,14 @@ export const products = [
 ];
 
 
-
 export const category = [
-    { title: "Electronics", icon: BiDevices },
-    { title: "Fashion", icon: TbShirt },
-    { title: "Home Appliance", icon: BiHome },
-    { title: "Beauty", icon: BiFace },
-    { title: "Sports", icon: BiDumbbell }
+    { title: "Electronics", image: Electornics },
+    { title: "Fashion", image: Fashon },
+    { title: "Home Appliance", image: Home },
+    { title: "Beauty", image: Beauty },
+    { title: "Sports", image: Sports }
 ];
+
 
 
 

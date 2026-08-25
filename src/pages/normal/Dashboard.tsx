@@ -70,9 +70,115 @@ const heroSlides = [
 
 const AUTOPLAY_INTERVAL = 4500
 
+// const HeroCarousel = () => {
+//     const [current, setCurrent] = useState(0)
+
+//     const [animating, setAnimating] = useState(false)
+//     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+//     const total = heroSlides.length
+
+//     const goTo = useCallback(
+//         (index: number) => {
+//             if (animating) return
+//             setAnimating(true)
+//             setCurrent((index + total) % total)
+//             setTimeout(() => setAnimating(false), 600)
+//         },
+//         [animating, total]
+//     )
+
+//     const next = useCallback(() => goTo(current + 1), [current, goTo])
+
+
+//     // auto-play
+//     useEffect(() => {
+//         timerRef.current = setTimeout(next, AUTOPLAY_INTERVAL)
+//         return () => {
+//             if (timerRef.current) clearTimeout(timerRef.current)
+//         }
+//     }, [current, next])
+
+//     const slide = heroSlides[current]
+
+//     return (
+//         <section className="relative w-full h-145 overflow-hidden rounded-xl shadow-md select-none">
+
+//             {heroSlides.map((s, i) => (
+//                 <div
+//                     key={i}
+//                     className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"
+//                         }`}
+//                 >
+//                     <div
+//                         className="absolute inset-0 bg-cover bg-center"
+//                         style={{ backgroundImage: `url('${s.image}')` }}
+//                     />
+//                     <div
+//                         className={`absolute inset-0 bg-linear-to-r ${s.overlay}`}
+//                     />
+//                 </div>
+//             ))}
+
+//             {/* Content */}
+//             <div className="relative z-20 h-full flex flex-col justify-center px-12 max-w-2xl">
+//                 <span
+//                     key={`tag-${current}`}
+//                     className="inline-block text-xs font-semibold uppercase tracking-widest text-primary mb-3
+//                                animate-[fadeSlideUp_0.5s_ease_both]"
+//                 >
+//                     {slide.tag}
+//                 </span>
+//                 <h2
+//                     key={`h-${current}`}
+//                     className="text-5xl font-bold leading-tight
+//                                animate-[fadeSlideUp_0.5s_0.1s_ease_both]"
+//                 >
+//                     {slide.headline}
+//                 </h2>
+//                 <p
+//                     key={`p-${current}`}
+//                     className="mt-4 text-secondary text-base max-w-md
+//                                animate-[fadeSlideUp_0.5s_0.2s_ease_both]"
+//                 >
+//                     {slide.sub}
+//                 </p>
+//                 <button
+//                     key={`btn-${current}`}
+//                     className="mt-7 self-start px-7 py-3 bg-primary text-white rounded-lg
+
+//                                font-medium hover:bg-primary-hover transition-colors duration-200
+//                                animate-[fadeSlideUp_0.5s_0.3s_ease_both]"
+//                 >
+//                     {slide.cta}
+//                 </button>
+
+//             </div>
+
+//             {/* Prev / Next arrows */}
+
+
+//             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+//                 {heroSlides.map((_, i) => (
+//                     <button
+//                         key={i}
+//                         onClick={() => goTo(i)}
+//                         aria-label={`Go to slide ${i + 1}`}
+//                         className={`rounded-full transition-all duration-300 ${i === current
+//                             ? "w-7 h-2.5 bg-primary"
+//                             : "w-2.5 h-2.5 bg-white/60 hover:bg-white"
+//                             }`}
+//                     />
+//                 ))}
+//             </div>
+
+//         </section>
+//     )
+// }
+
 const HeroCarousel = () => {
     const [current, setCurrent] = useState(0)
     const [animating, setAnimating] = useState(false)
+    const [loaded, setLoaded] = useState(false)
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const total = heroSlides.length
 
@@ -81,17 +187,20 @@ const HeroCarousel = () => {
             if (animating) return
             setAnimating(true)
             setCurrent((index + total) % total)
-            setTimeout(() => setAnimating(false), 600)
+            setTimeout(() => setAnimating(false), 350)
         },
         [animating, total]
     )
 
     const next = useCallback(() => goTo(current + 1), [current, goTo])
 
-
-    // auto-play
     useEffect(() => {
-        timerRef.current = setTimeout(next, AUTOPLAY_INTERVAL)
+        const loadTimer = setTimeout(() => setLoaded(true), 500)
+        return () => clearTimeout(loadTimer)
+    }, [])
+
+    useEffect(() => {
+        timerRef.current = setTimeout(next, 3000)
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current)
         }
@@ -100,71 +209,69 @@ const HeroCarousel = () => {
     const slide = heroSlides[current]
 
     return (
-        <section className="relative w-full h-145 overflow-hidden rounded-xl shadow-md select-none">
+        <section className="relative h-screen min-h-[650px] w-full overflow-hidden bg-[#f3f1eb] select-none">
 
-            {heroSlides.map((s, i) => (
-                <div
-                    key={i}
-                    className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"
-                        }`}
-                >
+            {/* Images */}
+            <div
+                className={`absolute top-0 h-full overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(.77,0,.18,1)] ${loaded ? "left-0 w-full" : "left-1/2 w-1/2"
+                    }`}
+            >
+                {heroSlides.map((s, i) => (
                     <div
-                        className="absolute inset-0 bg-cover bg-center"
+                        key={i}
+                        className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ${i === current
+                            ? "scale-100 opacity-100"
+                            : "scale-105 opacity-0"
+                            }`}
                         style={{ backgroundImage: `url('${s.image}')` }}
                     />
-                    <div
-                        className={`absolute inset-0 bg-linear-to-r ${s.overlay}`}
-                    />
-                </div>
-            ))}
+                ))}
 
-            {/* Content */}
-            <div className="relative z-20 h-full flex flex-col justify-center px-12 max-w-2xl">
-                <span
-                    key={`tag-${current}`}
-                    className="inline-block text-xs font-semibold uppercase tracking-widest text-primary mb-3
-                               animate-[fadeSlideUp_0.5s_ease_both]"
-                >
-                    {slide.tag}
-                </span>
-                <h2
-                    key={`h-${current}`}
-                    className="text-5xl font-bold leading-tight
-                               animate-[fadeSlideUp_0.5s_0.1s_ease_both]"
-                >
-                    {slide.headline}
-                </h2>
-                <p
-                    key={`p-${current}`}
-                    className="mt-4 text-secondary text-base max-w-md
-                               animate-[fadeSlideUp_0.5s_0.2s_ease_both]"
-                >
-                    {slide.sub}
-                </p>
-                <button
-                    key={`btn-${current}`}
-                    className="mt-7 self-start px-7 py-3 bg-primary text-white rounded-lg
-                            
-                               font-medium hover:bg-primary-hover transition-colors duration-200
-                               animate-[fadeSlideUp_0.5s_0.3s_ease_both]"
-                >
-                    {slide.cta}
-                </button>
-
+                <div
+                    className={`absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/30 transition-opacity duration-1000 ${loaded ? "opacity-100" : "opacity-0"
+                        }`}
+                />
             </div>
 
-            {/* Prev / Next arrows */}
+            {/* Content */}
+            <div className="absolute inset-0 z-10 mt-40  px-6 text-white md:px-10 lg:px-[5vw]">
+                <div
+                    className={`max-w-2xl transition-all duration-500 ${animating
+                        ? "translate-y-5 opacity-0 blur-md"
+                        : "translate-y-0 opacity-100 blur-0"
+                        }`}
+                >
+                    <p className="mb-5 text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                        {slide.tag}
+                    </p>
 
+                    <h2 className="mb-7 text-xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-4xl md:text-5xl lg:text-6xl">
+                        {slide.headline}
+                    </h2>
 
-            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+                    <p className="mb-8 max-w-lg text-base leading-7 text-white/80 md:text-lg">
+                        {slide.sub}
+                    </p>
+
+                    <button className="group inline-flex items-center gap-4 rounded-xl bg-primary px-7 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-hover">
+                        {slide.cta}
+                        <span className="transition-transform duration-300 group-hover:translate-x-1">
+                            →
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            {/* Indicators */}
+            <div className="absolute bottom-8 right-8 z-20 flex gap-2">
                 {heroSlides.map((_, i) => (
                     <button
                         key={i}
                         onClick={() => goTo(i)}
                         aria-label={`Go to slide ${i + 1}`}
-                        className={`rounded-full transition-all duration-300 ${i === current
-                            ? "w-7 h-2.5 bg-primary"
-                            : "w-2.5 h-2.5 bg-white/60 hover:bg-white"
+                        className={`h-2 rounded-full transition-all duration-300 ${i === current
+                            ? "w-8 bg-white"
+                            : "w-2 bg-white/40"
                             }`}
                     />
                 ))}
@@ -173,6 +280,7 @@ const HeroCarousel = () => {
         </section>
     )
 }
+
 const Dashboard = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -251,7 +359,7 @@ const Dashboard = () => {
 
     console.log("flashSale", flashSale)
     return (
-        <div className="h-full w-full space-y-10 relative">
+        <div className="h-full w-full space-y-15  fade relative">
             <HeroCarousel />
             <ChatBot />
             {runningsale && (
@@ -302,7 +410,7 @@ const Dashboard = () => {
                 <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-4 items-center mb-10 mt-5">
                     {category.map((item, index) => (
                         <CategoryCart
-                            icon={item.icon}
+                            image={item.image}
                             title={item.title}
                             key={index}
                         />

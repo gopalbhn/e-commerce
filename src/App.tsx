@@ -36,9 +36,6 @@ import FlashSale from './pages/admin/FlashSale'
 import SellerFlashSale from './pages/seller/SellerFlashSale'
 
 function App() {
-
-
-
   return (
     <div className="App">
       <Toaster position='bottom-right' toastOptions={{
@@ -89,22 +86,17 @@ function Init() {
 
       }
       const data = await res.json();
-      console.log(data);
 
       if (data.success) {
         setUser({
           id: data.data.id,
-
           role: data.data.role,
           storeApproved: data.data.storeAproved,
-
-
         });
       } else {
         setUser(null)
       }
     } catch (error) {
-      console.log(error)
       setUser(null)
       setIsLoading(false)
     } finally {
@@ -121,8 +113,9 @@ function Init() {
   }, []);
   if (loading) {
     return (
-      <div className="w-screen h-screen flex items-center justify-center">
-        <Loader />
+      <div className="w-screen h-screen flex flex-col gap-5 items-center justify-center">
+        <Loader className="animate-spin w-10 h-10" />
+        <p className="text-xl font-semibold">Loading...</p>
       </div>
     )
   }

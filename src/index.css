@@ -5,18 +5,19 @@
 
 
 
-@theme {
-    /* Primary */
+/* @theme {
+    
     --color-primary: #8F4B3D;
+  
     --color-primary-hover: #793A2E;
     --color-primary-light: #FFA896;
 
-    /* Secondary */
+    
     --color-secondary: #605E5C;
     --color-secondary-hover: #484644;
     --color-secondary-light: #E6E2DF;
 
-    /* Accent */
+    
     --color-accent: #096B5C;
     --color-accent-hover: #00574B;
     --color-accent-light: #7DCDBB;
@@ -38,7 +39,58 @@
     --breakpoint-lg: 1024px;
 
 
+} */
+
+
+@theme {
+
+    --color-primary: #245243;
+    --color-primary-hover: #29624E;
+    --color-primary-light: #7DCDBB;
+
+
+    --color-secondary: #605E5C;
+    --color-secondary-hover: #484644;
+    --color-secondary-light: #E6E2DF;
+
+
+    --color-accent: #096B5C;
+    --color-accent-hover: #00574B;
+    --color-accent-light: #7DCDBB;
+
+    --color-badge: #E85D75;
+
+
+    --color-background: #f5f2ea;
+
+
+    --color-card-background: #fdfcfb;
+    --color-card-background-hover: #ffffff;
+
+    --color-card-border: #d4d1ce;
+
+
+    --text-hero: 36px;
+    --text-header: 24px;
+    --text-title: 16px;
+    --text-body: 14px;
+    --text-small: 10px;
+
+    --font-sans: "Inter", sans-serif;
+
+    --breakpoint-sm: 360px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+
+
 }
+
+:root {
+    background-color: var(--color-background);
+
+}
+
+
 
 .cn-toast {
     background-color: var(--primary);

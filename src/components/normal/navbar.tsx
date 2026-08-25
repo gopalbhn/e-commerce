@@ -26,7 +26,7 @@ const NavBar = () => {
             if (window.scrollY > 15) {
                 setColor("bg-white/50 backdrop-blur-md")
             } else {
-                setColor("bg-transparent")
+                setColor("bg-transparent ")
             }
         }
         handleScroll();
@@ -57,7 +57,7 @@ const NavBar = () => {
     const currentPath = window.location.pathname;
 
     return (
-        <div className={`h-15 w-full flex items-center gap-2 md:gap-8 px-4 md:px-10 inset-0 sticky ${color} top-0 left-0 z-100`}>
+        <div className={`h-15 w-full flex  items-center gap-2 md:gap-8 px-4 md:px-10 inset-0  ${currentPath == "/" ? "fixed" : "sticky"} ${color} top-0 left-0 z-100 ${currentPath == "/" && color == "bg-transparent " ? "text-white" : "text-secondary"} `}>
             <div className="h-10 md:h-12 w-30 md:w-40  flex items-center justify-center text-white  ">
                 <img src={Logo} alt="logo" className="w-full h-full object-cover " />
             </div>
@@ -65,13 +65,11 @@ const NavBar = () => {
             <div className="flex  items-center gap-6 hidden md:flex">
                 {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => {
                     const active = item == "Home" ? "/" : item === "New Arrivals" ? "/newarrivals" : `/${item.trim().toLowerCase()}`
-                    console.log("current path", currentPath, "item", item)
-                    console.log("Active state", active)
-                    console.log("location", location.pathname)
+
                     return (
                         <Link to={
                             active
-                        } key={item} className={`text-sm font-medium  cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : "text-secondary"}`}>
+                        } key={item} className={`text-sm font-medium  cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : ""}`}>
                             {item}
                         </Link>
                     )
@@ -82,10 +80,10 @@ const NavBar = () => {
                 <ActionSearchBar />
             </div>
             <div className="flex items-center gap-1 md:gap-4 justify-end flex-1 md:flex-0">
-                <button className="p-2 rounded-full transition hover:bg-gray-100 group  " onClick={() => navigate("/wishlist")}>
+                <button className={`p-2 rounded-full transition hover:bg-gray-100 group  ${currentPath == "/" && color == "bg-transparent " ? "hover:text-primary" : ""}`} onClick={() => navigate("/wishlist")}>
                     <CiHeart className="text-2xl" />
                 </button>
-                <button className="p-2 rounded-full transition hover:bg-gray-100 relative  " onClick={() => navigate('/shoping-cart')}>
+                <button className={`p-2 rounded-full transition hover:bg-gray-100 relative ${currentPath == "/" && color == "bg-transparent " ? "hover:text-primary" : ""}`} onClick={() => navigate('/shoping-cart')}>
                     <IoCartOutline className="text-2xl" />
                     {cartItemLength > 0 && (
                         <span className="absolute top-0 right-0 bg-primary text-white rounded-full px-2 text-xs">
