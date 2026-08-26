@@ -34,10 +34,10 @@ const Deals = () => {
 
                 <section className="h-full w-full mt-5 ">
                     <div className="w-full">
-                        <h1 className="text-header text-left font-semibold capitalize">Deals of the day</h1>
-                        <p className="text-body text-secondary">Limited time offers on top products. Don't miss Out</p>
+                        <h1 className="text-header text-left font-semibold capitalize font-fraunces">Deals of the day</h1>
+                        <p className="text-body text-secondary font-ibm-plex-mono">Limited time offers on top products. Don't miss Out</p>
                     </div>
-                    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 items-center">
+                    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 items-center ">
                         {product.slice(0, 4).map((item: any, index: any) => (
                             <ProductCart
                                 id={item._id}
@@ -72,10 +72,10 @@ const Deals = () => {
                 </section> */}
                 <section className="h-full w-full mt-5">
                     <div className="w-full">
-                        <h1 className="text-header text-left font-semibold capitalize">This Month Best Deal</h1>
-                        <p className="text-body text-secondary ">Limited time offers on top products. Don't miss Out</p>
+                        <h1 className="text-header text-left font-semibold capitalize font-fraunces">This Month Best Deal</h1>
+                        <p className="text-body text-secondary font-ibm-plex-mono">Limited time offers on top products. Don't miss Out</p>
                     </div>
-                    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 items-center">
+                    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 items-center sroll-reveal">
                         {product.slice(4, 8).map((item: any, index: any) => (
                             <ProductCart
                                 id={item._id}

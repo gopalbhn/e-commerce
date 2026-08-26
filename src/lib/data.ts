@@ -1,5 +1,4 @@
-import { BiDevices, BiDumbbell, BiFace, BiHome } from "react-icons/bi";
-import { TbShirt } from "react-icons/tb";
+
 
 import Electornics from "../assets/category/cart-electornics.webp"
 import Fashon from "../assets/category/cart-fashon.webp"

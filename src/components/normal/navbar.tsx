@@ -62,16 +62,18 @@ const NavBar = () => {
                 <img src={Logo} alt="logo" className="w-full h-full object-cover " />
             </div>
 
-            <div className="flex  items-center gap-6 hidden md:flex">
+            <div className="flex  items-center gap-6 hidden md:flex pl-6">
                 {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => {
                     const active = item == "Home" ? "/" : item === "New Arrivals" ? "/newarrivals" : `/${item.trim().toLowerCase()}`
 
                     return (
-                        <Link to={
-                            active
-                        } key={item} className={`text-sm font-medium  cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : ""}`}>
+                        <Link
+                            to={active}
+                            key={item}
+                            className={`relative text-sm font-medium font-ibm-plex-mono cursor-pointer transition-colors duration-300 hover:text-primary after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-primary after:transition-all after:duration-300 ${currentPath === active ? "text-primary after:w-full" : "after:w-0 hover:after:w-1/2"}`}>
                             {item}
                         </Link>
+
                     )
                 })}
             </div>
@@ -96,7 +98,7 @@ const NavBar = () => {
                         <button className="p-2 rounded-full transition hover:bg-gray-100 relative" onClick={() => setOpen(!open)}>
                             <FaRegUserCircle className="text-2xl" />
                             {open && (
-                                <div className="absolute top-12 -right-5 bg-white shadow-lg rounded-lg w-28 flex flex-col items-center justify-center overflow-hidden">
+                                <div className="absolute top-12 -right-5 bg-white shadow-lg rounded-lg w-28 flex flex-col items-center justify-center overflow-hidden font-ibm-plex-mono">
                                     <button className="text-secondary hover:text-primary w-full  p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/myorder")}>My Orders</button>
                                     <button className="text-secondary hover:text-primary w-full p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/purchase-history")}>History</button>
                                     <button className="text-secondary hover:text-primary w-full p-2 cursor-pointer hover:bg-primary/30" onClick={handleLogOut}>Logout</button>
@@ -135,7 +137,7 @@ const NavBar = () => {
                                         return (
                                             <Link to={
                                                 active
-                                            } key={item} className={`text-sm font-medium  cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : "text-secondary"}`}>
+                                            } key={item} className={`text-sm font-medium  flex cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : "text-secondary"}`}>
                                                 {item}
                                             </Link>
                                         )

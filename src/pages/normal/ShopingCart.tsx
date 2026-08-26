@@ -6,21 +6,20 @@ import { FiHeart } from "react-icons/fi";
 
 import OrderSummaryTable from "@/components/normal/orderSummary";
 import { useNavigate } from "react-router-dom";
-interface Icoupon {
-    _id?: string,
-    code?: string,
-    discountRate?: number
-}
+import NotFound from "@/components/normal/not-found";
+import { ShoppingCart } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+
 const ShopingCart = () => {
 
 
     const [products, setProducts] = useState<any[]>([]);
     const [isWishListed, setIsWishlisted] = useState(false)
-    const [isCouponApplied, setIsCouponApplied] = useState(false)
+
     const [selectedProduct, setSelectedProduct] = useState<any[]>([])
     const [cart, setCart] = useState<any[]>([])
-    const [coupon, setCoupon] = useState<Icoupon[]>([]);
-    const [code, setCode] = useState("")
+
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,9 +27,9 @@ const ShopingCart = () => {
     }, []);
 
 
-    console.log("selected", selectedProduct)
+
     const handleSelectedProduct = (id: string) => {
-        console.log("id", id)
+
         if (selectedProduct.some(selected => selected.id === id)) {
             setSelectedProduct(selectedProduct.filter((item) => item.id !== id))
             setCart(prev => prev.filter(item => item.products._id !== id))
@@ -59,10 +58,6 @@ const ShopingCart = () => {
                 quantity: item.quantity
 
             }));
-            if (data.data.couponApplied) {
-                setIsCouponApplied(true)
-                setCoupon(data.data.coupon);
-            }
             console.log("all products", allProducts)
             setProducts(allProducts);
 
@@ -83,24 +78,7 @@ const ShopingCart = () => {
         }
     }
 
-    async function applyDiscount() {
-        try {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/apply/${code}`, {
-                credentials: "include"
-            })
-            const data = await res.json()
-            if (data.success) {
-                toast.success("Coupon Applied Successfully")
-                setTimeout(() => {
-                    window.location.reload()
-                }, 500)
-            } else {
-                toast.error(data.message)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+
 
     async function addToWishList(id: string) {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/wishlist/add/${id}`, {
@@ -185,23 +163,25 @@ const ShopingCart = () => {
 
     if (products.length == 0) {
         return (
-            <div className="h-full w-full flex flex-col">
-                <section className='h-full w-full px-10 mt-5 mb-10'>
-                    <h1 className="text-title font-bold mb-8 mt-2">Your Shoping Cart</h1>
-                    <div className="flex  justify-center gap-10">
-                        <div className="w-2/3  rounded-xl">
-                            <p>Your cart is empty</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
+            <NotFound
+                icon={ShoppingCart}
+                eyebrow={""}
+                title={"Your Shoping Cart is empty"}
+                description={"Add items to your cart to save them for later."}
+                buttonText={"Shop Now"}
+                onButtonClick={() => {
+                    navigate("/")
+                }}
+                showButton={true}
+
+            />
         )
     }
 
     return (
         <div className="h-full w-full flex flex-col">
             <section className='h-full w-full px-4 md:px-10 mt-5 mb-10'>
-                <h1 className="text-title font-bold mb-8 mt-2">Your Shoping Cart</h1>
+                <h1 className="text-title font-bold mb-8 mt-2 font-fraunces">Your Shoping Cart</h1>
                 <div className="flex flex-col md:flex-row justify-center gap-10">
 
                     <div className="w-full md:w-2/3 space-y-5  rounded-xl">
@@ -211,7 +191,10 @@ const ShopingCart = () => {
                                 const isSelected = selectedProduct.some(selected => selected.id == item._id)
                                 return (
 
-                                    <div className={`w-full  flex gap-2 shadow-md p-3 font-medium text-sm ${isSelected ? "bg-primary/5 scale-95" : ""}`} key={item.id} onClick={() => handleSelectedProduct(item._id)} >
+                                    <div className={`w-full  flex gap-2 shadow-md p-3 font-medium font-ibm-plex-mono text-sm ${isSelected ? "bg-primary/5 scale-95" : ""}`} key={item.id} onClick={() => handleSelectedProduct(item._id)} >
+                                        <div className='flex items-center justify-center w-5 h-5'>
+                                            <Checkbox checked={isSelected} onCheckedChange={() => handleSelectedProduct(item._id)} />
+                                        </div>
                                         <div className="h-30 w-30 overflow-hidden rounded-xl">
 
                                             <img src={item?.thumbnails} alt="Product Image" className="w-full h-full object-cover" />
@@ -272,7 +255,7 @@ const ShopingCart = () => {
                     </div>
                     <div className="w-full md:w-1/3  p-6 rounded-xl shadow-md">
 
-                        <OrderSummaryTable data={cart} applyCode={applyDiscount} handleCheckout={handleProceedToCheckout} />
+                        <OrderSummaryTable data={cart} handleCheckout={handleProceedToCheckout} />
                     </div>
                 </div>
             </section >

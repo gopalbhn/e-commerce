@@ -1,4 +1,6 @@
+import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { useState } from "react";
 
 
 interface Icoupon {
@@ -59,23 +61,41 @@ function calculateTotal(data: any, coupon: any[]) {
 
 interface props {
     data: any,
-    applyCode?: () => void,
+
     handleCheckout?: () => void,
     mode?: string,
-    code?: string,
-    setCode?: (code: string) => void
+
 }
 
 
-export default function OrderSummaryTable({ data, applyCode, handleCheckout, mode, code, setCode }: props) {
+export default function OrderSummaryTable({ data, handleCheckout, mode }: props) {
     console.log('product data', data)
     const { total, tax, shipping, subTotal, discount, totalDiscountRate } = calculateTotal(data, data?.coupon)
     const coupon: Icoupon[] = data?.coupon
     console.log("coupon", coupon)
+    const [code, setCode] = useState<string>("")
+    async function applyDiscount() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/apply/${code}`, {
+                credentials: "include"
+            })
+            const data = await res.json()
+            if (data.success) {
+                toast.success("Coupon Applied Successfully")
+                setTimeout(() => {
+                    window.location.reload()
+                }, 500)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div>
-            <h1 className="text-body font-semibold mb-8 mt-2">Order Summary</h1>
-            <div className="flex flex-col gap-y-3 py-3 border-b border-gray-400">
+            <h1 className="text-body font-semibold mb-8 mt-2 font-fraunces">Order Summary</h1>
+            <div className="flex flex-col gap-y-3 py-3 border-b border-gray-400 font-ibm-plex-mono">
                 <div className="flex items-center justify-between">
                     <p>Subtotal</p>
                     <p>NPR.{subTotal}</p>
@@ -94,7 +114,7 @@ export default function OrderSummaryTable({ data, applyCode, handleCheckout, mod
 
             {
                 mode == "checkout" && (
-                    <div className="w-full border-b border-gray-400">
+                    <div className="w-full border-b border-gray-400 font-ibm-plex-mono">
                         <p>Discount Code</p>
                         <div className="w-full flex items-center justify-between my-3 gap-x-3">
                             <input placeholder="Enter Code"
@@ -108,7 +128,7 @@ export default function OrderSummaryTable({ data, applyCode, handleCheckout, mod
                             </input>
                             {
                                 code.length > 4 ? (
-                                    <button className="py-1.5 px-3 rounded-xl bg-primary text-white" onClick={applyCode}>Apply</button>
+                                    <button className="py-1.5 px-3 rounded-xl bg-primary text-white" onClick={applyDiscount}>Apply</button>
                                 ) : (
                                     <button disabled className="py-1.5 px-3 rounded-xl bg-secondary-light text-white">Apply</button>
                                 )
@@ -135,7 +155,7 @@ export default function OrderSummaryTable({ data, applyCode, handleCheckout, mod
 
             }
 
-            <div className="w-full ">
+            <div className="w-full font-ibm-plex-mono">
                 <div className="flex items-center justify-between">
 
                     <h2>Discount</h2>
@@ -148,7 +168,7 @@ export default function OrderSummaryTable({ data, applyCode, handleCheckout, mod
             </div>
             {
                 mode !== "checkout" && (
-                    <Button variant="default" className="w-full py-2 mt-5  text-white rounded-lg" onClick={() => handleCheckout()}> Proceed to Checkout</Button>
+                    <Button variant="default" className="w-full py-2 mt-5  text-white  font-ibm-plex-mono rounded-lg" onClick={() => handleCheckout()}> Proceed to Checkout</Button>
                 )
             }
         </div>

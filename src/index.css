@@ -1,8 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-
 
 
 /* @theme {
@@ -77,12 +77,25 @@
     --text-small: 10px;
 
     --font-sans: "Inter", sans-serif;
+    --font-fraunces: "Fraunces", serif;
+    --font-ibm-plex-mono: "IBM Plex Mono", monospace;
+    --font-serif: serif;
 
     --breakpoint-sm: 360px;
     --breakpoint-md: 768px;
     --breakpoint-lg: 1024px;
 
+    --animate-fade-in: fadeSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1);
 
+
+}
+
+@utility scroll-reveal {
+    opacity: 0
+}
+
+@utility scroll-reveal-visible {
+    animation: fadeSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 :root {
@@ -90,7 +103,14 @@
 
 }
 
+.scrolbar-none::-webkit-scrollbar {
+    display: none;
+}
 
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
 .cn-toast {
     background-color: var(--primary);
@@ -103,11 +123,56 @@
 @keyframes fadeSlideUp {
     from {
         opacity: 0;
-        transform: translateY(18px);
+        transform: translateY(30px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.scrolbar-modify::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrolbar-modify::-webkit-scrollbar-track {
+    background: #222;
+}
+
+.scrolbar-modify::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 12px;
+}
+
+.scrolbar-modify::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-hover);
+}
+
+.scrolbar-modify {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) rgba(255, 255, 255, 0.05);
+}
+
+.scrolbar-modify::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.animate-float {
+    animation: float 2.5s ease-in-out infinite;
 }

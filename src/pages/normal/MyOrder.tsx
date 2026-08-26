@@ -19,11 +19,11 @@ function OrderComponent({ order }: { order: any }) {
         <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 p-6">
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                 <div className="space-y-2">
-                    <h2 className="text-lg font-semibold text-gray-800">
+                    <h2 className="text-lg font-semibold text-gray-800 font-ibm-plex-mono">
                         Order #{id.slice(-8).toUpperCase()}
                     </h2>
 
-                    <p className="text-gray-500">
+                    <p className="text-gray-500 font-ibm-plex-mono">
                         Placed on{" "}
                         <span className="font-medium text-gray-700">
                             {formattedDate}
@@ -37,14 +37,14 @@ function OrderComponent({ order }: { order: any }) {
 
                 <div className="flex flex-col items-start md:items-end gap-4">
                     <span
-                        className={`px-4 py-1 rounded-full text-sm font-semibold border border-primary/50`}
+                        className={`px-4 py-1 rounded-full text-sm font-semibold border border-primary/50 font-ibm-plex-mono`}
                     >
                         {status}
                     </span>
 
                     <button
                         onClick={() => navigate(`/orders/${id}`)}
-                        className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+                        className="bg-primary font-ibm-plex-mono hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl font-medium transition-all duration-200 hover:scale-105"
                     >
                         View Details
                     </button>
@@ -106,11 +106,11 @@ const MyOrder = () => {
         <div className="min-h-screen bg-gray-50 flex flex-col">
             <div className="max-w-6xl mx-auto w-full flex-1 px-5 py-10">
                 <div className="mb-10">
-                    <h1 className="text-4xl font-bold text-gray-800">
+                    <h1 className="text-4xl font-bold text-gray-800 font-fraunces">
                         My Orders
                     </h1>
 
-                    <p className="text-gray-500 mt-2">
+                    <p className="text-gray-500 mt-2 font-ibm-plex-mono">
                         View and manage your recent purchases.
                     </p>
                 </div>
@@ -119,17 +119,17 @@ const MyOrder = () => {
                     <div className="bg-white rounded-2xl shadow-sm border border-dashed border-gray-300 p-16 text-center">
                         <div className="text-6xl mb-4">📦</div>
 
-                        <h2 className="text-2xl font-semibold text-gray-700">
+                        <h2 className="text-2xl font-semibold text-gray-700 font-fraunces">
                             No Orders Yet
                         </h2>
 
-                        <p className="text-gray-500 mt-2">
+                        <p className="text-gray-500 mt-2 font-ibm-plex-mono">
                             Looks like you haven't placed any orders yet.
                         </p>
 
                         <button
                             onClick={() => (window.location.href = "/")}
-                            className="mt-6 bg-primary text-white px-6 py-3 rounded-xl hover:bg-primary/90 transition"
+                            className="mt-6 bg-primary text-white px-6 py-3 rounded-xl hover:bg-primary/90 transition font-ibm-plex-mono"
                         >
                             Start Shopping
                         </button>

@@ -31,12 +31,12 @@ const PurchaseHistory = () => {
         <div className="h-full w-full ">
             {openReviewModal && <CreateReviewModal onClose={() => setOpenReviewModal(false)} productId={productId} />}
             <section className="h-full w-full mb-15 px-10">
-                <h1 className="text-title font-bold mb-8 mt-2 ">Your Purchase History</h1>
+                <h1 className="text-title font-bold mb-8 mt-2 font-fraunces">Your Purchase History</h1>
 
                 <div className="h-full w-full flex flex-col gap-2">
                     {purchasedProduct.map((item: any) => (
                         <div key={item._id}>
-                            <h1 className="text-title font-semibold  mt-5">
+                            <h1 className="text-title font-semibold font-fraunces mt-5">
                                 Delivered On: {new Date(item.updatedAt).toDateString()}
                             </h1>
 
@@ -56,15 +56,15 @@ const PurchaseHistory = () => {
 
                                         <div className="flex w-full items-center justify-between">
                                             <div className="flex flex-col gap-1">
-                                                <p className="font-bold text-body line-clamp-2">
+                                                <p className="font-bold text-body line-clamp-2 font-fraunces">
                                                     {prod.product?.name}
                                                 </p>
-                                                <p className="text-body ">Quantity: {prod.quantity}</p>
-                                                <p className="text-body ">Total Cost: NPR.{prod.price}</p>
+                                                <p className="text-body font-ibm-plex-mono ">Quantity: {prod.quantity}</p>
+                                                <p className="text-body font-ibm-plex-mono">Total Cost: NPR.{prod.price}</p>
                                             </div>
 
                                             <button
-                                                className="bg-primary px-4 py-2 md:px-5 md:py-3  rounded-xl text-white"
+                                                className="bg-primary px-4 py-2 md:px-5 md:py-3  rounded-xl text-white font-ibm-plex-mono"
                                                 onClick={() => {
                                                     setOpenReviewModal(true);
                                                     setProductId(prod.product?._id || null);
@@ -140,15 +140,15 @@ const CreateReviewModal = ({ onClose, productId }: { onClose: () => void; produc
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-black/20 bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-5 rounded-lg w-2/3  md:w-1/3">
-                <h1 className="text-xl font-semibold mb-4">Write a Review</h1>
+                <h1 className="text-xl font-semibold mb-4 font-fraunces">Write a Review</h1>
                 <textarea
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    className="w-full h-32 p-2 border border-gray-300 rounded-lg mb-4"
+                    className="w-full h-32 p-2 border border-gray-300 rounded-lg mb-4 font-ibm-plex-mono"
                     placeholder="Share your experience with this product..."
                 />
                 <div className="flex items-center mb-4">
-                    <span className="mr-2">Rating:</span>
+                    <span className="mr-2 font-fraunces">Rating:</span>
                     {[1, 2, 3, 4, 5].map((star) => (
                         <button
                             key={star}
@@ -160,17 +160,17 @@ const CreateReviewModal = ({ onClose, productId }: { onClose: () => void; produc
                     ))}
                 </div>
                 <div className="flex justify-end gap-2">
-                    <button className="bg-gray-300 px-4 py-2 rounded-lg" onClick={onClose}>
+                    <button className="bg-gray-300 px-4 py-2 rounded-lg font-ibm-plex-mono" onClick={onClose}>
                         Cancel
                     </button>
                     {
                         loading ? (
-                            <button className="bg-primary text-white px-4 py-2 rounded-lg disabled flex gap-2 items-center opacity-50 cursor-not-allowed " >
+                            <button className="bg-primary text-white px-4 py-2 rounded-lg disabled flex gap-2 items-center opacity-50 cursor-not-allowed font-ibm-plex-mono" >
                                 Submit
                                 <ImSpinner8 className="animate-spin" />
                             </button>
                         ) : (
-                            <button className="bg-primary text-white px-4 py-2 rounded-lg" onClick={handleSubmit}>
+                            <button className="bg-primary text-white px-4 py-2 rounded-lg font-ibm-plex-mono" onClick={handleSubmit}>
                                 Submit
                             </button>
                         )

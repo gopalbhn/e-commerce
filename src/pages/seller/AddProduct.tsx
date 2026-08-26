@@ -384,7 +384,7 @@ const AddProduct = () => {
                                         toast.error("File size must be less than 2MB")
                                         return;
                                     }
-                                    setThumbnails(e.target.files?.[0])
+                                    setThumbnails(e.target.files?.[0] ?? null)
                                 }}
                             />
                         </div>

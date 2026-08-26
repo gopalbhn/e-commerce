@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
 import { MdMenu } from 'react-icons/md'
 import SellerSideBar from '../../components/Sellers/SellerSideBar'
-
-import { FaCalendarAlt, FaCar } from 'react-icons/fa'
 import { BsBoxSeamFill } from 'react-icons/bs'
 import { toast } from 'sonner'
 import Table from '@/components/normal/table'
 import { Eye } from 'lucide-react'
 import { CiDeliveryTruck } from 'react-icons/ci'
-import { useNavigate } from 'react-router-dom'
 import OrderDetailComponent from '@/components/normal/orderDetail'
 
 const AllOrders = () => {
@@ -18,9 +15,8 @@ const AllOrders = () => {
     const [view, setView] = useState<string>("all")
     const [viewOrder, setViewOrder] = useState(false);
     const [orderDetail, setOrderDetail] = useState<any>(null);
-    const navigate = useNavigate();
-    const totalPendingOrder = order?.filter((item: any) => item.orderStatus === "Pending").length;
-    const totalCompletedOrder = order?.filter((item: any) => item.orderStatus === "Delivered").length;
+    const totalPendingOrder = order?.filter((item: any) => item.orderStatus === "Pending").length ?? 0;
+    const totalCompletedOrder = order?.filter((item: any) => item.orderStatus === "Delivered").length ?? 0;
     async function fetchAllOrder() {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/order/seller`, {
@@ -59,15 +55,15 @@ const AllOrders = () => {
     }
     function handleShippedOrder() {
         setView("shipped");
-        setFilteredOrder(order?.filter((item: any) => item.orderStatus === "Shipped"))
+        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Shipped") ?? [])
     }
     function handlePendingOrder() {
         setView("pending")
-        setFilteredOrder(order?.filter((item: any) => item.orderStatus === "Pending"))
+        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Pending") ?? [])
     }
     function handleCompletedOrder() {
         setView("completed")
-        setFilteredOrder(order?.filter((item: any) => item.orderStatus === "Delivered"))
+        setFilteredOrder(order.filter((item: any) => item.orderStatus === "Delivered") ?? [])
     }
 
     async function updateStatus(status: string, id: string) {

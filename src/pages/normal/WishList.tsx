@@ -5,6 +5,8 @@ import ProductCart from "@/components/normal/productCart"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import type { ProductInterface } from "@/types/types"
+import NotFound from "@/components/normal/not-found"
+import { Heart } from "lucide-react"
 
 
 
@@ -57,16 +59,18 @@ const WishList = () => {
 
     if (products?.length == 0) {
         return (
-            <div className="h-full w-full flex flex-col">
-                <section className='h-full w-full px-10 mt-5 mb-10'>
-                    <h1 className="text-title font-bold mb-8 mt-2">Your WishList</h1>
-                    <div className="flex  justify-center gap-10">
-                        <div className="w-2/3  rounded-xl">
-                            <p>Your WishList is empty</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
+            <NotFound
+                icon={Heart}
+                eyebrow={""}
+                title={"Your WishList is empty"}
+                description={"Add items to your wishlist to save them for later."}
+                buttonText={"Shop Now"}
+                onButtonClick={() => {
+                    window.location.href = "/"
+                }}
+                showButton={true}
+
+            />
         )
     }
     return (
@@ -74,12 +78,12 @@ const WishList = () => {
             <section className="h-full w-full px-4 md:px-10 mb-10 ">
                 <div className="w-full flex items-center justify-between mt-5">
                     <div className="min-w-0">
-                        <h1 className="text-title font-bold md:text-header md:font-semibold ">My WishList</h1>
-                        <p className="text-sm font-medium text-body md:text-body"> Items Saved In Your Wishlist</p>
+                        <h1 className="text-title font-bold md:text-header md:font-semibold font-fraunces">My WishList</h1>
+                        <p className="text-sm font-medium text-body md:text-body font-ibm-plex-mono"> Items Saved In Your Wishlist</p>
                     </div>
                     <div className="flex gap-2 flex-col md:flex-row">
-                        <Button variant="default" className=" flex-1 md:flex-none px-2 md:px-4 py-2 whitespace-nowrap"  >Add All to Cart</Button>
-                        <Button variant="default" className="flex-1 md:flex-none px-2 md:px-4 py-2 whitespace-nowrap" onClick={clearAll}>Clear All</Button>
+                        <Button variant="default" className=" flex-1 md:flex-none px-2 md:px-4 py-2 whitespace-nowrap font-ibm-plex-mono"  >Add All to Cart</Button>
+                        <Button variant="default" className="flex-1 md:flex-none px-2 md:px-4 py-2 whitespace-nowrap font-ibm-plex-mono" onClick={clearAll}>Clear All</Button>
                     </div>
                 </div>
                 <div className="h-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center gap-5 mt-5">

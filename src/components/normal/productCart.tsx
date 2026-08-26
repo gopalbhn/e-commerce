@@ -57,7 +57,7 @@ const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList,
     }
   }
   return (
-    <div className="group relative bg-white hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300 border border-gray-400" onClick={onclick}>
+    <div className="group relative bg-card-background hover:shadow-md rounded-xl overflow-hidden transition-shadow duration-300 border border-gray-400 " onClick={onclick}>
       {wishList ? (
         <button className='absolute top-4 right-4 bg-black/30 text-white h-6 w-6 md:h-8 md:w-8 rounded-full z-40 flex items-center justify-center' onClick={onDelete}>
           <RxCross1 />
@@ -83,10 +83,12 @@ const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList,
           className="w-full h-full object-cover transition-soft group-hover:scale-110 transition-soft duration-300"
           src={image}
           alt={name}
+          loading="lazy"
+          decoding="async"
         />
 
         {Number(discount) && (
-          <div className="absolute top-4 left-4 bg-badge text-white md:px-3 px-2 md:py-1 py-1 rounded-full">
+          <div className="absolute top-4 left-4 bg-badge/50 text-white font-ibm-plex-mono md:px-3 px-2 md:py-1 py-1 rounded-xl">
             -{discount} %
           </div>
         )}
@@ -97,18 +99,20 @@ const ProductCart = ({ id, image, name, price, old, discount, onclick, wishList,
       <div className="p-2 md:p-4 space-y-2">
 
 
-        <h3 className="font-semibold text-body md:text-title line-clamp-1 md:line-clamp-2">
+        <h3 className="font-semibold text-body md:text-title line-clamp-1 md:line-clamp-2 font-fraunces">
           {name}
         </h3>
         <div className='flex items-center justify-between'>
 
           <div className="flex items-center gap-2">
-            <span className="text-body font-bold text-primary uppercase">
+
+            <span className="text-body font-bold text-primary uppercase font-ibm-plex-mono">
               Npr.{price}
             </span>
-            <span className="text-body text-outline line-through">
+            <span className="text-body text-outline line-through font-ibm-plex-mono">
               Npr.{old}
             </span>
+
           </div>
 
           <button className=' absolute bottom-1 md:bottom-4 md:right-4 right-2 p-1 md:p-2 rounded-full  text-primary border border-primary hover:bg-primary/30 items-center justify-center hover:scale-110 transition-soft duration-300' onClick={(e) => {

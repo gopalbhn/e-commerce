@@ -6,11 +6,14 @@ import { useEffect, useState } from "react"
 import { MdFilterAlt } from "react-icons/md"
 import { BiChevronDown, BiChevronRight } from "react-icons/bi"
 import type { ProductInterface } from "@/types/types"
+import { Checkbox } from "@/components/ui/checkbox"
+import useScrollReveal from "@/hooks/observer-hook"
 
 
 
 const ProductListing = () => {
     const navigate = useNavigate();
+    useScrollReveal()
     const [currentIndex, setCurrentIndex] = useState<number>(8);
     const [filters, setFilters] = useState({
         category: "",
@@ -162,10 +165,10 @@ const ProductListing = () => {
             <CategoryList category={category} filters={filters} setFilters={setFilters} fetchProducts={fetchProducts} fetchSubCategories={fetchSubCategories} subCategory={subCategory} fetchBrands={fetchBrands} brands={brands} />
             <section className=" w-full lg:w-4/5 mb-10 min-w-0">
                 <div className="w-full rounded-xl p-5 flex items-center justify-between ">
-                    <h1 className="text-header font-semibold">Collection</h1>
+                    <h1 className="text-header font-semibold font-fraunces">Collection</h1>
 
                 </div>
-                <div className="w-full   overflow-y-auto  grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="w-full   overflow-y-auto  grid grid-cols-2 md:grid-cols-3 gap-4 scroll-reveal">
                     {products.slice(0, currentIndex).map((product, index) => (
                         <ProductCart
                             id={product._id}
@@ -200,16 +203,15 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
     const [currentSelectedCategory, setCurrentSelectedCategory] = useState('')
     const [currentSelectedSubCategory, setCurrentSubCategory] = useState("")
     return (
-        // <div className="h-full w-1/5 rounded-xl p-4 border border-gray-300  mb-5 text-sm " key={category}>
-        <div className="w-full lg:w-1/5 h-full shrink-0 rounded-xl p-4 border border-gray-300 mb-5 text-sm">
+        <div className="w-full lg:w-1/5 h-full shrink-0 rounded-xl p-4 border border-gray-300 mb-5 text-md">
             <div >
-                <h3 className="text-body text-title font-semibold mb-4">Categories</h3>
-                <ul className="flex flex-col justify-start gap-2">
+                <h3 className="text-body text-title font-semibold mb-4 font-fraunces">Categories</h3>
+                <ul className="flex flex-col justify-start gap-1">
                     {category?.map((item: any) => (
                         <li key={item.id} className="list-none">
                             <button
                                 key={item.id}
-                                className={currentSelectedCategory == item.id ? "text-primary text-start text-body hover:" : "text-start text-body hover:text-primary hover:scale-103"}
+                                className={`w-full flex items-center font-ibm-plex-mono justify-between rounded-xl px-3 py-2 text-body text-left transition-all ${currentSelectedCategory == item.id ? "bg-primary/10 text-primary font-semibold" : "text-gray-700 hover:bg-gray-50 hover:text-primary "}`}
                                 onClick={() => {
                                     setCurrentSelectedCategory(item.id)
 
@@ -228,12 +230,12 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                                 {currentSelectedCategory == item.id ? (<BiChevronDown className="inline-block text-body" />) : (<BiChevronRight className="inline-block text-body" />)}
                             </button>
                             {currentSelectedCategory === item.id && subCategory?.length > 0 && (
-                                <ul className="flex flex-col gap-2">
+                                <ul className="flex flex-col gap-2 px-2 mt-1">
                                     {console.log("Current slelecte", currentSelectedSubCategory)}
                                     {subCategory.map((subItem: any) => (
                                         <button
                                             key={subItem._id}
-                                            className={`text-left  text-body ${currentSelectedSubCategory === subItem._id ? "text-primary" : ""}`}
+                                            className={`w-full text-left font-ibm-plex-mono px-3 py-1.5 hover:bg-primary/10 rounded-xl text-body ${currentSelectedSubCategory === subItem._id ? "text-primary bg-primary/5" : ""}`}
                                             onClick={() => {
                                                 const newFilters = {
                                                     category: filters.category,
@@ -260,13 +262,13 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
             </div>
             {brands.map((brand: any) => (
                 <div className="mt-2" key={brand}>
-                    <h3 className="text-body font-semibold mb-4">Brand</h3>
+                    <h3 className="text-body font-semibold mb-4 font-fraunces">Brand</h3>
                     <ul className="flex flex-col gap-2">
-                        <li key={brand._id} className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
+                        <li key={brand._id} className="flex items-center gap-2 font-ibm-plex-mono">
+                            <Checkbox
+
                                 checked={filters.brand === brand._id}
-                                onChange={() => {
+                                onCheckedChange={(checked) => {
                                     const newFilters = {
                                         category: filters.category,
                                         subCategory: filters.subCategory,
@@ -276,12 +278,11 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                                     setFilters(newFilters);
                                     fetchProducts(newFilters);
                                 }}
-                                className="h-5 w-5 accent-primary"
+
                             />
 
                             <label>{brand.name}</label>
                         </li>
-
 
 
                     </ul>
@@ -289,19 +290,20 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                 </div>
             ))}
             <div className="mt-2">
-                <h3 className="text-body font-semibold my-4"> Price Range</h3>
+                <h3 className="text-body font-semibold my-4 font-fraunces"> Price Range</h3>
                 <div className="w-full flex items-center gap-1">
                     <input
                         type="number"
                         placeholder="Min"
                         value={filters.minPrice}
+                        min={0}
                         onChange={(e) =>
                             setFilters({
                                 ...filters,
                                 minPrice: e.target.value,
                             })
                         }
-                        className="w-[45%] border border-gray-300 rounded-md px-2 py-1"
+                        className="w-[45%] border border-gray-300 rounded-md px-2 py-1 font-ibm-plex-mono"
                     />
 
                     <p className="text-sm">to</p>
@@ -310,16 +312,17 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                         type="number"
                         placeholder="Max"
                         value={filters.maxPrice}
+                        min={0}
                         onChange={(e) =>
                             setFilters({
                                 ...filters,
                                 maxPrice: e.target.value,
                             })
                         }
-                        className="w-[45%] border border-gray-300 rounded-md px-2 py-1"
+                        className="w-[45%] border border-gray-300 rounded-md px-2 py-1 font-ibm-plex-mono"
                     />
                     <button
-                        className="w-8 h-8 bg-primary text-white rounded-md flex justify-center items-center"
+                        className="w-8 h-8 bg-primary text-white rounded-md flex justify-center items-center font-ibm-plex-mono"
                         onClick={() => {
 
                             fetchProducts(filters);
@@ -331,12 +334,13 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
 
             </div>
             <div className="mt-2">
-                <h3 className="text-body font-semibold mb-2 ">Ratings</h3>
+                <h3 className="text-body font-semibold mb-2 font-fraunces">Ratings</h3>
 
                 <div className="space-y-3">
                     {[4, 3, 2, 1].map((rating) => (
-                        <div key={rating} className="flex items-center gap-2">
-                            <input
+                        <div key={rating} className="flex items-center gap-2 font-ibm-plex-mono">
+
+                            {/* <input
                                 type="checkbox"
                                 checked={filters.rating === rating.toString()}
                                 onChange={() => {
@@ -349,8 +353,28 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                                     });
                                     fetchProducts({ ...filters, rating: rating.toString() });
                                 }}
-                                className="h-5 w-5 accent-primary"
+
+                                className="h-5 w-5 appearance-none rounded-xl border-2 border-primary bg-background checked:bg-primary checked:border-primary cursor-pointer"
+
+                            /> */}
+                            <Checkbox
+                                checked={filters.rating === rating.toString()}
+                                onCheckedChange={(checked) => {
+                                    const newRating = checked ? rating.toString() : "";
+
+                                    setFilters({
+                                        ...filters,
+                                        rating: newRating,
+                                    });
+
+                                    fetchProducts({
+                                        ...filters,
+                                        rating: newRating,
+                                    });
+                                }}
+
                             />
+
 
                             <div className="flex items-center">
                                 {[...Array(4)].map((_, index) =>
@@ -370,6 +394,7 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
         </div >
     )
 }
+
 
 
 export default ProductListing

@@ -15,10 +15,9 @@ const Checkout = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [address, setAddress] = useState<ShippingAddressState | null>(null)
   const [products, setProducts] = useState<any>();
-  const [product, setProduct] = useState<any>(null)
+
   const [editAddress, setEditAddress] = useState<boolean>(false)
   const [coupon, setCoupon] = useState<any>(null)
-  const [code, setCode] = useState<string>("")
   const [param] = useSearchParams()
   const checkout = param.get("mode")
   console.log("checkout", checkout)
@@ -225,37 +224,20 @@ const Checkout = () => {
     console.log('total', total)
     return { total, tax, shipping, subTotal, discount, totalDiscountRate }
   }
-  async function applyDiscount() {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/coupon/apply/${code}`, {
-        credentials: "include"
-      })
-      const data = await res.json()
-      if (data.success) {
-        toast.success("Coupon Applied Successfully")
-        setTimeout(() => {
-          window.location.reload()
-        }, 500)
-      } else {
-        toast.error(data.message)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
   return (
     <div className="w-full h-full">
       <section className="w-full h-full mt-10 mb-15 px-10">
         <div className="h-15 w-[60%] mx-auto relative flex items-center justify-between gap-2 ">
           <div className=" flex flex-col items-center">
-            <div className={`h-14 w-14 rounded-full  font-bold flex items-center justify-center ${step >= 1 ? `bg-primary text-white` : `bg-white border border-primary text-primary`}`}>
+            <div className={`h-14 w-14 rounded-full  font-bold flex items-center justify-center ${step >= 1 ? `bg-primary text-white` : `border border-primary text-primary`}`}>
               1
             </div>
             <p className="text-sm text-primary">Shiping</p>
           </div>
           <div className="relative h-0.5 bg-primary flex-1 -mt-6" />
           <div className="flex flex-col items-center">
-            <div className={`h-14 w-14 rounded-full  font-bold flex items-center justify-center ${step > 2 ? `bg-primary text-white` : `bg-white border border-primary text-primary`}`}>
+            <div className={`h-14 w-14 rounded-full  font-bold flex items-center justify-center ${step > 2 ? `bg-primary text-white` : ` border border-primary text-primary`}`}>
               2
             </div>
             <p className="text-sm text-primary">Payment</p>
@@ -263,7 +245,7 @@ const Checkout = () => {
           <div className="relative h-0.5 bg-gray-400 flex-1 -mt-6" />
 
           <div className=" flex flex-col items-center">
-            <div className={`h-14 w-14 rounded-full bg-white border border-primary text-primary font-bold flex items-center justify-center ${step > 3 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
+            <div className={`h-14 w-14 rounded-full  border border-primary text-primary font-bold flex items-center justify-center ${step > 3 ? `bg-primary text-white` : `border-primary text-primary`}`}>
               3
             </div>
             <p className="text-sm text-primary">Review</p>
@@ -279,7 +261,7 @@ const Checkout = () => {
             {step == 3 && <Review />}
           </div>
           {/* {step !== 3 && <OrderSummary products={products} coupon={coupon} calculateTotal={calculateTotal} product={product} />} */}
-          {step !== 3 && <OrderSummaryTable data={products} mode="checkout" applyCode={applyDiscount} code={code} setCode={setCode} />}
+          {step !== 3 && <OrderSummaryTable data={products} mode="checkout" />}
 
         </div>
       </section >
@@ -521,7 +503,7 @@ const PaymentSetup = ({ handleEsewaPayment, handleKhaltiPayment }: any) => {
 
 const AddressDetail = ({ address, nextStep, toogleEditAddress }: any) => {
   return (
-    <div className="w-full h-full shadow-sm rounded-xl  p-4">
+    <div className="w-full h-full  rounded-xl  p-4">
       <div className="w-full flex justify-between items-center mb-5">
         <h1 className="text-title font-semibold">Shipping Address</h1>
         <div className="">

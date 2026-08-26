@@ -6,6 +6,8 @@ import Loader from "@/components/normal/Loader";
 import { useParams } from "react-router-dom";
 import { GrLocation } from "react-icons/gr"
 import OrderSummary from "@/components/normal/orderSummary";
+import NotFound from "@/components/normal/not-found";
+import { RiShoppingCartLine } from "react-icons/ri";
 
 const OrderDetail = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,21 +58,26 @@ const OrderDetail = () => {
   return (
     <div className="h-full w-full">
       <section className="mt-10 mb-15 px-4 md:px-10">
-        <div className="text-primary text-sm mb-5"> Home / My Orders</div>
+
         {!orders ? (
           <div className="h-[50vh] w-full flex items-center justify-center">
-            <h1 className="text-2xl text-center">No Orders Found</h1>
+            <NotFound
+              icon={<RiShoppingCartLine />}
+              title="Order Not Found"
+              description="The order you are looking for does not exist or has been removed."
+
+            />
           </div>
         ) : (
           <div>
 
             <div className="flex justify-between items-center mb-5">
               <div>
-                <h1 className="md:text-header text-title font-semibold"> Orders Details</h1>
-                <p className="text-body">Placed On: 2023-10-10</p>
+                <h1 className="md:text-header text-title font-semibold font-fraunces"> Orders Details</h1>
+                <p className="text-body font-ibm-plex-mono">Placed On: 2023-10-10</p>
               </div>
               <div>
-                <button className="bg-primary text-white md:px-5 py-2 rounded-md px-2">
+                <button className="bg-primary text-white md:px-5 py-2 rounded-md px-2 font-ibm-plex-mono">
                   Download Invoice
                 </button>
               </div>
@@ -81,7 +88,7 @@ const OrderDetail = () => {
                 <div className={`md:h-15 h-10 md:w-15 w-10 rounded-full  font-bold flex items-center justify-center ${step >= 1 ? `bg-primary text-white` : `bg-gray-400 text-gray-200`}`}>
                   <IoMdCheckmarkCircleOutline className="text-white" size={30} />
                 </div>
-                <p className="text-sm text-primary">Pending</p>
+                <p className="text-sm text-primary font-ibm-plex-mono">Pending</p>
               </div>
               <div className="relative h-0.5 bg-primary flex-1 -mt-6" />
               <div className="flex flex-col items-center">
@@ -89,7 +96,7 @@ const OrderDetail = () => {
 
                   <FaVanShuttle className="text-white" size={30} />
                 </div>
-                <p className="text-sm text-primary">Shipped</p>
+                <p className="text-sm text-primary font-ibm-plex-mono">Shipped</p>
               </div>
               <div className="relative h-0.5 bg-gray-400 flex-1 -mt-6" />
 
@@ -98,7 +105,7 @@ const OrderDetail = () => {
                   <GrLocation className="text-primary" size={30} />
 
                 </div>
-                <p className="text-sm text-primary">Delivered</p>
+                <p className="text-sm text-primary font-ibm-plex-mono">Delivered</p>
               </div>
 
             </div>
@@ -120,17 +127,17 @@ const OrderDetail = () => {
                         </div>
 
                         <div className="w-full flex justify-between items-center">
-                          <div className="flex flex-col">
+                          <div className="flex flex-col font-ibm-plex-mono">
                             <h1 className="text-body font-semibold">{prod.name}</h1>
-                            <p className="text-sm text-primary">
+                            <p className="text-sm text-primary ">
                               Color: {prod.color} | Qty: {prod.quantity}
                             </p>
-                            <p className="text-title font-semibold text-primary">
+                            <p className="text-title font-semibold ">
                               Price: {prod.price}
                             </p>
                           </div>
 
-                          <button className="bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-hover">
+                          <button className="bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-hover font-ibm-plex-mono">
                             Track Item
                           </button>
                         </div>

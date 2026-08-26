@@ -7,6 +7,7 @@ import { category } from "@/lib/data.js"
 import { toast } from "sonner"
 import type { ProductInterface } from "@/types/types"
 import ChatBot from "@/components/normal/chatBot"
+import useScrollReveal from "@/hooks/observer-hook"
 
 
 const heroSlides = [
@@ -200,13 +201,14 @@ const HeroCarousel = () => {
     }, [])
 
     useEffect(() => {
-        timerRef.current = setTimeout(next, 3000)
+        timerRef.current = setTimeout(next, AUTOPLAY_INTERVAL)
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current)
         }
-    }, [current, next])
+    }, [next])
 
     const slide = heroSlides[current]
+
 
     return (
         <section className="relative h-screen min-h-[650px] w-full overflow-hidden bg-[#f3f1eb] select-none">
@@ -241,15 +243,15 @@ const HeroCarousel = () => {
                         : "translate-y-0 opacity-100 blur-0"
                         }`}
                 >
-                    <p className="mb-5 text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                    <p className="mb-5 text-xs font-semibold font-ibm-plex-mono uppercase tracking-[0.3em] text-white/70">
                         {slide.tag}
                     </p>
 
-                    <h2 className="mb-7 text-xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-4xl md:text-5xl lg:text-6xl">
+                    <h2 className="mb-7 text-xl font-semibold font-fraunces leading-[0.95] tracking-[-0.05em] sm:text-4xl md:text-5xl lg:text-6xl">
                         {slide.headline}
                     </h2>
 
-                    <p className="mb-8 max-w-lg text-base leading-7 text-white/80 md:text-lg">
+                    <p className="mb-8 max-w-lg text-base leading-7 font-ibm-plex-mono text-white/80 md:text-lg">
                         {slide.sub}
                     </p>
 
@@ -269,7 +271,7 @@ const HeroCarousel = () => {
                         key={i}
                         onClick={() => goTo(i)}
                         aria-label={`Go to slide ${i + 1}`}
-                        className={`h-2 rounded-full transition-all duration-300 ${i === current
+                        className={`h-2 rounded-full transition-all duration-300 font-ibm-plex-mono ${i === current
                             ? "w-8 bg-white"
                             : "w-2 bg-white/40"
                             }`}
@@ -286,7 +288,7 @@ const Dashboard = () => {
     const [searchParams] = useSearchParams();
     const [remainingTime, setRemainingTime] = useState("")
     const [products, setProducts] = useState<ProductInterface[]>([])
-    const [flashSale, setFlashSale] = useState([]);
+    const [flashSale, setFlashSale] = useState<ProductInterface[]>([]);
     const [runningsale, setRunningSale] = useState(false)
     const [saleTitle, setSaleTitle] = useState("")
     function FlashShaleCountDown() {
@@ -358,14 +360,15 @@ const Dashboard = () => {
     }
 
     console.log("flashSale", flashSale)
+    useScrollReveal()
     return (
-        <div className="h-full w-full space-y-15  fade relative">
+        <div className="h-full w-full space-y-15  relative">
             <HeroCarousel />
             <ChatBot />
             {runningsale && (
 
 
-                <section className="h-full w-full px-10">
+                <section className="h-full w-full px-10 scroll-reveal">
                     <div className="max-w-7xl mx-auto flex items-center justify-between">
                         <div className="flex flex-col">
 
@@ -404,9 +407,9 @@ const Dashboard = () => {
                     </div>
                 </section>
             )}
-            <section className="h-full w-full px-4 md:px-10">
-                <h1 className="text-header text-left font-semibold ">Shop by Category</h1>
-                <p className="text-body text-secondary">Best deals and offers for you</p>
+            <section className="h-full w-full px-4 md:px-10 scroll-reveal">
+                <h1 className="text-header text-left font-semibold font-inter">Shop by Category</h1>
+                <p className="text-body text-secondary font-ibm-plex-mono">Best deals and offers for you</p>
                 <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-4 items-center mb-10 mt-5">
                     {category.map((item, index) => (
                         <CategoryCart
@@ -420,9 +423,9 @@ const Dashboard = () => {
 
             </section>
 
-            <section className="h-full w-full px-4 md:px-10 ">
-                <h1 className="text-header font-semibold line-height-[40px]">Just For You</h1>
-                <p className="text-body text-secondary">Curated just for you</p>
+            <section className="h-full w-full px-4 md:px-10 scroll-reveal">
+                <h1 className="text-header font-semibold font-inter line-height-[40px]">Just For You</h1>
+                <p className="text-body text-secondary font-ibm-plex-mono">Curated just for you</p>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
                     {products.slice(0, 8).map((product, index) => (

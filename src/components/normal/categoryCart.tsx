@@ -19,7 +19,7 @@ const CategoryCart = ({
                 hover:shadow-lg"
         >
 
-            <img src={image} alt={title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" />
+            <img src={image} loading="lazy" decoding="async" alt={title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" />
 
             <div className=" absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-all duration-300 group-hover:from-black/90" />
 

@@ -100,7 +100,7 @@ const PaymentSuccess = () => {
                 <div className="h-20 w-20 rounded-full bg-primary-hover/50 flex justify-center items-center">
                     <CheckCircleIcon className="text-white" size={30} />
                 </div>
-                <p className="text-body font-semibold tracking-tight ">Your order has been placed successfully</p>
+                <p className="text-body font-semibold tracking-tight font-ibm-plex-mono ">Your order has been placed successfully</p>
                 <div className="w-[80%] p-5 bg-gray-100 border border-gray-300 rounded-xl">
                     <div className="w-full flex justify-between gap-2">
                         <p>Transaction id:</p>

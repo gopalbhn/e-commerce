@@ -195,118 +195,202 @@ const ProductDetail = () => {
       <div className="pl-16 pt-2">
         <BreadcrumbDemo />
       </div>
-      <section className='w-full h-full rounded-lg flex flex-col lg:flex-row items-center justify-center gap-1 px-4 md:px-10'>
-        <div className='w-full lg:w-1/2 h-full p-4 group'>
-          <div className='relative h-[60vh] w-full flex justify-center items-center overflow-hidden '>
-            <img src={previewimage} alt="Product Image" className='w-full h-full object-cover rounded-lg transition-soft duration-300 hover:scale-110' />
-            <button className='absolute top-4 right-4 text-primary bg-white/50 text-2xl p-2 rounded-full hover:scale-110 transition-soft duration-300 backdrop-blur-sm'>
+      <section className="w-full min-h-full rounded-lg flex flex-col lg:flex-row items-start justify-center gap-8 lg:gap-12 px-4 md:px-8 lg:px-12">
+
+
+        <div className="w-full lg:w-1/2 h-full">
+          <div className="relative h-[55vh] lg:h-[65vh] w-full flex justify-center items-center overflow-hidden rounded-lg group">
+            <img
+              src={previewimage}
+              alt="Product Image"
+              className="w-full h-full object-cover rounded-lg transition-soft duration-300 group-hover:scale-105"
+            />
+
+            <button className="absolute top-4 right-4 text-primary bg-white/50 text-2xl p-2 rounded-full hover:scale-110 transition-soft duration-300 backdrop-blur-sm">
               <HiMiniMagnifyingGlassPlus />
             </button>
           </div>
-          <div className="w-full h-30 grid grid-cols-3 md:grid-cols-5 gap-5 md:gap-2 mt-2 md:mt-6">
+
+          {/* Thumbnails */}
+          <div className="w-full grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 mt-4">
             {product?.images?.map((img: string, index: number) => (
-              <div key={index} className="h-25 w-25 overflow-hidden rounded-lg hover:border border-primary " onClick={() => setPreviewimage(img)}>
+              <div
+                key={index}
+                className={`h-20 w-20 md:h-24 md:w-24 overflow-hidden rounded-lg cursor-pointer transition-all duration-200
+            ${previewimage === img
+                    ? "border-2 border-primary"
+                    : "border border-transparent hover:border-primary"
+                  }`}
+                onClick={() => setPreviewimage(img)}
+              >
                 <img
                   src={img}
-                  alt="Headphone 1"
-                  className="w-full h-full object-cover rounded-lg "
+                  alt={`Product ${index + 1}`}
+                  className="w-full h-full object-cover rounded-lg"
                 />
               </div>
             ))}
           </div>
         </div>
-        <div className='w-full lg:w-1/2 h-full p-4 flex flex-col justify-center gap-y-3'>
 
-          <h1 className='text-header font-bold'>{product?.name}</h1>
 
-          <div className='flex items-center gap-4 '>
-            <div className='flex items-center gap-2'>
+        {/* RIGHT - Product Details */}
+        <div className="w-full lg:w-1/2 h-full flex flex-col justify-center gap-y-5">
+
+          {/* Product Name */}
+          <h1 className="text-header font-bold font-fraunces">
+            {product?.name}
+          </h1>
+
+          {/* Rating */}
+          <div className="flex items-center font-ibm-plex-mono">
+            <div className="flex items-center gap-2">
               {Array.from({ length: 5 }).map((_, i) => {
                 const isFilled = i < product?.rating;
+
                 return (
-                  <FiStar key={i} className="text-yellow-500 text-xl"
-                    fill={isFilled ? 'currentColor' : 'none'} />
-                )
+                  <FiStar
+                    key={i}
+                    className="text-yellow-500 text-xl"
+                    fill={isFilled ? "currentColor" : "none"}
+                  />
+                );
               })}
-              <span className="ml-2 text-sm text-gray-500">{product?.rating}/5 (248 Reviews)</span>
+
+              <span className="ml-2 text-sm text-gray-500">
+                {product?.rating}/5 (248 Reviews)
+              </span>
             </div>
           </div>
-          <div className='flex items-center gap-4 '>
 
+          {/* Price */}
+          <div className="flex items-center gap-4 font-ibm-plex-mono">
+            <h2 className="text-title font-bold">
+              Npr.{product?.price}
+            </h2>
 
-            <h2 className='text-title font-bold '>Npr.{product?.price}</h2>
-            <h2 className='text-body text-gray-500 line-through'>Npr.{product?.oldPrice}</h2>
-            <h2 className='text-title font-bold text-primary-light'>{product?.discount}%</h2>
+            <h2 className="text-body text-gray-500 line-through">
+              Npr.{product?.oldPrice}
+            </h2>
+
+            <h2 className="text-title font-bold text-primary-light">
+              {product?.discount}%
+            </h2>
           </div>
-          <div className='  px-3 py-1.5 rounded-xl border border-gray-300 bg-[#f1edec]'>
-            <p className='flex items-center gap-4 mb-1'>
-              <BiCheckCircle className='text-2xl text-accent-light' />
-              <span className='text-small font-semibold'>In Stock - {product?.stock} Left</span>
+
+          {/* Stock */}
+          <div className="px-4 py-3 rounded-xl border border-gray-300 bg-[#f1edec] font-ibm-plex-mono">
+            <p className="flex items-center gap-3 mb-1">
+              <BiCheckCircle className="text-2xl text-accent-light" />
+
+              <span className="text-small font-semibold">
+                In Stock - {product?.stock} Left
+              </span>
             </p>
-            <p className='text-small font-semibold text-gray-500'>Order within 2h 15m for Same-Day Shipping.</p>
-          </div>
-          <div className='flex items-center gap-2'>
 
+            <p className="text-small font-semibold text-gray-500">
+              Order within 2h 15m for Same-Day Shipping.
+            </p>
+          </div>
+
+          {/* Wishlist */}
+          <div className="flex items-center">
             {isWishListed ? (
-              <button className=' h-10 flex items-center px-5 gap-2 rounded-xl hover:scale-101 bg-red-500 transition-all duration-300 ease-in-out' onClick={removeFromWishList}>
-                <FiHeart fill='white' className=' h-full text-white' />
-                <span className='text-white text-body'>Save for Later</span>
+              <button
+                className="h-10 font-ibm-plex-mono flex items-center px-5 gap-2 rounded-xl bg-red-500 hover:scale-105 transition-all duration-300 ease-in-out"
+                onClick={removeFromWishList}
+              >
+                <FiHeart fill="white" className="h-full text-white" />
+                <span className="text-white text-body">
+                  Save for Later
+                </span>
               </button>
             ) : (
-              <button className=' h-10 flex  items-center px-5 gap-2 rounded-xl border border-gray-500 hover:scale-105 transition-all duration-300 ease-in-out' onClick={addToWishList}>
-                <FiHeart className='h-full ' />
-                <span className='text-body'>Save for Later</span>
+              <button
+                className="h-10 font-ibm-plex-mono flex items-center px-5 gap-2 rounded-xl border border-gray-500 hover:scale-105 transition-all duration-300 ease-in-out"
+                onClick={addToWishList}
+              >
+                <FiHeart className="h-full" />
+
+                <span className="text-body">
+                  Save for Later
+                </span>
               </button>
             )}
           </div>
-          {/* <div className='flex flex-col gap-4 '>
-            <p>
-              <span className='font-bold text-sm mr-2'>Color:</span>
-              Dark Walnut
-            </p>
-            <div className='flex items-center gap-4'>
-              <div className='rounded-full bg-[#3D2B1F] h-10 w-10 border border-gray-400'></div>
-              <div className='rounded-full bg-[#6D4C41] h-10 w-10 border border-gray-400'></div>
-              <div className='rounded-full bg-[#8D6E63] h-10 w-10 border border-gray-400'></div>
 
-            </div>
-          </div> */}
-          <div className='flex flex-col gap-4 mb-6'>
-            <p>Quantity</p>
-            <div className='flex items-center gap-4 rounded-xl '>
-              <div className='rounded-xl border border-gray-300 bg-white flex items-center gap-4'>
-                <button className='px-4 py-2.5 hover:bg-gray-200' onClick={() => setTotalCartItem(prev => {
-                  if (prev == 1) {
-                    return 1
-                  } else {
-                    prev--;
-                    return prev;
-                  }
-                })}>-</button>
-                <span className='text-sm font-semibold'>{totalCartItem}</span>
-                <button className='px-4 py-2.5 hover:bg-gray-200' onClick={() => setTotalCartItem(prev => {
-                  if (prev >= product?.stock) {
-                    toast.error("Out of Stock")
-                    return product?.stock;
-                  } else {
-                    prev++;
-                    return prev;
-                  }
-                })}>+</button>
+          {/* Quantity + Buttons */}
+          <div className="flex flex-col gap-5 font-ibm-plex-mono">
 
+            {/* Quantity */}
+            <div className="flex items-center gap-5">
+              <p className="text-sm font-semibold">
+                Quantity
+              </p>
+
+              <div className="rounded-xl border border-gray-300 bg-white flex items-center">
+                <button
+                  className="px-4 py-2.5 hover:bg-gray-200 rounded-l-xl"
+                  onClick={() =>
+                    setTotalCartItem((prev) =>
+                      prev === 1 ? 1 : prev - 1
+                    )
+                  }
+                >
+                  -
+                </button>
+
+                <span className="px-4 text-sm font-semibold">
+                  {totalCartItem}
+                </span>
+
+                <button
+                  className="px-4 py-2.5 hover:bg-gray-200 rounded-r-xl"
+                  onClick={() =>
+                    setTotalCartItem((prev) => {
+                      if (prev >= product?.stock) {
+                        toast.error("Out of Stock");
+                        return product?.stock;
+                      }
+
+                      return prev + 1;
+                    })
+                  }
+                >
+                  +
+                </button>
               </div>
-              <button disabled={buttonDisabled} className={`w-full max-w-xl md:px-10 md:py-4 py-3 px-6 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300 ${buttonDisabled ? "opacity-50 cursor-not-allowed" : ""}`} onClick={AddToCart}>
-                <BiCart className='text-xl' /> Add To cart
-              </button>
             </div>
 
-            <button className='w-full max-w-xl md:px-10 md:py-4 py-3 px-6 rounded-xl bg-black text-white flex items-center justify-center gap-x-2 hover:scale-101 transition-soft duration-300' onClick={handleBuyNow}>
-              Buy Now
-            </button>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
+
+              <button
+                disabled={buttonDisabled}
+                className={`flex-1 font-ibm-plex-mono px-6 md:px-8 py-3.5 rounded-xl bg-primary text-white flex items-center justify-center gap-x-2 hover:scale-[1.01] transition-soft duration-300 ${buttonDisabled
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+                  }`}
+                onClick={AddToCart}
+              >
+                <BiCart className="text-xl" />
+                Add To Cart
+              </button>
+
+              <button
+                className="flex-1 font-ibm-plex-mono px-6 md:px-8 py-3.5 rounded-xl bg-black text-white flex items-center justify-center gap-x-2 hover:scale-[1.01] transition-soft duration-300"
+                onClick={handleBuyNow}
+              >
+                Buy Now
+              </button>
+
+            </div>
           </div>
+
         </div>
-      </section >
-      <section className='h-full w-full my-10 px-10'>
+      </section>
+
+      <section className='h-full w-full my-10 px-10 font-ibm-plex-mono'>
         <div className='h-full w-full flex gap-5'>
           {buttonList.map((item, index) => (
             <button key={index} className={` pb-2  hover:text-primary ${item == activeButton ? "border-b-2 border-primary text-primary" : "text-gray-500"}`} onClick={() => setActiveButton(item)}>{item}</button>
@@ -347,7 +431,7 @@ const ProductDetail = () => {
                   return isHeading ? (
                     <h3
                       key={index}
-                      className="font-bold text-lg text-on-surface mt-6 mb-2"
+                      className="font-bold text-lg text-on-surface mt-6 mb-2 font-fraunces"
                     >
                       {text}
                     </h3>

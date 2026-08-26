@@ -398,7 +398,7 @@ const EditProduct = () => {
                                 accept="image/*"
                                 multiple={false}
                                 className="hidden"
-                                onChange={(e) => setThumbnails(e.target.files[0])}
+                                onChange={(e) => setThumbnails(e.target.files[0] ?? null)}
                             />
                         </div>
 
