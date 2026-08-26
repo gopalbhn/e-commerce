@@ -1,7 +1,7 @@
 import Table from "@/components/normal/table";
 import SellerSideBar from "@/components/Sellers/SellerSideBar";
 import { useEffect, useState } from "react";
-import { FaPen, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 import { MdMenu } from "react-icons/md";
 import { toast } from "sonner";
@@ -19,8 +19,6 @@ const SellerFlashSale = () => {
     const [flashSaleId, setFlashSaleId] = useState<string>("")
     const [runningFlashSale, setRunningFlashSale] = useState<any[]>([])
     const [myFlashSaleProducts, setMyFlashSaleProducts] = useState([])
-    const [editProduct, setEditProduct] = useState<any>({})
-    const [showEditProduct, setShowEditProduct] = useState(false)
 
     async function fetchMyProducts() {
         try {
@@ -131,15 +129,6 @@ const SellerFlashSale = () => {
             console.log("error", error)
         }
     }
-
-    function handleEdit(id: string) {
-        console.log("id", id)
-        const eidtingProduct = products.find(prod => prod._id === id)
-        console.log("Editing Product")
-        setEditProduct([eidtingProduct])
-        setShowEditProduct(true)
-
-    }
     useEffect(() => {
         fetchMyProducts()
         getRunningFlashSale()
@@ -227,7 +216,7 @@ const SellerFlashSale = () => {
                 </div>
 
                 {showAddProduct && <AddProductComponet setShowAddProduct={setShowAddProduct} products={products} selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} handleAddProduct={handleAddProduct} />}
-                {showEditProduct && <AddProductComponet setShowAddProduct={setShowAddProduct} products={editProduct} selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} handleAddProduct={handleAddProduct} />}
+
             </section>
         </div>
     );
@@ -303,7 +292,9 @@ function AddProductComponet({ setShowAddProduct, products, setSelectedProducts, 
                 toast.error("Please enter stock greater than 0 for all products")
                 return;
             }
-            setSelectedProducts([...selectedProducts, { productId: id, stock: selectStock.some(pro => pro.id == id) ? selectStock.find(pro => pro.id == id)?.stock : 0 }])
+            setSelectedProducts([...selectedProducts, {
+                productId: id, stock: selectStock.find(pro => pro.id === id)?.stock ?? 0
+            }])
         }
 
     }

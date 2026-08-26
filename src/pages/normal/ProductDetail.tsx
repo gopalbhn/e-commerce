@@ -10,7 +10,7 @@ import SuccessModal from '@/components/normal/successModal';
 import BreadcrumbDemo from '@/components/ui/breadCrumbComponent';
 import UserStore from '@/store/userStore';
 import { FaStar } from 'react-icons/fa';
-import BuyNow from '@/components/normal/buyNow';
+
 
 const ProductDetail = () => {
   const [activeButton, setActiveButton] = useState<string>("Product Specs")
@@ -21,8 +21,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<any>(null)
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [reviews, setReviews] = useState([])
-  const [openProductModal, setOpenProductModal] = useState(false)
-  const [coupon, setCoupon] = useState<any>([])
+
   const { id } = useParams();
   const [successModalOpen, setSuccessModalOpen] = useState(false)
   const user = UserStore(state => state.user?.id);
@@ -189,9 +188,7 @@ const ProductDetail = () => {
       {successModalOpen && (
         <SuccessModal text="Product added to cart" onclick={() => setSuccessModalOpen(false)} />
       )}
-      {openProductModal && (
-        <BuyNow onclose={() => setOpenProductModal(false)} productId={product?._id} coupon={coupon} setCoupon={setCoupon} />
-      )}
+
       <div className="pl-16 pt-2">
         <BreadcrumbDemo />
       </div>

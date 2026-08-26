@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight, } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 interface NotFoundProps {

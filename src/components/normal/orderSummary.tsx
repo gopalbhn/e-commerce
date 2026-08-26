@@ -168,7 +168,7 @@ export default function OrderSummaryTable({ data, handleCheckout, mode }: props)
             </div>
             {
                 mode !== "checkout" && (
-                    <Button variant="default" className="w-full py-2 mt-5  text-white  font-ibm-plex-mono rounded-lg" onClick={() => handleCheckout()}> Proceed to Checkout</Button>
+                    <Button variant="default" className="w-full py-2 mt-5  text-white  font-ibm-plex-mono rounded-lg" onClick={() => handleCheckout?.()}> Proceed to Checkout</Button>
                 )
             }
         </div>

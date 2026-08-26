@@ -268,7 +268,7 @@ const CategoryList = ({ category, filters, setFilters, fetchProducts, fetchSubCa
                             <Checkbox
 
                                 checked={filters.brand === brand._id}
-                                onCheckedChange={(checked) => {
+                                onCheckedChange={() => {
                                     const newFilters = {
                                         category: filters.category,
                                         subCategory: filters.subCategory,

@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { GrLocation } from "react-icons/gr"
 import OrderSummary from "@/components/normal/orderSummary";
 import NotFound from "@/components/normal/not-found";
-import { RiShoppingCartLine } from "react-icons/ri";
+import { ShoppingCart } from "lucide-react";
 
 const OrderDetail = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -62,7 +62,7 @@ const OrderDetail = () => {
         {!orders ? (
           <div className="h-[50vh] w-full flex items-center justify-center">
             <NotFound
-              icon={<RiShoppingCartLine />}
+              icon={ShoppingCart}
               title="Order Not Found"
               description="The order you are looking for does not exist or has been removed."
 

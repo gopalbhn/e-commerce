@@ -43,7 +43,7 @@ const NewArrival = () => {
     const buttonRefs = useRef<HTMLButtonElement[]>([]);
 
     useEffect(() => {
-        const index = btnArray.indexOf(filter);
+        const index = btnArray.indexOf(filter!);
         const button = buttonRefs.current[index];
 
         if (button) {

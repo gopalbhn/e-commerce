@@ -38,7 +38,7 @@ const ChatBot = () => {
     console.log("chat", messages)
     return (
         <>
-            {active && <MessageBox messages={messages} setMessages={setMessages} active={active} setActive={setActive} />}
+            {active && <MessageBox messages={messages} setMessages={setMessages} setActive={setActive} />}
             {!active && (
 
                 <button
@@ -52,7 +52,7 @@ const ChatBot = () => {
     )
 }
 
-function MessageBox({ messages, setMessages, active, setActive }: { messages: Array<{ role: "user" | "assistant", content: string }>; setMessages: React.Dispatch<React.SetStateAction<Array<{ role: "user" | "assistant", content: string }>>>, active: boolean, setActive: React.Dispatch<React.SetStateAction<boolean>> }) {
+function MessageBox({ messages, setMessages, setActive }: { messages: Array<{ role: "user" | "assistant", content: string }>; setMessages: React.Dispatch<React.SetStateAction<Array<{ role: "user" | "assistant", content: string }>>>, setActive: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(true);
