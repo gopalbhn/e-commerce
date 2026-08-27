@@ -3,6 +3,8 @@ import ProductCart from "@/components/normal/productCart"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import type { ProductInterface } from "@/types/types"
+import { Button } from "@/components/ui/button"
+import { FaArrowRightLong } from "react-icons/fa6"
 
 const Deals = () => {
     const navigate = useNavigate()
@@ -21,18 +23,18 @@ const Deals = () => {
     const discountedProduct = product.filter(pro => Number(pro.discount) > 0)
     console.log("discountedProduct", discountedProduct)
     return (
-        <div className="h-full w-full">
+        <div className="h-full w-full space-y-15">
             <section className="h-[80vh] w-full ">
                 <div className="h-full w-full">
                     <Carousel />
                 </div>
 
             </section>
-            <div className="h-full px-4  md:px-10 space-y-10 mb-10">
+            <div className="h-full px-4 md:px-10  space-y-15">
 
 
 
-                <section className="h-full w-full mt-5 ">
+                <section className="h-full w-full ">
                     <div className="w-full">
                         <h1 className="text-header text-left font-semibold capitalize font-fraunces">Deals of the day</h1>
                         <p className="text-body text-secondary font-ibm-plex-mono">Limited time offers on top products. Don't miss Out</p>
@@ -54,23 +56,8 @@ const Deals = () => {
                         ))}
                     </div>
                 </section>
-                {/* <section className="h-full w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 p-5">
-                    {Electronics.slice(0, 4).map((product: any, index: any) => (
-                        <ProductCart
-                            id={product._id}
-                            image={product.thumbnails}
-                            name={product.name}
-                            price={product.price}
-                            old={product.oldPrice}
-                            key={index}
-                            discount={product.discount}
-                            isDiscounted={product.isDiscounted}
-                            wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail/${product._id}`)}
-                        />
-                    ))}
-                </section> */}
-                <section className="h-full w-full mt-5">
+
+                <section className="h-full w-full">
                     <div className="w-full">
                         <h1 className="text-header text-left font-semibold capitalize font-fraunces">This Month Best Deal</h1>
                         <p className="text-body text-secondary font-ibm-plex-mono">Limited time offers on top products. Don't miss Out</p>
@@ -98,63 +85,58 @@ const Deals = () => {
     )
 }
 
-
 const heroSlides = [
     {
         image:
-            "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1800&q=80",
-        tag: "Spring Collection 2024",
+            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80",
+        tag: "LIMITED TIME OFFER",
         headline: (
             <>
-                Elevate Your Lifestyle with{" "}
-                <span className="text-primary">Aura</span>
+                Amazing Deals on{" "}
+                <span className="text-primary">Electronics</span>
             </>
         ),
-        sub: "Minimalist aesthetics meet unparalleled quality in our curated essentials.",
-        cta: "Shop Collection",
-        overlay: "from-white/80 via-white/40 to-transparent",
+        sub: "Discover the latest gadgets, premium audio, smart devices, and accessories at prices you'll love.",
+        cta: "Shop Now",
     },
     {
         image:
-            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1800&q=80",
-        tag: "New Arrivals",
+            "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1200&q=80",
+        tag: "NEW ARRIVALS",
         headline: (
             <>
-                Precision Crafted{" "}
-                <span className="text-primary">Timepieces</span>
+                Premium Sound.{" "}
+                <span className="text-primary">Perfectly Yours.</span>
             </>
         ),
-        sub: "Explore our exclusive watch collection — built for those who value every second.",
-        cta: "Discover Watches",
-        overlay: "from-white/80 via-white/40 to-transparent",
+        sub: "Experience immersive sound with our collection of premium headphones and wireless audio.",
+        cta: "Explore Audio",
     },
     {
         image:
-            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1800&q=80",
-        tag: "Best Sellers",
+            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80",
+        tag: "SMART TECHNOLOGY",
         headline: (
             <>
-                Sound That Moves{" "}
-                <span className="text-primary">You</span>
+                Smart Tech for{" "}
+                <span className="text-primary">Every Day</span>
             </>
         ),
-        sub: "Premium audio gear for audiophiles and everyday listeners alike.",
-        cta: "Shop Audio",
-        overlay: "from-white/80 via-white/40 to-transparent",
+        sub: "Upgrade your everyday life with stylish smartwatches and the newest wearable technology.",
+        cta: "Shop Smartwatches",
     },
     {
         image:
-            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1800&q=80",
-        tag: "Flash Deals",
+            "https://images.unsplash.com/photo-1592286927505-2fd0d9d7f3c5?auto=format&fit=crop&w=1200&q=80",
+        tag: "FLASH SALE",
         headline: (
             <>
-                Gear Up for{" "}
-                <span className="text-primary">Adventure</span>
+                Upgrade Your{" "}
+                <span className="text-primary">Tech Setup</span>
             </>
         ),
-        sub: "Top-rated sports & outdoor essentials at prices that keep you moving.",
-        cta: "View Deals",
-        overlay: "from-white/80 via-white/40 to-transparent",
+        sub: "Find powerful gadgets and accessories designed to make your workspace smarter and better.",
+        cta: "View Flash Deals",
     },
 ]
 const Carousel = () => {
@@ -182,12 +164,37 @@ const Carousel = () => {
                         }`}
                 >
                     <div
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url('${s.image}')` }}
+                        className="absolute inset-0 bg-cover"
+
                     />
-                    <div
-                        className={`absolute inset-0 bg-linear-to-r ${s.overlay}`}
-                    />
+                    <div className="grid grid-cols-2 h-full w-full">
+                        <div className="h-full w-full bg-transparent px-20">
+                            <div className="h-full w-full flex flex-col justify-center gap-10">
+                                <div className="space-y-2">
+                                    <p className="font-body text-secondary font-ibm-plex-mono">{s.tag}</p>
+                                    <h1 className="text-header font-semibold capitalize font-fraunces">{s.headline}</h1>
+                                    <p className="text-body text-secondary font-ibm-plex-mono">{s.sub}</p>
+                                </div>
+                                <div className="flex items-center gap-5">
+                                    <Button className="group flex items-center gap-3 ">
+                                        {s.cta}
+                                        <FaArrowRightLong
+                                            size={12}
+                                            className="transition-transform duration-500 ease-in-out group-hover:cursor-pointer group-hover:translate-x-[5px]"
+                                        />
+                                    </Button>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div className="h-full w-full bg-primary">
+                            <div className="h-full w-full flex items-center justify-center">
+                                <img src={s.image} loading="lazy" decoding="async" alt={s.tag} className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             ))}
 

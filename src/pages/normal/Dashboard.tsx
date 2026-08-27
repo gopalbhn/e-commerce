@@ -71,110 +71,7 @@ const heroSlides = [
 
 const AUTOPLAY_INTERVAL = 4500
 
-// const HeroCarousel = () => {
-//     const [current, setCurrent] = useState(0)
 
-//     const [animating, setAnimating] = useState(false)
-//     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-//     const total = heroSlides.length
-
-//     const goTo = useCallback(
-//         (index: number) => {
-//             if (animating) return
-//             setAnimating(true)
-//             setCurrent((index + total) % total)
-//             setTimeout(() => setAnimating(false), 600)
-//         },
-//         [animating, total]
-//     )
-
-//     const next = useCallback(() => goTo(current + 1), [current, goTo])
-
-
-//     // auto-play
-//     useEffect(() => {
-//         timerRef.current = setTimeout(next, AUTOPLAY_INTERVAL)
-//         return () => {
-//             if (timerRef.current) clearTimeout(timerRef.current)
-//         }
-//     }, [current, next])
-
-//     const slide = heroSlides[current]
-
-//     return (
-//         <section className="relative w-full h-145 overflow-hidden rounded-xl shadow-md select-none">
-
-//             {heroSlides.map((s, i) => (
-//                 <div
-//                     key={i}
-//                     className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"
-//                         }`}
-//                 >
-//                     <div
-//                         className="absolute inset-0 bg-cover bg-center"
-//                         style={{ backgroundImage: `url('${s.image}')` }}
-//                     />
-//                     <div
-//                         className={`absolute inset-0 bg-linear-to-r ${s.overlay}`}
-//                     />
-//                 </div>
-//             ))}
-
-//             {/* Content */}
-//             <div className="relative z-20 h-full flex flex-col justify-center px-12 max-w-2xl">
-//                 <span
-//                     key={`tag-${current}`}
-//                     className="inline-block text-xs font-semibold uppercase tracking-widest text-primary mb-3
-//                                animate-[fadeSlideUp_0.5s_ease_both]"
-//                 >
-//                     {slide.tag}
-//                 </span>
-//                 <h2
-//                     key={`h-${current}`}
-//                     className="text-5xl font-bold leading-tight
-//                                animate-[fadeSlideUp_0.5s_0.1s_ease_both]"
-//                 >
-//                     {slide.headline}
-//                 </h2>
-//                 <p
-//                     key={`p-${current}`}
-//                     className="mt-4 text-secondary text-base max-w-md
-//                                animate-[fadeSlideUp_0.5s_0.2s_ease_both]"
-//                 >
-//                     {slide.sub}
-//                 </p>
-//                 <button
-//                     key={`btn-${current}`}
-//                     className="mt-7 self-start px-7 py-3 bg-primary text-white rounded-lg
-
-//                                font-medium hover:bg-primary-hover transition-colors duration-200
-//                                animate-[fadeSlideUp_0.5s_0.3s_ease_both]"
-//                 >
-//                     {slide.cta}
-//                 </button>
-
-//             </div>
-
-//             {/* Prev / Next arrows */}
-
-
-//             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-2">
-//                 {heroSlides.map((_, i) => (
-//                     <button
-//                         key={i}
-//                         onClick={() => goTo(i)}
-//                         aria-label={`Go to slide ${i + 1}`}
-//                         className={`rounded-full transition-all duration-300 ${i === current
-//                             ? "w-7 h-2.5 bg-primary"
-//                             : "w-2.5 h-2.5 bg-white/60 hover:bg-white"
-//                             }`}
-//                     />
-//                 ))}
-//             </div>
-
-//         </section>
-//     )
-// }
 
 const HeroCarousel = () => {
     const [current, setCurrent] = useState(0)
@@ -408,7 +305,7 @@ const Dashboard = () => {
                 </section>
             )}
             <section className="h-full w-full px-4 md:px-10 scroll-reveal">
-                <h1 className="text-header text-left font-semibold font-inter">Shop by Category</h1>
+                <h1 className="text-header text-left font-semibold font-fraunces">Shop by Category</h1>
                 <p className="text-body text-secondary font-ibm-plex-mono">Best deals and offers for you</p>
                 <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-4 items-center mb-10 mt-5">
                     {category.map((item, index) => (
@@ -424,7 +321,7 @@ const Dashboard = () => {
             </section>
 
             <section className="h-full w-full px-4 md:px-10 scroll-reveal">
-                <h1 className="text-header font-semibold font-inter line-height-[40px]">Just For You</h1>
+                <h1 className="text-header font-semibold font-fraunces line-height-[40px]">Just For You</h1>
                 <p className="text-body text-secondary font-ibm-plex-mono">Curated just for you</p>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">

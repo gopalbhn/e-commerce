@@ -26,7 +26,7 @@ const CategoryCart = ({
             <div className="absolute inset-x-0 bottom-0 p-4 transition-transform duration-300 ease-out group-hover:-translate-y-1">
 
                 <h1
-                    className="text-center text-base font-semibold text-white/60 group-hover:text-white transition-all duration-300 group-hover:tracking-wide">
+                    className="text-center text-base font-semibold font-fraunces text-white/60 group-hover:text-white transition-all duration-300 group-hover:tracking-wide">
                     {title}
                 </h1>
             </div>
