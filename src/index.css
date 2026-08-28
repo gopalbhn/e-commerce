@@ -49,14 +49,14 @@
     --color-primary-light: #7DCDBB;
 
 
-    --color-secondary: #605E5C;
+    --color-secondary: #2C4E6E;
     --color-secondary-hover: #484644;
-    --color-secondary-light: #E6E2DF;
+    --color-secondary-light: #D8C7AE;
 
 
-    --color-accent: #096B5C;
-    --color-accent-hover: #00574B;
-    --color-accent-light: #7DCDBB;
+    --color-accent: #B8923E;
+    --color-accent-hover: #9C722F;
+    --color-accent-light: #E4C98A;
 
     --color-badge: #E85D75;
 
@@ -68,6 +68,8 @@
     --color-card-background-hover: #ffffff;
 
     --color-card-border: #d4d1ce;
+
+    --color-grey: #4B5148;
 
 
     --text-hero: 36px;

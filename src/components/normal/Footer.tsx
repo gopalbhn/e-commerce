@@ -4,7 +4,7 @@ import { FaShareNodes } from "react-icons/fa6";
 const Footer = () => {
     return (
         <div className="w-full px-4 sm:px-6 lg:px-10">
-            <footer className="w-full bg-[#f8f5f4]">
+            <footer className="w-full bg-secondary text-white ">
 
                 <div className="
                     max-w-7xl
@@ -22,14 +22,15 @@ const Footer = () => {
                     {/* Brand */}
                     <div className="flex flex-col justify-between">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900">
+                            <h2 className="text-2xl font-bold text-white font-fraunces">
                                 Easy Mart
                             </h2>
 
                             <p className="
                                 mt-4
                                 text-sm
-                                text-gray-600
+                                text-white
+                                text-ibm-plex-mono
                                 leading-6
                                 max-w-md
                             ">
@@ -42,7 +43,7 @@ const Footer = () => {
                         <div className="flex items-center gap-5 mt-6 text-gray-700">
                             <a
                                 href="#"
-                                className="hover:text-black transition"
+                                className="hover:text-accent text-white transition"
                                 aria-label="Website"
                             >
                                 <FaGlobe size={18} />
@@ -50,7 +51,7 @@ const Footer = () => {
 
                             <a
                                 href="#"
-                                className="hover:text-black transition"
+                                className="hover:text-accent text-white transition"
                                 aria-label="Email"
                             >
                                 <FaEnvelope size={18} />
@@ -58,7 +59,7 @@ const Footer = () => {
 
                             <a
                                 href="#"
-                                className="hover:text-black transition"
+                                className="hover:text-accent text-white transition"
                                 aria-label="Share"
                             >
                                 <FaShareNodes size={18} />
@@ -68,7 +69,7 @@ const Footer = () => {
 
                     {/* Company */}
                     <div>
-                        <h3 className="text-sm font-bold uppercase tracking-wide mb-5">
+                        <h3 className="text-sm font-bold uppercase tracking-wide mb-5 text-white font-fraunces">
                             Company
                         </h3>
 
@@ -76,7 +77,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="#"
-                                    className="hover:text-black transition"
+                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
                                 >
                                     About Us
                                 </a>
@@ -85,7 +86,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="#"
-                                    className="hover:text-black transition"
+                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
                                 >
                                     Help Center
                                 </a>
@@ -94,7 +95,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="#"
-                                    className="hover:text-black transition"
+                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
                                 >
                                     Privacy Policy
                                 </a>
@@ -104,7 +105,7 @@ const Footer = () => {
 
                     {/* Customer Care */}
                     <div>
-                        <h3 className="text-sm font-bold uppercase tracking-wide mb-5">
+                        <h3 className="text-sm font-bold uppercase tracking-wide mb-5 text-white font-fraunces">
                             Customer Care
                         </h3>
 
@@ -112,7 +113,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="#"
-                                    className="hover:text-black transition"
+                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
                                 >
                                     Shipping Info
                                 </a>
@@ -121,7 +122,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="#"
-                                    className="hover:text-black transition"
+                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
                                 >
                                     Returns
                                 </a>
@@ -130,7 +131,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="#"
-                                    className="hover:text-black transition"
+                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
                                 >
                                     Terms of Service
                                 </a>
@@ -140,7 +141,7 @@ const Footer = () => {
 
                     {/* Newsletter */}
                     <div className="min-w-0">
-                        <h3 className="text-sm font-bold uppercase tracking-wide mb-5">
+                        <h3 className="text-sm font-bold uppercase tracking-wide mb-5 text-white font-fraunces">
                             Join the Platform
                         </h3>
 
@@ -159,30 +160,32 @@ const Footer = () => {
                                 className="
                                     min-w-0
                                     flex-1
-                                    px-3 sm:px-4
+                                    px-3 sm:px-4 font-ibm-plex-mono
                                     py-3
                                     text-sm
                                     outline-none
-                                    bg-white
+                                    bg-secondary
+                                    border border-accent
+                                    text-accent
                                 "
                             />
 
                             <button className="
                                 shrink-0
-                                bg-[#9B5A45]
-                                hover:bg-[#844937]
+                                bg-accent
+                                hover:bg-accent/70
                                 text-white
                                 px-4 sm:px-6
                                 py-3
                                 text-sm
                                 font-medium
-                                transition
+                                transition font-ibm-plex-mono
                             ">
                                 Join
                             </button>
                         </div>
 
-                        <p className="mt-6 lg:mt-8 text-xs text-gray-500">
+                        <p className="mt-6 lg:mt-8 text-xs text-white font-ibm-plex-mono">
                             © 2024 Lumina Marketplace. All rights reserved.
                         </p>
                     </div>

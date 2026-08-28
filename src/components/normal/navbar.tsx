@@ -57,7 +57,7 @@ const NavBar = () => {
     const currentPath = window.location.pathname;
 
     return (
-        <div className={`h-15 w-full flex  items-center gap-2 md:gap-8 px-4 md:px-10 inset-0  ${currentPath == "/" ? "fixed" : "sticky"} ${color} top-0 left-0 z-100 ${currentPath == "/" && color == "bg-transparent " ? "text-white" : "text-secondary"} `}>
+        <div className={`h-15 w-full flex  items-center gap-2 md:gap-8 px-4 md:px-10 inset-0  ${currentPath == "/" ? "fixed" : "sticky"} ${color} top-0 left-0 z-100 ${currentPath == "/" && color == "bg-transparent " ? "text-white" : "text-grey"} `}>
             <div className="h-10 md:h-12 w-30 md:w-40  flex items-center justify-center text-white  ">
                 <img src={Logo} alt="logo" className="w-full h-full object-cover " />
             </div>
@@ -99,9 +99,9 @@ const NavBar = () => {
                             <FaRegUserCircle className="text-2xl" />
                             {open && (
                                 <div className="absolute top-12 -right-5 bg-white shadow-lg rounded-lg w-28 flex flex-col items-center justify-center overflow-hidden font-ibm-plex-mono">
-                                    <button className="text-secondary hover:text-primary w-full  p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/myorder")}>My Orders</button>
-                                    <button className="text-secondary hover:text-primary w-full p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/purchase-history")}>History</button>
-                                    <button className="text-secondary hover:text-primary w-full p-2 cursor-pointer hover:bg-primary/30" onClick={handleLogOut}>Logout</button>
+                                    <button className="text-grey hover:text-primary w-full  p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/myorder")}>My Orders</button>
+                                    <button className="text-grey hover:text-primary w-full p-2 hover:bg-primary/30 cursor-pointer" onClick={() => navigate("/purchase-history")}>History</button>
+                                    <button className="text-grey hover:text-primary w-full p-2 cursor-pointer hover:bg-primary/30" onClick={handleLogOut}>Logout</button>
                                 </div>
                             )}
                         </button>
@@ -137,7 +137,7 @@ const NavBar = () => {
                                         return (
                                             <Link to={
                                                 active
-                                            } key={item} className={`text-sm font-medium  flex cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : "text-secondary"}`}>
+                                            } key={item} className={`text-sm font-medium  flex cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : "text-grey"}`}>
                                                 {item}
                                             </Link>
                                         )
