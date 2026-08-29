@@ -34,6 +34,7 @@ import Deals from './pages/normal/Deals'
 import NewArrival from './pages/normal/newArrival'
 import FlashSale from './pages/admin/FlashSale'
 import SellerFlashSale from './pages/seller/SellerFlashSale'
+import BottomNav from './components/normal/bottomNav'
 
 function App() {
   return (
@@ -173,8 +174,8 @@ function Init() {
           )
 
         }
-
       </Routes>
+      {role !== "Seller" && role !== "Admin" && location.pathname !== "/login" && <BottomNav />}
     </>
   )
 

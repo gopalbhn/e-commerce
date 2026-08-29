@@ -104,7 +104,7 @@ function ActionSearchBar() {
         },
     };
     return (
-        <div className={` transition-all duration-300 ease-in-out w-70 md:w-30 lg:w-70  ${isFocused && " w-full"}  `}>
+        <div className={` transition-all duration-300 ease-in-out w-40 md:w-30 lg:w-70  ${isFocused && " w-full"}  `}>
             <div className="relative">
                 <div className="relative">
                     <Input

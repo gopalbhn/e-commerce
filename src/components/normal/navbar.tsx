@@ -1,10 +1,10 @@
-import useCartStore from "@/store/cartStore"
+
 import UserStore from "@/store/userStore"
 
 import { useEffect, useState } from "react"
-import { CiHeart, CiMenuBurger } from "react-icons/ci"
+
 import { FaRegUserCircle } from "react-icons/fa"
-import { IoCartOutline, IoClose } from "react-icons/io5"
+
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "../ui/button"
 import { toast } from "sonner"
@@ -14,12 +14,10 @@ import { ActionSearchBar } from "../ui/searchSuggestion"
 const NavBar = () => {
     const [color, setColor] = useState<string>("")
     const [open, setOpen] = useState(false)
-    const [mobileView, setMobileView] = useState(false)
+
     const navigate = useNavigate();
-    const cartItem = useCartStore(state => state?.products)
-    const cartItemLength = cartItem?.length;
+
     const user = UserStore(state => state?.user);
-    console.log("user", user)
     const userId = user?.id
     useEffect(() => {
         function handleScroll() {
@@ -77,22 +75,12 @@ const NavBar = () => {
                     )
                 })}
             </div>
-            <div className=" flex-1  flex justify-end  rounded-xl relative hidden md:flex">
+            <div className=" flex-1 flex justify-end  rounded-xl relative ">
 
                 <ActionSearchBar />
             </div>
-            <div className="flex items-center gap-1 md:gap-4 justify-end flex-1 md:flex-0">
-                <button className={`p-2 rounded-full transition hover:bg-gray-100 group  ${currentPath == "/" && color == "bg-transparent " ? "hover:text-primary" : ""}`} onClick={() => navigate("/wishlist")}>
-                    <CiHeart className="text-2xl" />
-                </button>
-                <button className={`p-2 rounded-full transition hover:bg-gray-100 relative ${currentPath == "/" && color == "bg-transparent " ? "hover:text-primary" : ""}`} onClick={() => navigate('/shoping-cart')}>
-                    <IoCartOutline className="text-2xl" />
-                    {cartItemLength > 0 && (
-                        <span className="absolute top-0 right-0 bg-primary text-white rounded-full px-2 text-xs">
-                            {cartItemLength}
-                        </span>
-                    )}
-                </button>
+            <div className="flex items-center gap-1 md:gap-4 justify-end ">
+
                 {
                     userId ? (
                         <button className="p-2 rounded-full transition hover:bg-gray-100 relative" onClick={() => setOpen(!open)}>
@@ -113,41 +101,6 @@ const NavBar = () => {
                     )
                 }
             </div>
-
-            <button className=" flex items-center justify-center md:hidden cursor-pointer" onClick={() => setMobileView(!mobileView)}>
-                {
-                    mobileView ?
-                        <IoClose className="text-3xl" /> :
-                        <CiMenuBurger className="text-3xl" />
-                }
-
-            </button>
-
-            {
-                mobileView && (
-                    <div className="fixed top-15 left-0 w-full h-full bg-black/50 z-50">
-                        <div className="w-full h-fit bg-white flex  py-2 px-6">
-
-                            <div className="flex flex-col gap-4">
-                                <ActionSearchBar />
-
-                                <div className="flex flex-col gap-4">
-                                    {['Home', 'Category', 'Deals', 'New Arrivals'].map((item) => {
-                                        const active = item == "Home" ? "/" : item === "New Arrivals" ? "/newarrivals" : `/${item.trim().toLowerCase()}`
-                                        return (
-                                            <Link to={
-                                                active
-                                            } key={item} className={`text-sm font-medium  flex cursor-pointer hover:text-primary hover:underline transition-colors duration-300 ${currentPath === active ? "text-primary underline" : "text-grey"}`}>
-                                                {item}
-                                            </Link>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
         </div>
     )
 }
