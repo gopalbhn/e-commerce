@@ -16,7 +16,7 @@ function OrderComponent({ order }: { order: any }) {
 
 
     return (
-        <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 p-6">
+        <div className="bg-background rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 p-6">
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                 <div className="space-y-2">
                     <h2 className="text-lg font-semibold text-gray-800 font-ibm-plex-mono">
@@ -103,7 +103,7 @@ const MyOrder = () => {
     if (loading) return <Loader />;
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen bg-background flex flex-col">
             <div className="max-w-6xl mx-auto w-full flex-1 px-5 py-10">
                 <div className="mb-10">
                     <h1 className="text-4xl font-bold text-gray-800 font-fraunces">

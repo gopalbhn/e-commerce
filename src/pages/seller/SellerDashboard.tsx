@@ -147,7 +147,7 @@ const SellerDashboard = () => {
             <SellerSideBar open={open} />
             {viewOrder && <OrderDetailComponent onclose={() => setViewOrder(false)} orders={orderDetail} />}
             <section
-                className={`flex-1 min-w-0 flex h-full flex-col transition-all duration-300 ${open ? "ml-[20%] lg:ml-[15%]  " : "ml-0 bg-gray-100 "
+                className={`flex-1 min-w-0 flex h-full flex-col transition-all duration-300  ${open ? " md:ml-[15%]  " : "ml-0 bg-gray-100 "
                     }`}
             >
 
@@ -160,7 +160,7 @@ const SellerDashboard = () => {
                 </div>
 
 
-                <div className="p-2 md:p-8">
+                <div className="px-6 md:p-8 mt-6">
                     <div className=" grid grid-cols-[repeat(1,minmax(150px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-6">
                         {cards.map((card: any) => (
                             <MetricChart
@@ -176,7 +176,7 @@ const SellerDashboard = () => {
                         ))}
                     </div>
                 </div>
-                <div className="w-full p-4 md:p-8">
+                <div className="w-full px-6 md:p-8 mt-6">
                     <h1 className=" text-title font-semibold">Low Stocks</h1>
                     <div className="w-full flex flex-col gap-2">
                         {lowStockProduct.length == 0 ? (
@@ -194,7 +194,7 @@ const SellerDashboard = () => {
                                             <p className="font-semibold text-primary">{product.name}</p>
                                             <p>Quantity: {product.stock}</p>
                                         </div>
-                                        <button className="bg-primary-hover/5 p-2 rounded-lg mr-10" onClick={() => navigate(`/seller/edit-product/${product._id}`)}><FiEdit color="" /></button>
+                                        <button className="bg-primary-hover/5 p-2 rounded-lg mr-2 md:mr-10" onClick={() => navigate(`/seller/edit-product/${product._id}`)}><FiEdit color="" /></button>
                                     </div>
                                 </div>
                             ))
@@ -202,7 +202,7 @@ const SellerDashboard = () => {
                     </div>
                 </div>
 
-                <div className="md:p-8">
+                <div className="px-6 md:p-8 mt-6">
                     <h1 className="font-semibold text-title my-2">Pending Orders</h1>
                     <Table data={pendingOrder} columns={pendingOrderColumn} />
                 </div>

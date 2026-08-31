@@ -5,43 +5,6 @@
 @import "@fontsource-variable/geist";
 
 
-/* @theme {
-    
-    --color-primary: #8F4B3D;
-  
-    --color-primary-hover: #793A2E;
-    --color-primary-light: #FFA896;
-
-    
-    --color-secondary: #605E5C;
-    --color-secondary-hover: #484644;
-    --color-secondary-light: #E6E2DF;
-
-    
-    --color-accent: #096B5C;
-    --color-accent-hover: #00574B;
-    --color-accent-light: #7DCDBB;
-
-    --color-badge: #E85D75;
-
-    --color-background: "#ffff";
-
-    --text-hero: 36px;
-    --text-header: 24px;
-    --text-title: 16px;
-    --text-body: 14px;
-    --text-small: 10px;
-
-    --font-sans: "Inter", sans-serif;
-
-    --breakpoint-sm: 360px;
-    --breakpoint-md: 768px;
-    --breakpoint-lg: 1024px;
-
-
-} */
-
-
 @theme {
 
     --color-primary: #245243;
@@ -60,9 +23,7 @@
 
     --color-badge: #E85D75;
 
-
     --color-background: #f5f2ea;
-
 
     --color-card-background: #fdfcfb;
     --color-card-background-hover: #ffffff;
@@ -163,18 +124,34 @@
 }
 
 
-@keyframes float {
-
-    0%,
-    100% {
-        transform: translateY(0);
+@keyframes chat-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
     }
 
-    50% {
-        transform: translateY(-6px);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-.animate-float {
-    animation: float 2.5s ease-in-out infinite;
+.chat-reveal {
+    animation: chat-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+.fadeOut {
+    animation: fadeOut 1s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

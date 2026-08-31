@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { Button } from "../ui/button"
 import { toast } from "sonner"
 import Logo from "@/assets/ecom_logo.webp"
+import mobileLogo from "@/assets/logo_mobile.webp"
 import { ActionSearchBar } from "../ui/searchSuggestion"
 
 const NavBar = () => {
@@ -55,9 +56,10 @@ const NavBar = () => {
     const currentPath = window.location.pathname;
 
     return (
-        <div className={`h-15 w-full flex  items-center gap-2 md:gap-8 px-4 md:px-10 inset-0  ${currentPath == "/" ? "fixed" : "sticky"} ${color} top-0 left-0 z-100 ${currentPath == "/" && color == "bg-transparent " ? "text-white" : "text-grey"} `}>
+        <div className={`h-15 w-full flex  items-center gap-2 md:gap-8 px-2 md:px-10 inset-0  ${currentPath == "/" ? "fixed" : "sticky"} ${color} top-0 left-0 z-100 ${currentPath == "/" && color == "bg-transparent " ? "text-white" : "text-grey"} `}>
             <div className="h-10 md:h-12 w-30 md:w-40  flex items-center justify-center text-white  ">
-                <img src={Logo} alt="logo" className="w-full h-full object-cover " />
+                <img src={Logo} alt="logo" className="w-full h-full object-cover hidden md:block " />
+                <img src={mobileLogo} alt="logo" className="w-full h-full object-contain md:hidden block " />
             </div>
 
             <div className="flex  items-center gap-6 hidden md:flex pl-6">

@@ -43,7 +43,7 @@ const ChatBot = () => {
 
                 <button
                     onClick={() => setActive(!active)}
-                    className={`h-16 w-16 rounded-full bg-primary fixed z-50 right-5 bottom-1 flex items-center justify-center cursor-pointer hover:bg-primary/70 transition-all duration-200 ${active && "border-6 p-2 border-slate-200"} `}
+                    className={`h-16 w-16 rounded-full bg-primary fixed z-50 right-5 bottom-18 md:bottom-10 flex items-center justify-center cursor-pointer hover:bg-primary/70 transition-all duration-200 chat-reveal space-y-0 ${active && "border-6 p-2 border-slate-200"} `}
                 >
                     <IoChatboxOutline size={40} color="white" />
                 </button >
@@ -102,7 +102,7 @@ function MessageBox({ messages, setMessages, setActive }: { messages: Array<{ ro
     }
     console.log("messages", messages)
     return (
-        <div className={`h-96 w-96 overflow-y-auto bg-slate-300 fixed z-100 left-210 bottom-3 rounded-xl transition-all duration-200 `}>
+        <div className={`h-96 w-96 overflow-y-auto bg-slate-300 fixed z-100 left-210 bottom-15 md:bottom-10 rounded-xl transition-all duration-200 fadeOut`}>
             <div className="w-full flex justify-between items-center  bg-primary">
 
                 <h1 className=" w-full pl-5  text-white font-semibold text-xl font-fraunces">Easy Mart Support</h1>

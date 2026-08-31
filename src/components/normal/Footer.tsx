@@ -3,7 +3,7 @@ import { FaShareNodes } from "react-icons/fa6";
 
 const Footer = () => {
     return (
-        <div className="w-full px-4 sm:px-6 lg:px-10">
+        <div className="w-full px-4 sm:px-6 lg:px-10 mb-20 md:mb-5">
             <footer className="w-full bg-secondary text-white ">
 
                 <div className="

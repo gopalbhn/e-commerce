@@ -24,8 +24,8 @@ const Deals = () => {
     console.log("discountedProduct", discountedProduct)
     return (
         <div className="h-full w-full space-y-15">
-            <section className="h-[80vh] w-full ">
-                <div className="h-full w-full">
+            <section className="h-[80vh] w-full chat-reveal ">
+                <div className="h-full w-full ">
                     <Carousel />
                 </div>
 

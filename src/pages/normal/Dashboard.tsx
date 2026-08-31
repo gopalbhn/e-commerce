@@ -259,43 +259,83 @@ const Dashboard = () => {
     console.log("flashSale", flashSale)
     useScrollReveal()
     return (
-        <div className="h-full w-full space-y-15  relative">
-            <HeroCarousel />
+        <div className="h-full w-full relative">
             <ChatBot />
-            {runningsale && (
+            <main className="space-y-15">
+                <HeroCarousel />
+
+                {runningsale && (
 
 
-                <section className="h-full w-full px-10 scroll-reveal">
-                    <div className="max-w-7xl mx-auto flex items-center justify-between">
-                        <div className="flex flex-col">
+                    <section className="h-full w-full px-10 scroll-reveal">
+                        <div className="max-w-7xl mx-auto flex items-center justify-between">
+                            <div className="flex flex-col">
 
-                            <h2 className="text-header font-semibold text-primary">{saleTitle}</h2>
-                            <p className="text-body text-secondary">Grab your offer fast</p>
-                        </div>
-                        <div className="flex items-center gap-x-4">
-                            <p className="font-bold uppercase text-title">Ends In:</p>
-                            <div className="flex gap-x-2">
-                                {time.map((value, index) => {
-                                    return (
-                                        <div key={index} className="flex flex-col items-center">
-                                            <div className="p-2 bg-badge text-white rounded ">{value}</div>
-                                            <p>{index === 0 ? "Hrs" : index === 1 ? "Min" : "Sec"}</p>
-                                        </div>
-                                    )
-                                })}
+                                <h2 className="text-header font-semibold text-primary">{saleTitle}</h2>
+                                <p className="text-body text-secondary">Grab your offer fast</p>
+                            </div>
+                            <div className="flex items-center gap-x-4">
+                                <p className="font-bold uppercase text-title">Ends In:</p>
+                                <div className="flex gap-x-2">
+                                    {time.map((value, index) => {
+                                        return (
+                                            <div key={index} className="flex flex-col items-center">
+                                                <div className="p-2 bg-badge text-white rounded ">{value}</div>
+                                                <p>{index === 0 ? "Hrs" : index === 1 ? "Min" : "Sec"}</p>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
                         </div>
+                        <div className="h-full w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center gap-4 mt-5 ">
+                            {flashSale.slice(0, 4).map((product, index) => (
+                                <ProductCart
+                                    id={product._id}
+                                    image={product.thumbnails}
+                                    name={product.name}
+                                    price={product.price}
+                                    old={product.oldPrice}
+                                    key={index}
+                                    discount={product.discount}
+                                    isDiscounted={product.isDiscounted}
+                                    wishList={product.wishList}
+                                    onclick={() => navigate(`/product-detail/${product._id}`)}
+                                />
+                            ))}
+                        </div>
+                    </section>
+                )}
+                <section className="h-full w-full px-4 md:px-10 scroll-reveal">
+                    <h1 className="text-header text-left font-semibold font-fraunces">Shop by Category</h1>
+                    <p className="text-body text-secondary font-ibm-plex-mono">Best deals and offers for you</p>
+                    <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-4 items-center mb-10 mt-5">
+                        {category.map((item, index) => (
+                            <CategoryCart
+                                image={item.image}
+                                title={item.title}
+                                key={index}
+                            />
+                        ))}
+
                     </div>
-                    <div className="h-full w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center gap-4 mt-5 ">
-                        {flashSale.slice(0, 4).map((product, index) => (
+
+                </section>
+
+                <section className="h-full w-full px-4 md:px-10 scroll-reveal">
+                    <h1 className="text-header font-semibold font-fraunces line-height-[40px]">Just For You</h1>
+                    <p className="text-body text-secondary font-ibm-plex-mono">Curated just for you</p>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
+                        {products.slice(0, 8).map((product, index) => (
                             <ProductCart
                                 id={product._id}
                                 image={product.thumbnails}
                                 name={product.name}
                                 price={product.price}
                                 old={product.oldPrice}
-                                key={index}
                                 discount={product.discount}
+                                key={index}
                                 isDiscounted={product.isDiscounted}
                                 wishList={product.wishList}
                                 onclick={() => navigate(`/product-detail/${product._id}`)}
@@ -303,45 +343,8 @@ const Dashboard = () => {
                         ))}
                     </div>
                 </section>
-            )}
-            <section className="h-full w-full px-4 md:px-10 scroll-reveal">
-                <h1 className="text-header text-left font-semibold font-fraunces">Shop by Category</h1>
-                <p className="text-body text-secondary font-ibm-plex-mono">Best deals and offers for you</p>
-                <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-4 items-center mb-10 mt-5">
-                    {category.map((item, index) => (
-                        <CategoryCart
-                            image={item.image}
-                            title={item.title}
-                            key={index}
-                        />
-                    ))}
-
-                </div>
-
-            </section>
-
-            <section className="h-full w-full px-4 md:px-10 scroll-reveal">
-                <h1 className="text-header font-semibold font-fraunces line-height-[40px]">Just For You</h1>
-                <p className="text-body text-secondary font-ibm-plex-mono">Curated just for you</p>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
-                    {products.slice(0, 8).map((product, index) => (
-                        <ProductCart
-                            id={product._id}
-                            image={product.thumbnails}
-                            name={product.name}
-                            price={product.price}
-                            old={product.oldPrice}
-                            discount={product.discount}
-                            key={index}
-                            isDiscounted={product.isDiscounted}
-                            wishList={product.wishList}
-                            onclick={() => navigate(`/product-detail/${product._id}`)}
-                        />
-                    ))}
-                </div>
-            </section>
-            <Footer />
+                <Footer />
+            </main>
         </div>
     )
 }

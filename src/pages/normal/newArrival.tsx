@@ -41,46 +41,79 @@ const NewArrival = () => {
     const [indicatorStyle, setIndicatorStyle] = useState<{ width?: number; height?: number; left?: number; top?: number }>({});
 
     const buttonRefs = useRef<HTMLButtonElement[]>([]);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const updateIndicator = (index: number) => {
+        const button = buttonRefs.current[index];
+        const container = containerRef.current;
+
+        if (!button || !container) return;
+
+        const buttonRect = button.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        setIndicatorStyle({
+            width: buttonRect.width,
+            height: buttonRect.height,
+            left: buttonRect.left - containerRect.left,
+            top: buttonRect.top - containerRect.top
+        })
+    }
 
     useEffect(() => {
-        const index = btnArray.indexOf(filter!);
-        const button = buttonRefs.current[index];
+        if (!filter) return;
 
-        if (button) {
-            setIndicatorStyle({
-                width: button.offsetWidth,
-                height: button.offsetHeight,
-                left: button.offsetLeft,
-                top: button.offsetTop,
-            });
+        const index = btnArray.indexOf(filter)
+
+        if (index === -1) {
+            return
         }
-    }, [filter]);
+        requestAnimationFrame(() => {
+            updateIndicator(index)
+        })
+    }, [filter])
+
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (!filter) return
+
+            const index = btnArray.indexOf(filter)
+            if (index !== -1) {
+                updateIndicator(index)
+            }
+        }
+
+        window.addEventListener("resize", handleResize)
+
+        return () => {
+            window.removeEventListener("resize", handleResize)
+        }
+    }, [filter])
+
     return (
         <div className="h-full w-full">
 
             <div className="min-h-[calc(100vh-8rem)] px-4 md:px-10 space-y-10 mb-10">
-                <div className="relative flex flex-wrap items-center justify-start gap-2 mt-5">
-                    <div
-                        className="absolute rounded-lg bg-primary transition-all duration-500 ease-in-out"
-                        style={{
-                            width: `${indicatorStyle?.width}px`,
-                            height: `${indicatorStyle?.height}px`,
-                            transform: `translate(${indicatorStyle?.left}px, ${indicatorStyle?.top}px)`,
-                        }}
-                    />
-                    {btnArray.map((item, index) => (
-                        <button
-                            key={index}
-                            ref={(el: any) => (buttonRefs.current[index] = el)}
-                            className={`relative z-10 px-4 py-2 rounded-lg transition-colors duration-300 font-ibm-plex-mono ${filter === item
-                                ? "text-white"
-                                : "border border-primary text-primary"
-                                }`}
-                            onClick={() => applyFilter(item)}
-                        >
-                            {item}
-                        </button>
-                    ))}
+                <div className="inline-flex mt-5 p-1 rounded-xl border border-primary">
+                    <div ref={containerRef} className="relative flex flex-wrap items-center justify-start gap-1">
+                        <div className="absolute z-0 rounded-lg bg-primary pointer-events-none transition-[transform,width,height] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]"
+                            style={{
+                                width: `${indicatorStyle.width}px`,
+                                height: `${indicatorStyle.height}px`,
+                                transform: `translate(${indicatorStyle.left}px,${indicatorStyle.top}px)`,
+                            }} />
+
+                        {btnArray.map((item, index) => (
+                            <button key={item} ref={(el) => {
+                                buttonRefs.current[index] = el;
+                            }} className={`relative z-10 px-4 py-2 rounded-lg font-ibm-plex-mono border-none outline-none ${filter === item ? "text-white" : "text-primary"}`}
+                                onClick={() => applyFilter(item)}
+                            >
+                                {item}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
 

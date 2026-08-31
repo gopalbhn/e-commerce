@@ -40,7 +40,7 @@ const SellerSideBar = ({ open }: { open: boolean }) => {
     }
 
     return (
-        <div className={` h-screen w-[20%] md:w-[15%] flex flex-col fixed top-0 left-0 z-20 bg-white shadow-sm border-r border-gray-400 p-4 overflow-y-scroll  transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className={` h-screen hidden md:flex md:w-[15%] flex-col fixed top-0 left-0 z-20 bg-white shadow-sm border-r border-gray-400 p-4 overflow-y-scroll  transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}>
 
             <div className="h-12 w-full md:w-40  flex items-center justify-center text-white">
                 <img src={Logo} alt="logo" className="w-full h-full object-cover " />
@@ -60,7 +60,7 @@ const SellerSideBar = ({ open }: { open: boolean }) => {
             {MenuItems.map((item) => {
                 const active = item.link === location.pathname;
                 return (
-                    <Link to={item.link} key={item.id} className={` w-full flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 px-4 py-2.5  mb-1 rounded-xl hover:bg-primary-hover/1 hover:text-primary transition-colors ${active ? "underline text-primary" : ""}`}>
+                    <Link to={item.link} key={item.id} className={` w-full flex  items-center justify-center md:justify-start gap-1 px-4 py-2.5  mb-1 rounded-xl hover:bg-primary-hover/1 hover:text-primary transition-colors ${active ? "underline text-primary" : ""}`}>
                         <item.icon className="md:w-3 w-6  md:h-3 h-6 shrink-0 " />
                         <p className="text-xs md:text-sm">{item.title}</p>
                     </Link>
