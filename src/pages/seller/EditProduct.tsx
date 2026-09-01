@@ -130,6 +130,12 @@ const EditProduct = () => {
             console.log("data from one fetch", data)
             if (data.success) {
                 const dataObj = data.data;
+                console.log("dataobj", dataObj)
+                let specData: Spec[] = Object.entries(dataObj.specification || {}).map(([key, value]) => ({
+                    key,
+                    value: String(value)
+                }));
+                console.log("spec", specData)
                 setTitle(dataObj.name)
                 setDescription(dataObj.description)
                 setBasePrice(dataObj.price)
@@ -138,7 +144,7 @@ const EditProduct = () => {
                 setStock(dataObj.stock)
                 setImages(dataObj.images)
                 setThumbnails(dataObj.thumbnails)
-                setSpecs(dataObj.specification ?? [])
+                setSpecs(specData);
             }
         } catch (error) {
             console.log(error)
@@ -192,33 +198,26 @@ const EditProduct = () => {
             <SellerSideBar open={open} />
 
             <section
-                className={`flex-1 transition-all duration-300 ${open ? "ml-[15%]" : "ml-0"}`}
+                className={`flex-1 transition-all duration-300 ${open ? "md:ml-[15%]" : "ml-0"}`}
             >
                 {/* Header */}
                 <div className="h-16 flex items-center justify-between px-8 bg-white shadow-sm sticky top-0 z-10">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setOpen(!open)}
-                            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors hidden md:block"
                         >
                             <MdMenu size={28} />
                         </button>
                         <div>
                             <h1 className="text-title font-bold leading-tight">Product Details</h1>
-                            <p className="text-sm text-gray-400">Manage your product information, pricing, and inventory.</p>
+                            <p className="text-sm text-gray-400 hidden md:block">Manage your product information, pricing, and inventory.</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <button className="px-5 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
-                            Discard Changes
-                        </button>
-                        <button className="px-5 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors">
-                            Save Product
-                        </button>
-                    </div>
+
                 </div>
 
-                <div className="p-8 flex flex-col gap-6 max-w-4xl">
+                <div className="p-4 md:p-8 flex flex-col gap-6 w-full md:max-w-4xl md:mx-auto">
 
                     {/* Product Information */}
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
@@ -485,7 +484,7 @@ const EditProduct = () => {
                                         value={spec.key}
                                         onChange={(e) => updateSpec(i, "key", e.target.value)}
                                         placeholder="Key"
-                                        className="w-1/3 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                                        className="md:w-1/3 w-1/2 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                                     />
 
                                     <input
@@ -493,7 +492,7 @@ const EditProduct = () => {
                                         value={spec.value}
                                         onChange={(e) => updateSpec(i, "value", e.target.value)}
                                         placeholder="Value"
-                                        className="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                                        className="md:flex-1 w-1/2 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                                     />
 
                                     <button

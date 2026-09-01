@@ -176,16 +176,16 @@ const AllOrders = () => {
         <div className="h-full w-full bg-gray-50 flex">
             <SellerSideBar open={open} />
             {viewOrder && <OrderDetailComponent onclose={() => setViewOrder(false)} orders={orderDetail} />}
-            <section className={`w-full h-full ${open ? "ml-[15%] p-4" : "ml-0 "} transition-all duration-300 px-10`}>
+            <section className={`w-full min-h-screen ${open ? " md:ml-[15%] p-4" : "ml-0 "} transition-all duration-300 px-6 md:px-10`}>
                 <div className="h-15 w-full flex items-center ">
                     <div className="flex gap-3 items-center">
                         <button
                             onClick={() => setOpen(!open)}
-                            className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors hidden md:block"
                         >
                             <MdMenu size={30} />
                         </button>
-                        <h1 className="text-title font-bold">Dashboard</h1>
+                        <h1 className="text-body md:text-title font-bold">All Orders</h1>
                     </div>
                 </div>
 
@@ -195,7 +195,7 @@ const AllOrders = () => {
                 </div>
 
                 <div className="w-full h-full mt-5">
-                    <div className='px-5 py-2 flex gap-2'>
+                    <div className='md:px-5 py-2 flex gap-2 flex-wrap'>
                         <button onClick={() => {
                             fetchAllOrder()
                             setView("all")

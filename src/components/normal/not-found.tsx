@@ -22,7 +22,7 @@ const NotFound = ({
     showButton = true,
 }: NotFoundProps) => {
     return (
-        <div className="relative flex min-h-[520px] w-full items-center justify-center overflow-hidden rounded-3xl border border-black/10 bg-muted/20 px-6 py-16">
+        <div className="relative flex min-h-[83vh] w-full items-center justify-center overflow-hidden rounded-3xl border border-black/10 bg-muted/20 px-6 py-16">
             {/* Background decoration */}
             <div className="pointer-events-none absolute inset-0">
                 <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />

@@ -181,35 +181,28 @@ const AddProduct = () => {
             <SellerSideBar open={open} />
 
             <section
-                className={`flex-1 transition-all duration-300 ${open ? "ml-[15%]" : "ml-0"}`}
+                className={`flex-1 transition-all duration-300 ${open ? "md:ml-[15%]" : "ml-0"}`}
             >
                 {/* Header */}
-                <div className="h-16 flex items-center justify-between px-8 bg-white shadow-sm sticky top-0 z-10">
+                <div className="h-16 flex items-center justify-between px-6 md:px-8  bg-white shadow-sm sticky top-0 z-10">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setOpen(!open)}
-                            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors hidden md:block"
                         >
                             <MdMenu size={28} />
                         </button>
                         <div>
-                            <h1 className="text-title font-bold leading-tight">Product Details</h1>
-                            <p className="text-sm text-gray-400">Manage your product information, pricing, and inventory.</p>
+                            <h1 className="text-title font-bold leading-tight">Add Product</h1>
+                            <p className="text-sm text-gray-400 hidden md:block">Manage your product information, pricing, and inventory.</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <button className="px-5 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
-                            Discard Changes
-                        </button>
-                        <button className="px-5 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors">
-                            Save Product
-                        </button>
-                    </div>
+
                 </div>
 
-                <div className="p-8 flex flex-col gap-6 max-w-4xl">
+                <div className="p-6 md:p-8 flex flex-col gap-6 w-full md:max-w-4xl md:mx-auto">
 
-                    {/* Product Information */}
+
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                         <h2 className="text-base font-semibold text-gray-800 mb-5 flex items-center gap-2">
                             <span className="w-5 h-5 rounded-full bg-primary-light/30 text-primary flex items-center justify-center text-xs font-bold">i</span>
@@ -217,7 +210,7 @@ const AddProduct = () => {
                         </h2>
 
                         <div className="flex flex-col gap-4">
-                            {/* Title */}
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Product Title</label>
                                 <input
@@ -369,8 +362,8 @@ const AddProduct = () => {
                             ) : (
                                 <>
                                     <FiUploadCloud size={36} className="text-primary mb-3" />
-                                    <p className="text-sm text-gray-600 font-medium">Click or drag images here to upload</p>
-                                    <p className="text-xs text-gray-400 mt-1">PNG, JPG, or WEBP up to 10MB. Recommended size: 1200×1200px</p>
+                                    <p className="text-sm text-gray-600 font-medium text-center">Click or drag images here to upload</p>
+                                    <p className="text-xs text-gray-400 mt-1 text-center">PNG, JPG, or WEBP up to 10MB. Recommended size: 1200×1200px</p>
                                 </>
                             )}
                             <input
@@ -434,8 +427,8 @@ const AddProduct = () => {
                                     <>
 
                                         <FiUploadCloud size={36} className="text-primary mb-3" />
-                                        <p className="text-sm text-gray-600 font-medium">Click or drag images here to upload</p>
-                                        <p className="text-xs text-gray-400 mt-1">PNG, JPG, or WEBP up to 10MB. Recommended size: 1200×1200px</p>
+                                        <p className="text-sm text-gray-600 font-medium text-center">Click or drag images here to upload</p>
+                                        <p className="text-xs text-gray-400 mt-1 text-center">PNG, JPG, or WEBP up to 10MB. Recommended size: 1200×1200px</p>
 
                                     </>)}
 
@@ -461,7 +454,7 @@ const AddProduct = () => {
 
                     </div>
                     {/* Specifications */}
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                    <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-base font-semibold text-gray-800 flex items-center gap-2">
                                 <span className="w-5 h-5 rounded-full bg-primary-light/30 text-primary flex items-center justify-center text-xs">≡</span>
@@ -484,14 +477,14 @@ const AddProduct = () => {
                                         value={spec.key}
                                         onChange={(e) => updateSpec(i, "key", e.target.value)}
                                         placeholder="Key"
-                                        className="w-1/3 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                                        className="md:w-1/3 w-1/2 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                                     />
                                     <input
                                         type="text"
                                         value={spec.value}
                                         onChange={(e) => updateSpec(i, "value", e.target.value)}
                                         placeholder="Value"
-                                        className="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                                        className="md:flex-1 w-1/2 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                                     />
                                     <button
                                         onClick={() => removeSpec(i)}

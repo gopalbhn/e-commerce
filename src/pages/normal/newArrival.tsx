@@ -41,7 +41,7 @@ const NewArrival = () => {
     const [indicatorStyle, setIndicatorStyle] = useState<{ width?: number; height?: number; left?: number; top?: number }>({});
 
     const buttonRefs = useRef<HTMLButtonElement[]>([]);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     const updateIndicator = (index: number) => {
         const button = buttonRefs.current[index];

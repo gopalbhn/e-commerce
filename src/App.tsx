@@ -175,7 +175,7 @@ function Init() {
 
         }
       </Routes>
-      {role !== "Seller" && role !== "Admin" && location.pathname !== "/login" && <BottomNav />}
+      {location.pathname !== "/login" && <BottomNav />}
     </>
   )
 

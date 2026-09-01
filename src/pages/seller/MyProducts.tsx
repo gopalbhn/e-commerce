@@ -161,21 +161,21 @@ const MyProducts = () => {
         />
       )}
       <section
-        className={`w-full h-full ${open ? "ml-[15%] p-4" : "ml-0 "} transition-all duration-300 px-10`}
+        className={`w-full h-full ${open ? "md:ml-[15%] p-4" : "ml-0 "} transition-all duration-300 px-6 md:px-10`}
       >
-        <div className="h-15 w-full flex items-center justify-between">
+        <div className="h-15 w-full flex items-center justify-between ">
           <div className="flex gap-3 items-center">
             <button
               onClick={() => setOpen(!open)}
-              className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors"
+              className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors hidden md:block"
             >
               <MdMenu size={30} />
             </button>
-            <h1 className="text-title font-bold">My Products</h1>
+            <h1 className="text-body md:text-title font-bold ">My Products</h1>
           </div>
 
-          <div className="max-w-7xl flex gap-3 items-center">
-            <div className="w-100 h-10 bg-white border border-gray-200 rounded-lg flex items-center px-3 gap-2 shadow-sm focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary/50 transition-all">
+          <div className="flex gap-3 items-center">
+            <div className="md:w-100 h-10 bg-white border border-gray-200 rounded-lg flex items-center px-3 gap-2 shadow-sm focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary/50 transition-all">
               <BiSearch size={15} className="text-gray-400 shrink-0" />
               <input
                 type="text"
