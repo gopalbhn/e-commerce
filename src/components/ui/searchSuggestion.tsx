@@ -115,10 +115,10 @@ function ActionSearchBar() {
                         onBlur={() =>
                             setTimeout(() => setIsFocused(false), 200)
                         }
-                        className="h-10 rounded-lg pl-4 pr-10 "
+                        className={`h-10 rounded-lg pl-4 pr-10 ${isFocused ? "block" : "hidden md:block"}`}
                     />
 
-                    <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" onClick={() => setIsFocused(true)} />
                 </div>
 
                 <AnimatePresence>

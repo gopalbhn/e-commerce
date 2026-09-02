@@ -2,9 +2,11 @@ import { FaEnvelope, FaGlobe } from "react-icons/fa";
 import { FaShareNodes } from "react-icons/fa6";
 
 const Footer = () => {
+    const company = ["About Us", "Help Center", "Privacy Policy"];
+    const customerCare = ["Shipping Info", "Returns", "Terms of Service"];
     return (
-        <div className="w-full px-4 sm:px-6 lg:px-10 mb-20 md:mb-5">
-            <footer className="w-full bg-secondary text-white ">
+        <div className="w-full px-4 sm:px-6 lg:px-10 mb-20 md:mb-5 ">
+            <footer className="w-full bg-secondary text-white rounded-xl">
 
                 <div className="
                     max-w-7xl
@@ -74,32 +76,17 @@ const Footer = () => {
                         </h3>
 
                         <ul className="space-y-3 text-sm text-gray-600">
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
-                                >
-                                    About Us
-                                </a>
-                            </li>
+                            {company.map((item) => (
+                                <li key={item}>
+                                    <a
+                                        href="#"
+                                        className="hover:text-accent text-white transition font-ibm-plex-mono relative after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:w-0 hover:after:w-1/2 hover:after:transition-all hover:after:duration-800"
 
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
-                                >
-                                    Help Center
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
-                                >
-                                    Privacy Policy
-                                </a>
-                            </li>
+                                    >
+                                        {item}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
@@ -110,32 +97,16 @@ const Footer = () => {
                         </h3>
 
                         <ul className="space-y-3 text-sm text-gray-600">
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
-                                >
-                                    Shipping Info
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
-                                >
-                                    Returns
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-accent text-white transition font-ibm-plex-mono"
-                                >
-                                    Terms of Service
-                                </a>
-                            </li>
+                            {customerCare.map((item) => (
+                                <li key={item}>
+                                    <a
+                                        href="#"
+                                        className="hover:text-accent text-white transition font-ibm-plex-mono relative after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:w-0 hover:after:w-1/2 hover:after:transition-all hover:after:duration-800"
+                                    >
+                                        {item}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 

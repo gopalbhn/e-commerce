@@ -105,7 +105,7 @@ const NewArrival = () => {
                             }} />
 
                         {btnArray.map((item, index) => (
-                            <button key={item} ref={(el) => {
+                            <button key={item} ref={(el: HTMLButtonElement) => {
                                 buttonRefs.current[index] = el;
                             }} className={`relative z-10 px-4 py-2 rounded-lg font-ibm-plex-mono border-none outline-none ${filter === item ? "text-white" : "text-primary"}`}
                                 onClick={() => applyFilter(item)}
