@@ -1,15 +1,17 @@
-// Login.tsx
 import { useState, useMemo, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FiEye, FiEyeOff, FiShoppingCart, FiUser, FiMail, FiLock } from "react-icons/fi";
 import { toast } from "sonner";
-import Logo from "@/assets/ecom_logo.webp";
+import HeroLottie from "@/components/normal/Lottie";
+import logoAnimation from "../../assets/easymart-logo.json"
+import LogoImage from "../../assets/ecom_logo.webp"
 
 const BG_IMAGES = [
-  "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=1920&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1920&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1607082349566-187342175e2f?q=80&w=1920&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=1920&auto=format&fit=crop",
 ];
+
 
 interface StrengthResult {
   score: number;
@@ -34,7 +36,6 @@ function getPasswordStrength(password: string): StrengthResult {
   return levels[score];
 }
 
-// ---------- Sliding Image Background ----------
 function SlidingBackground({ images }: { images: string[] }) {
   const [index, setIndex] = useState(0);
 
@@ -47,11 +48,10 @@ function SlidingBackground({ images }: { images: string[] }) {
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden">
-      <div className="absolute inset-0  z-10" />
       {images.map((img, i) => (
         <div
           key={img}
-          className="absolute inset-0 w-full h-full bg-cover bg-center transition  duration-1000 ease-in-out"
+          className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out"
           style={{
             backgroundImage: `url(${img})`,
             opacity: i === index ? 1 : 0,
@@ -62,7 +62,6 @@ function SlidingBackground({ images }: { images: string[] }) {
   );
 }
 
-// ---------- Shared Field ----------
 interface InputProps {
   label: string;
   type?: string;
@@ -76,10 +75,10 @@ interface InputProps {
 function Field({ label, type = "text", value, placeholder, icon, onChange, rightSlot }: InputProps) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-white/80 font-ibm-plex-mono">{label}</label>
+      <label className="text-sm font-medium text-secondary font-ibm-plex-mono">{label}</label>
       <div className="relative">
         {icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary">
             {icon}
           </div>
         )}
@@ -88,10 +87,10 @@ function Field({ label, type = "text", value, placeholder, icon, onChange, right
           value={value}
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full ${icon ? "pl-10" : "pl-4"} pr-10 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 text-sm outline-none focus:border-purple-500/50 transition-colors`}
+          className={`w-full ${icon ? "pl-10" : "pl-4"} pr-10 py-2.5 bg-white border border-secondary-light rounded-lg text-gray-900 placeholder-gray-400 text-sm outline-none focus:border-primary transition-colors`}
         />
         {rightSlot && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white cursor-pointer transition-colors">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary cursor-pointer transition-colors">
             {rightSlot}
           </span>
         )}
@@ -143,7 +142,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3 ">
       <Field
         label="Email"
         type="email"
@@ -167,7 +166,7 @@ function LoginForm() {
       />
 
       <div className="text-right">
-        <a href="#" className="text-sm text-white/70 hover:text-white transition-colors">
+        <a href="#" className="text-sm text-primary hover:underline transition-colors">
           Forgot password?
         </a>
       </div>
@@ -175,21 +174,17 @@ function LoginForm() {
       <button
         disabled={!canSubmit || isSubmitting}
         onClick={handleLogin}
-        className={`w-full rounded-lg py-3 text-sm font-semibold text-white transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg  hover:shadow-background/5
-          ${canSubmit ? "bg-primary hover:bg-primary-hover cursor-pointer" : "bg-white/10 text-white/40 cursor-not-allowed"}
+        className={`w-full rounded-lg py-3 text-sm font-semibold text-white transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg
+          ${canSubmit ? "bg-primary hover:bg-primary-hover cursor-pointer" : "bg-secondary-light text-secondary cursor-not-allowed"}
           disabled:opacity-70 disabled:transform-none`}
       >
         {isSubmitting ? "Logging in..." : "Login"}
       </button>
 
-      <div className="flex items-center gap-3">
-        <div className="flex-1 h-px bg-white/10" />
-        <span className="text-xs text-white/50">quick access via</span>
-        <div className="flex-1 h-px bg-white/10" />
-      </div>
+
 
       <button
-        className="w-full flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+        className="w-full flex items-center justify-center gap-2 rounded-lg border border-secondary-light bg-white py-2.5 text-sm font-medium text-gray-700 hover:bg-secondary-light/40 transition-colors cursor-pointer"
         onClick={handleLoginWithGoogle}
       >
         <FcGoogle size={18} />
@@ -199,7 +194,6 @@ function LoginForm() {
   );
 }
 
-// ---------- Consumer Registration ----------
 function ConsumerRegistrationForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -277,11 +271,22 @@ function ConsumerRegistrationForm() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className={`h-1.5 flex-1 rounded-full transition-colors ${i <= strength.score ? strength.color : "bg-white/10"}`}
+                  className={`h-1.5 flex-1 rounded-full transition-colors ${i <= strength.score ? strength.color : "bg-secondary-light"}`}
                 />
               ))}
             </div>
-            <span className="text-xs font-medium text-white/70">{strength.label}</span>
+            <span
+              className={`text-xs font-medium ${strength.score <= 1
+                ? "text-red-500"
+                : strength.score === 2
+                  ? "text-yellow-500"
+                  : strength.score === 3
+                    ? "text-blue-500"
+                    : "text-green-500"
+                }`}
+            >
+              {strength.label}
+            </span>
           </div>
         )}
       </div>
@@ -300,14 +305,14 @@ function ConsumerRegistrationForm() {
             </span>
           }
         />
-        {!passwordsMatch && <span className="text-xs text-red-400">Passwords do not match</span>}
+        {!passwordsMatch && <span className="text-xs text-red-500">Passwords do not match</span>}
       </div>
 
       <button
         disabled={!canSubmit}
         onClick={handleConsumerRegister}
-        className={`w-full rounded-lg py-3 text-sm font-semibold text-white transition-all mt-1 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40
-          ${canSubmit ? "bg-purple-600 hover:bg-purple-700 cursor-pointer" : "bg-white/10 text-white/40 cursor-not-allowed"}`}
+        className={`w-full rounded-lg py-3 text-sm font-semibold text-white transition-all mt-1 shadow-lg
+          ${canSubmit ? "bg-primary hover:bg-primary-hover cursor-pointer" : "bg-secondary-light text-secondary cursor-not-allowed"}`}
       >
         Create Account
       </button>
@@ -315,7 +320,6 @@ function ConsumerRegistrationForm() {
   );
 }
 
-// ---------- Seller Registration ----------
 function SellerRegistrationForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -369,7 +373,7 @@ function SellerRegistrationForm() {
   }
 
   return (
-    <div className="flex flex-col gap-4 ">
+    <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-3">
         <Field label="First Name" value={firstName} placeholder="John" onChange={setFirstName} />
         <Field label="Last Name" value={lastName} placeholder="Doe" onChange={setLastName} />
@@ -398,11 +402,22 @@ function SellerRegistrationForm() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className={`h-1.5 flex-1 rounded-full transition-colors ${i <= strength.score ? strength.color : "bg-white/10"}`}
+                  className={`h-1.5 flex-1 rounded-full transition-colors ${i <= strength.score ? strength.color : "bg-secondary-light"}`}
                 />
               ))}
             </div>
-            <span className="text-xs font-medium text-white/70">{strength.label}</span>
+            <span
+              className={`text-xs font-medium ${strength.score <= 1
+                ? "text-red-500"
+                : strength.score === 2
+                  ? "text-yellow-500"
+                  : strength.score === 3
+                    ? "text-blue-500"
+                    : "text-green-500"
+                }`}
+            >
+              {strength.label}
+            </span>
           </div>
         )}
       </div>
@@ -421,7 +436,7 @@ function SellerRegistrationForm() {
             </span>
           }
         />
-        {!passwordsMatch && <span className="text-xs text-red-400">Passwords do not match</span>}
+        {!passwordsMatch && <span className="text-xs text-red-500">Passwords do not match</span>}
       </div>
 
       <Field label="Store Name" value={shopName} placeholder="Store Name" onChange={setShopName} />
@@ -431,8 +446,8 @@ function SellerRegistrationForm() {
       <button
         disabled={!canSubmit}
         onClick={handleSellerRegistration}
-        className={`w-full rounded-lg py-3 text-sm font-semibold text-white transition-all mt-1 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40
-          ${canSubmit ? "bg-purple-600 hover:bg-purple-700 cursor-pointer" : "bg-white/10 text-white/40 cursor-not-allowed"}`}
+        className={`w-full rounded-lg py-3 text-sm font-semibold text-white transition-all mt-1 shadow-lg
+          ${canSubmit ? "bg-primary hover:bg-primary-hover cursor-pointer" : "bg-secondary-light text-secondary cursor-not-allowed"}`}
       >
         Create Account
       </button>
@@ -448,30 +463,30 @@ interface RegestrationSectionProps {
 function RegestrationSection({ onSelect }: RegestrationSectionProps) {
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold text-center text-white">Register as</h1>
-      <p className="text-sm text-white/60 text-center">Choose your path to join our platform</p>
+      <h1 className="text-xl font-semibold text-center text-gray-900">Register as</h1>
+      <p className="text-sm text-secondary text-center">Choose your path to join our platform</p>
       <div className="grid grid-cols-2 gap-4 mt-6">
         <button
           onClick={() => onSelect("consumer")}
-          className="border border-white/10 bg-white/5 rounded-xl p-6 text-left hover:border-purple-500/50 hover:bg-white/10 transition cursor-pointer"
+          className="border border-secondary-light bg-white rounded-xl p-6 text-left hover:border-primary hover:bg-primary/5 transition cursor-pointer shadow-sm"
         >
           <div className="flex gap-3 items-center">
-            <FiUser size={26} className="text-white/80" />
-            <h3 className="font-semibold text-lg text-white">Consumer</h3>
+            <FiUser size={26} className="text-secondary" />
+            <h3 className="font-semibold text-lg text-gray-900">Consumer</h3>
           </div>
-          <p className="text-sm text-white/60 mt-2">
+          <p className="text-sm text-secondary mt-2">
             Browse products, place orders, track deliveries and manage your purchases.
           </p>
         </button>
         <button
           onClick={() => onSelect("seller")}
-          className="border border-white/10 bg-white/5 rounded-xl p-6 text-left hover:border-purple-500/50 hover:bg-white/10 transition cursor-pointer"
+          className="border border-secondary-light bg-white rounded-xl p-6 text-left hover:border-primary hover:bg-primary/5 transition cursor-pointer shadow-sm"
         >
           <div className="flex gap-3 items-center">
-            <FiShoppingCart size={26} className="text-white/80" />
-            <h3 className="font-semibold text-lg text-white">Seller</h3>
+            <FiShoppingCart size={26} className="text-secondary" />
+            <h3 className="font-semibold text-lg text-gray-900">Seller</h3>
           </div>
-          <p className="text-sm text-white/60 mt-2">
+          <p className="text-sm text-secondary mt-2">
             Open your own store, upload products and manage customer orders.
           </p>
         </button>
@@ -480,7 +495,6 @@ function RegestrationSection({ onSelect }: RegestrationSectionProps) {
   );
 }
 
-// ---------- Main Page ----------
 type Tab = "login" | "register";
 type RegisterType = "consumer" | "seller" | null;
 
@@ -488,36 +502,29 @@ const Login = () => {
   const [tab, setTab] = useState<Tab>("login");
   const [registerType, setRegisterType] = useState<RegisterType>(null);
 
-  const isWide = tab === "register" && registerType !== null;
-
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-10 overflow-hidden">
-      <SlidingBackground images={BG_IMAGES} />
-
-      <div className={`relative z-20 w-full transition-all duration-300 ${isWide ? "max-w-xl" : "max-w-md"}`}>
-        <div
-          className={`p-8 rounded-2xl backdrop-blur-sm bg-black/40 border border-white/10 ${tab === "register" ? "max-h-[85vh] overflow-y-auto scrollbar-none" : ""
-            }`}
-        >
-          {/* Brand */}
-          <div className="mb-8 text-center">
-            <div className="h-12 w-40 mx-auto mb-3">
-              <img src={Logo} className="h-full w-full object-contain" alt="Logo" />
+    <div className="h-screen w-full flex bg-white">
+      <div className="w-full md:w-1/2 flex flex-col overflow-y-auto scrollbar-none bg-white">
+        <div className="my-auto px-8 py-10 md:px-14 w-full max-w-lg mx-auto border border-secondary-light rounded-lg p-6">
+          <div className="mb-8 text-center md:text-left">
+            <div className="h-12 w-40 mx-auto md:mx-0 mb-3">
+              {/* <Logo /> */}
+              <img src={LogoImage} className="h-full w-full object-contain" />
             </div>
-            <p className="text-white/70 text-sm font-ibm-plex-mono">
+            <p className="text-secondary text-sm font-ibm-plex-mono">
               {tab === "login" ? "Welcome back! Sign in to continue." : "Create your account to get started."}
             </p>
           </div>
 
           {/* Toggle tabs */}
-          <div className="flex rounded-lg border border-white/10 p-1 mb-6">
+          <div className="flex rounded-lg border border-secondary-light p-1 mb-6">
             <button
               onClick={() => {
                 setTab("login");
                 setRegisterType(null);
               }}
               className={`flex-1 rounded-md py-2 text-sm font-semibold font-ibm-plex-mono transition-colors cursor-pointer
-                ${tab === "login" ? "bg-primary text-white " : "text-white/60 hover:text-white"}`}
+                ${tab === "login" ? "bg-primary text-white" : "text-secondary hover:text-primary"}`}
             >
               Login
             </button>
@@ -527,7 +534,7 @@ const Login = () => {
                 setRegisterType(null);
               }}
               className={`flex-1 rounded-md py-2 text-sm font-semibold font-ibm-plex-mono transition-colors cursor-pointer
-                ${tab === "register" ? "bg-primary text-white" : "text-white/60 hover:text-white"}`}
+                ${tab === "register" ? "bg-primary text-white" : "text-secondary hover:text-primary"}`}
             >
               Register
             </button>
@@ -545,11 +552,29 @@ const Login = () => {
         </div>
       </div>
 
-      <footer className="absolute bottom-4 left-0 right-0 text-center text-white/50 text-sm z-20">
-        © 2025. All rights reserved.
-      </footer>
+      <div className="hidden md:block md:w-1/2 relative">
+        <SlidingBackground images={BG_IMAGES} />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/60 to-accent/60 flex flex-col items-center justify-end pb-16 px-8 text-white text-center">
+          <h2 className="text-2xl font-bold leading-snug">Shop smarter, live better</h2>
+          <p className="text-sm mt-2 opacity-90">
+            Discover thousands of products at unbeatable prices.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
+
+
+
+const Logo = () => {
+  return (
+    <a href="/">
+      <HeroLottie />
+    </a>
+  );
+}
+
+
 
 export default Login;

@@ -107,7 +107,7 @@ function MessageBox({ messages, setMessages, setActive }: { messages: Array<{ ro
     }
     console.log("messages", messages)
     return (
-        <div className={`h-96 w-96 overflow-y-auto bg-slate-300 fixed z-100 left-210 bottom-15 md:bottom-10 rounded-xl transition-all duration-200 fadeOut`}>
+        <div className={`h-96 w-[80%] md:w-96 overflow-y-auto bg-slate-300 fixed z-100 left-1/2 -translate-x-1/2  md:right-5 md:left-auto md:translate-x-0 bottom-16 md:bottom-10 rounded-xl transition-all duration-200 fadeOut`}>
             <div className="w-full flex justify-between items-center  bg-primary">
                 <div className="flex items-center gap-1">
                     <div className="p-3 ml-2 flex items-center justify-center bg-white/20 font-semibold text-xl text-white rounded-full"><IoChatboxOutline size={20} /></div>

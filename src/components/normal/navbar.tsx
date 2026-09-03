@@ -56,7 +56,7 @@ const NavBar = () => {
     const currentPath = window.location.pathname;
 
     return (
-        <div className={`h-15 w-full flex  items-center gap-2 md:gap-8 px-2 md:px-10 inset-0  ${currentPath == "/" ? "fixed" : "sticky"} ${color} top-0 left-0 z-100 ${currentPath == "/" && color == "bg-transparent " ? "text-white" : "text-grey"} `}>
+        <div className={`h-15 w-full flex  items-center gap-2 md:gap-8 px-2 md:px-10 inset-0  ${currentPath == "/" || currentPath == "/deals" ? "fixed" : "sticky"} ${color} top-0 left-0 z-100 ${currentPath == "/" && color == "bg-transparent " ? "text-white" : "text-grey"} `}>
             <div className="h-10 md:h-12 w-30 md:w-40  flex items-center justify-center text-white  ">
                 <img src={Logo} alt="logo" className="w-full h-full object-cover hidden md:block " />
                 <img src={mobileLogo} alt="logo" className="w-full h-full object-contain md:hidden block " />

@@ -23,8 +23,8 @@ const Deals = () => {
     const discountedProduct = product.filter(pro => Number(pro.discount) > 0)
     console.log("discountedProduct", discountedProduct)
     return (
-        <div className="h-full w-full space-y-15">
-            <section className="h-[80vh] w-full chat-reveal ">
+        <div className="h-full w-full space-y-15 relative">
+            <section className="h-[90vh] w-full chat-reveal ">
                 <div className="h-full w-full ">
                     <Carousel />
                 </div>
@@ -155,7 +155,7 @@ const Carousel = () => {
     }, [current])
 
     return (
-        <div className="relative w-full h-full overflow-hidden rounded-xl shadow-md select-none">
+        <div className="relative w-full h-full overflow-hidden rounded-xl  select-none absolute top-0">
 
             {heroSlides.map((s, i) => (
                 <div
