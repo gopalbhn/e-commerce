@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SellerSideBar from "../../components/Sellers/SellerSideBar";
 import { MdMenu } from "react-icons/md";
 import { BiPlus, BiSearch } from "react-icons/bi";
@@ -17,7 +17,8 @@ interface productstatsProps {
 const MyProducts = () => {
   const [open, setOpen] = useState<boolean>(true);
   const navigate = useNavigate();
-
+  const [isFocused, setIsFocused] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const [product, setProduct] = useState<any[] | []>([])
   const [productStats, setProductStats] = useState<productstatsProps>(
@@ -29,7 +30,9 @@ const MyProducts = () => {
   )
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
   const [deleteItemId, setDeleteItemId] = useState<string>("");
-  async function handleSearch(searchText: string) {
+  async function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    const searchText = e.target.value;
+
     if (searchText.trim() === "") {
       setProduct(product);
       return;
@@ -38,6 +41,28 @@ const MyProducts = () => {
       product?.name.toLowerCase().includes(searchText.toLowerCase())
     ))
   }
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setIsFocused(false);
+      }
+    };
+
+    const handleScroll = () => {
+      setIsFocused(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   async function fetchProductStats() {
     try {
@@ -163,32 +188,49 @@ const MyProducts = () => {
       <section
         className={`w-full h-full ${open ? "md:ml-[15%] p-4" : "ml-0 "} transition-all duration-300 px-6 md:px-10`}
       >
-        <div className="h-15 w-full flex items-center justify-between ">
+        <div className="h-16 w-full flex items-center justify-between px-1">
           <div className="flex gap-3 items-center">
             <button
               onClick={() => setOpen(!open)}
-              className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors hidden md:block"
+              className="p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 active:scale-95 transition-all duration-150 hidden md:block"
             >
-              <MdMenu size={30} />
+              <MdMenu size={24} />
             </button>
-            <h1 className="text-body md:text-title font-bold ">My Products</h1>
+            {!isFocused && (
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight font-fraunces">
+                My Products
+              </h1>
+            )}
           </div>
 
           <div className="flex gap-3 items-center">
-            <div className="md:w-100 h-10 bg-white border border-gray-200 rounded-lg flex items-center px-3 gap-2 shadow-sm focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary/50 transition-all">
-              <BiSearch size={15} className="text-gray-400 shrink-0" />
+            <div
+              ref={searchRef}
+              className={`h-10 bg-white border border-gray-200 rounded-xl flex items-center px-3 gap-2 shadow-sm
+      focus-within:ring-4 focus-within:ring-primary/10 focus-within:border-primary/60
+      transition-all duration-200 ${isFocused ? "w-68" : "w-10 md:w-64"} md:w-64 overflow-hidden`}
+            >
+              <BiSearch
+                size={17}
+                className="text-gray-400 shrink-0 cursor-pointer"
+                onClick={() => setIsFocused(!isFocused)}
+              />
               <input
                 type="text"
                 placeholder="Search products..."
-                onChange={(e) => handleSearch(e.target.value)}
-                className="w-full h-full outline-none text-sm text-gray-700 placeholder:text-gray-400 bg-transparent"
+                onChange={(e) => handleSearch(e)}
+                className={`w-full h-full outline-none text-sm text-gray-700 placeholder:text-gray-400 bg-transparent transition-opacity duration-200 ${isFocused ? "opacity-100 block" : "opacity-0 hidden"
+                  } md:opacity-100 md:block`}
               />
             </div>
-            <button className="h-10 px-4 bg-primary border border-gray-200 rounded-lg flex items-center gap-2 text-sm text-white font-medium hover:bg-primary-hover hover:border-gray-300 transition-all shadow-sm"
+
+            <button
+              className="h-10 px-4 bg-primary rounded-xl flex items-center gap-2 text-sm text-white font-semibold
+      shadow-sm hover:bg-primary-hover hover:shadow-md active:scale-95 transition-all duration-150"
               onClick={() => navigate('/seller/add-product')}
             >
-              <BiPlus size={15} />
-              Add Product
+              <BiPlus size={17} />
+              <span className="hidden md:block">Add Product</span>
             </button>
           </div>
         </div>

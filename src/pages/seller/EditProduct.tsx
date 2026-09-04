@@ -210,7 +210,7 @@ const EditProduct = () => {
                             <MdMenu size={28} />
                         </button>
                         <div>
-                            <h1 className="text-title font-bold leading-tight">Product Details</h1>
+                            <h1 className="text-xl font-bold leading-tight">Edit Product </h1>
                             <p className="text-sm text-gray-400 hidden md:block">Manage your product information, pricing, and inventory.</p>
                         </div>
                     </div>

@@ -15,7 +15,6 @@ import MyProducts from './pages/seller/MyProducts'
 import AllOrders from './pages/seller/AllOrders'
 import AddProduct from './pages/seller/AddProduct'
 import EditProduct from './pages/seller/EditProduct'
-import SellerRegistration from './pages/seller/SellerRegistration'
 import CouponManagement from './pages/seller/CouponManagement'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AllAdminOrders from './pages/admin/AllAdminOrders'
@@ -157,7 +156,7 @@ function Init() {
               <Route path='/seller/orders' element={<AllOrders />} />
               <Route path='/seller/add-product' element={<AddProduct />} />
               <Route path='/seller/edit-product/:id' element={<EditProduct />} />
-              <Route path="/seller/registration" element={<SellerRegistration />} />
+
               <Route path="/seller/coupons" element={<CouponManagement />} />
               <Route path="/seller/flashsale" element={<SellerFlashSale />} />
             </>

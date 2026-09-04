@@ -1,5 +1,7 @@
 
 import UserStore from "@/store/userStore";
+import { AiFillProduct, AiOutlineProduct } from "react-icons/ai";
+import { FiTag } from "react-icons/fi";
 
 import { GoHeart, GoHeartFill, GoHome, GoHomeFill } from "react-icons/go"
 import { IoCartOutline, IoCartSharp } from "react-icons/io5";
@@ -15,8 +17,8 @@ const BottomNav = () => {
     let roles = user?.role
     console.log("user role`", roles)
     return (
-        <div className="w-[95%] mx-auto rounded-xl  md:hidden border-t border-gray-200  bg-white/80 backdrop-blur-xl py-2 z-50 sticky bottom-2 px-6">
-            <div className="grid grid-cols-3">
+        <div className="w-[95%] mx-auto rounded-xl  md:hidden border-t border-gray-200  bg-white/80 backdrop-blur-xl py-2 z-50 fixed bottom-2 px-6">
+            <div className={`grid ${roles == "Seller" ? "grid-cols-4" : "grid-cols-3"}`}>
                 <div onClick={() => navigate("/")} className={`flex flex-col items-center  ${current === "/" ? "text-secondary  " : "text-gray-500"}`}>
                     {current == "/" ? <GoHomeFill size={18} /> : <GoHome size={18} />}
 
@@ -36,13 +38,17 @@ const BottomNav = () => {
                     roles == "Seller" && (
                         <>
                             <div onClick={() => navigate("/seller/product")} className={`flex flex-col items-center ${current === "/cart" ? "text-secondary" : "text-gray-500"}`}>
-                                {current == "/seller/product" ? <IoCartOutline size={18} /> : <IoCartOutline size={18} />}
+                                {current == "/seller/product" ? <AiFillProduct size={18} /> : <AiOutlineProduct size={18} />}
                                 <p>Products</p>
                             </div>
 
                             <div onClick={() => navigate("/seller/orders")} className={`flex flex-col items-center ${current === "/cart" ? "text-secondary" : "text-gray-500"}`}>
                                 {current == "/seller/orders" ? <IoCartOutline size={18} /> : <IoCartOutline size={18} />}
                                 <p>Orders</p>
+                            </div>
+                            <div onClick={() => navigate("/seller/coupons")} className={`flex flex-col items-center ${current === "/cart" ? "text-secondary" : "text-gray-500"}`}>
+                                {current == "/seller/coupons" ? <FiTag size={18} /> : <FiTag size={18} />}
+                                <p>Coupons</p>
                             </div>
                         </>
                     )

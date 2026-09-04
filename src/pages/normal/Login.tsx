@@ -508,8 +508,8 @@ const Login = () => {
         <div className="my-auto px-8 py-10 md:px-14 w-full max-w-lg mx-auto border border-secondary-light rounded-lg p-6">
           <div className="mb-8 text-center md:text-left">
             <div className="h-12 w-40 mx-auto md:mx-0 mb-3">
-              {/* <Logo /> */}
-              <img src={LogoImage} className="h-full w-full object-contain" />
+              <Logo />
+              {/* <img src={LogoImage} className="h-full w-full object-contain" /> */}
             </div>
             <p className="text-secondary text-sm font-ibm-plex-mono">
               {tab === "login" ? "Welcome back! Sign in to continue." : "Create your account to get started."}

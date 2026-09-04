@@ -175,25 +175,25 @@ const SellerFlashSale = () => {
         <div className="min-h-screen bg-gray-100 flex">
             <SellerSideBar open={open} />
             <section
-                className={`flex-1 transition-all duration-300 ${open ? "ml-[15%]" : "ml-0"
+                className={`flex-1 transition-all duration-300 min-w-0 ${open ? "md:ml-[15%]" : "ml-0"
                     }`}
             >
 
                 <div className="h-16 flex items-center px-8 bg-white shadow-sm">
-                    <button onClick={() => setOpen(!open)}>
+                    <button onClick={() => setOpen(!open)} className="hidden md:block">
                         <MdMenu size={28} />
                     </button>
 
-                    <h1 className="ml-4 text-2xl font-bold">Flash Sale</h1>
+                    <h1 className="ml-4 text-xl font-bold font-fraunces">Flash Sale</h1>
                 </div>
 
                 <div className="h-full w-full p-8 ">
-                    <h1 className="text-header font-bold">Running Flash Sale</h1>
+                    <h1 className="text-header font-bold font-fraunces">Running Flash Sale</h1>
                     <div className="w-full  mt-6 rounded-xl">
                         {runningFlashSale?.length == 0 ? (
                             <div>
 
-                                <p className="text-center mt-10 font-semibold">No Running FlashSale</p>
+                                <p className="text-center mt-10 font-semibold font-ibm-plex-mono">No Running FlashSale</p>
 
                             </div>
                         ) : (
@@ -205,7 +205,7 @@ const SellerFlashSale = () => {
                         <div>
                             <>
                                 <div className="flex items-center gap-3 mt-5">
-                                    <h1 className="text-header font-bold">My Flash Sale Products</h1>
+                                    <h1 className="text-xl font-bold font-fraunces">My Flash Sale Products</h1>
                                 </div>
                                 <div className="w-full overflow-x-auto mt-5">
                                     <Table columns={sellerFlashSaleColumn} data={myFlashSaleProducts} />

@@ -232,7 +232,7 @@ const CouponManagement = () => {
     }, [])
 
     return (
-        <div className="min-h-screen bg-gray-50 flex">
+        <div className="min-h-screen w-full bg-gray-50 flex">
             <SellerSideBar open={open} />
             {showDeleteConfirm && (
                 <DeleteModal
@@ -240,19 +240,21 @@ const CouponManagement = () => {
                     onConfirm={() => handleDeleteCoupon(deleteId)}
                 />
             )}
-            <section className={`flex-1 transition-all duration-300 ${open ? "ml-[15%]" : "ml-0"}`}>
+            <section className={`flex-1 transition-all duration-300 min-w-0 ${open ? "md:ml-[15%]" : "ml-0"}`}>
                 {/* Header */}
-                <div className="h-16 flex items-center justify-between px-8 bg-white shadow-sm sticky top-0 z-10">
+                <div className="h-16 flex items-center justify-between md:px-8  px-6 bg-white shadow-sm sticky top-0 z-10">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setOpen(!open)}
-                            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors hidden md:block"
                         >
                             <MdMenu size={28} />
                         </button>
                         <div>
-                            <h1 className="text-title font-bold leading-tight">Coupon Management</h1>
-                            <p className="text-sm text-gray-400">Create and manage discount coupons for your store.</p>
+                            <h1 className="text-xl font-bold font-fraunces leading-tight hidden md:block">Coupon Management</h1>
+                            <h1 className="text-xl font-bold font-fraunces leading-tight md:hidden">Coupon </h1>
+
+                            <p className="text-sm text-gray-400 font-ibm-plex-mono hidden md:block">Create and manage discount coupons for your store.</p>
                         </div>
                     </div>
                     <button
@@ -260,12 +262,13 @@ const CouponManagement = () => {
                         className="flex items-center gap-2 px-5 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors"
                     >
                         <FiPlus size={16} />
-                        New Coupon
+                        <span className="hidden md:block font-ibm-plex-mono">New Coupon</span>
+                        <span className="md:hidden">Coupon</span>
                     </button>
                 </div>
 
 
-                <div className="p-8">
+                <div className=" p-4 md:p-8">
                     <Table columns={couponColumn} data={coupons} />
                 </div>
             </section>

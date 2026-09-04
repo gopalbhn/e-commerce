@@ -185,7 +185,7 @@ const AddProduct = () => {
             >
                 {/* Header */}
                 <div className="h-16 flex items-center justify-between px-6 md:px-8  bg-white shadow-sm sticky top-0 z-10">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 ">
                         <button
                             onClick={() => setOpen(!open)}
                             className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors hidden md:block"

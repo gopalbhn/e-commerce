@@ -4,14 +4,12 @@ import logoAnimation from "../../assets/easymart-logo.json";
 function HeroLottie() {
     return (
         <Lottie
-            animationData={logoAnimation}
+            src={logoAnimation}
             loop
             autoplay
-            style={{
-                width: 150,
-                height: 50,
-            }}
+            style={{ width: 150, height: 50 }}
         />
+
     );
 }
 

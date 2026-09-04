@@ -11,11 +11,13 @@ import { toast } from "sonner"
 import Logo from "@/assets/ecom_logo.webp"
 import mobileLogo from "@/assets/logo_mobile.webp"
 import { ActionSearchBar } from "../ui/searchSuggestion"
+import { Search, X } from "lucide-react"
+import SearchBox from "./SearchBox"
 
 const NavBar = () => {
     const [color, setColor] = useState<string>("")
     const [open, setOpen] = useState(false)
-
+    const [isFocused, setIsFocused] = useState(false)
     const navigate = useNavigate();
 
     const user = UserStore(state => state?.user);
@@ -77,9 +79,11 @@ const NavBar = () => {
                     )
                 })}
             </div>
-            <div className=" flex-1 flex justify-end  rounded-xl relative ">
+            <div className=" flex-1 flex justify-end  rounded-xl  ">
+                <Search onClick={() => setIsFocused(true)} className="md:hidden" />
 
                 <ActionSearchBar />
+                {isFocused && <SearchBox onclick={() => setIsFocused(!isFocused)} />}
             </div>
             <div className="flex items-center gap-1 md:gap-4 justify-end ">
 

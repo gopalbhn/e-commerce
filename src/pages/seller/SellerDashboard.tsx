@@ -151,12 +151,12 @@ const SellerDashboard = () => {
                     }`}
             >
 
-                <div className={`h-16 w-full ${open ? "px-10 " : "p-4 "} md:px-8 flex gap-2 flex-shrink-0 items-center  bg-white shadow-sm`}>
-                    <button onClick={() => setOpen(!open)}>
+                <div className={`h-16 w-full  ${open ? "px-10 " : "p-4 "} md:px-8 flex gap-2 flex-shrink-0 items-center  bg-white shadow-sm`}>
+                    <button onClick={() => setOpen(!open)} className="hidden md:block">
                         <MdMenu size={28} />
                     </button>
 
-                    <h1 className="text-2xl font-bold">Dashboard</h1>
+                    <h1 className="text-xl font-bold font-fraunces">Dashboard</h1>
                 </div>
 
 
@@ -177,7 +177,7 @@ const SellerDashboard = () => {
                     </div>
                 </div>
                 <div className="w-full px-6 md:p-8 mt-6">
-                    <h1 className=" text-title font-semibold">Low Stocks</h1>
+                    <h1 className=" text-title font-semibold font-fraunces">Low Stocks</h1>
                     <div className="w-full flex flex-col gap-2">
                         {lowStockProduct.length == 0 ? (
                             <div className="text-md mx-auto mt-3">You Dont have Any Product Now</div>
@@ -191,7 +191,7 @@ const SellerDashboard = () => {
                                     </div>
                                     <div className=" w-full flex items-center justify-between mt-2">
                                         <div className="flex flex-col gap-1">
-                                            <p className="font-semibold text-primary">{product.name}</p>
+                                            <p className="font-semibold ">{product.name}</p>
                                             <p>Quantity: {product.stock}</p>
                                         </div>
                                         <button className="bg-primary-hover/5 p-2 rounded-lg mr-2 md:mr-10" onClick={() => navigate(`/seller/edit-product/${product._id}`)}><FiEdit color="" /></button>

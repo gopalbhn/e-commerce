@@ -185,7 +185,7 @@ const AllOrders = () => {
                         >
                             <MdMenu size={30} />
                         </button>
-                        <h1 className="text-body md:text-title font-bold">All Orders</h1>
+                        <h1 className="text-xl md:text-title font-bold font-fraunces">All Orders</h1>
                     </div>
                 </div>
 
@@ -195,14 +195,14 @@ const AllOrders = () => {
                 </div>
 
                 <div className="w-full h-full mt-5">
-                    <div className='md:px-5 py-2 flex gap-2 flex-wrap'>
+                    <div className='md:px-5 py-2 md:flex gap-2 md:flex-wrap grid grid-cols-3'>
                         <button onClick={() => {
                             fetchAllOrder()
                             setView("all")
-                        }} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "all" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>All</button>
-                        <button onClick={handlePendingOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "pending" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Pending</button>
-                        <button onClick={handleShippedOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "shipped" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Shipped</button>
-                        <button onClick={handleCompletedOrder} className={`px-8 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "completed" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Completed</button>
+                        }} className={`px-4 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "all" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>All</button>
+                        <button onClick={handlePendingOrder} className={`px-4 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "pending" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Pending</button>
+                        <button onClick={handleShippedOrder} className={`px-4 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "shipped" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Shipped</button>
+                        <button onClick={handleCompletedOrder} className={`px-4 py-2 rounded-full shadow-sm text-sm font-medium transition-all hover:shadow-md ${view === "completed" ? "bg-primary-hover text-white" : "bg-white border border-gray-200 text-gray-600 hover:bg-primary-hover hover:text-white hover:border-primary-hover"}`}>Completed</button>
                     </div>
 
                     <div className="mt-10 ">
