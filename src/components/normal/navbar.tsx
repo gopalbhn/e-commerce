@@ -11,7 +11,7 @@ import { toast } from "sonner"
 import Logo from "@/assets/ecom_logo.webp"
 import mobileLogo from "@/assets/logo_mobile.webp"
 import { ActionSearchBar } from "../ui/searchSuggestion"
-import { Search, X } from "lucide-react"
+import { Search } from "lucide-react"
 import SearchBox from "./SearchBox"
 
 const NavBar = () => {

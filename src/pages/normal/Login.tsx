@@ -3,8 +3,6 @@ import { FcGoogle } from "react-icons/fc";
 import { FiEye, FiEyeOff, FiShoppingCart, FiUser, FiMail, FiLock } from "react-icons/fi";
 import { toast } from "sonner";
 import HeroLottie from "@/components/normal/Lottie";
-import logoAnimation from "../../assets/easymart-logo.json"
-import LogoImage from "../../assets/ecom_logo.webp"
 
 const BG_IMAGES = [
   "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1920&auto=format&fit=crop",
